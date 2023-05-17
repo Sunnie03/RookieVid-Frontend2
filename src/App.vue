@@ -1,13 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark> 
-      <!-- 这部分固定了？？？？ -->
-      <!--主页最上方导航栏 链接-->
-     
-      <div class="head_guide">
-        
-      </div>
-    </v-app-bar>
+    
+        <!-- <Header></Header> -->
+    
 
     <v-main>
       <router-view />
@@ -17,12 +12,13 @@
 </template>
 
 <script>
-import router from './router';
 // import Header from '@/components/HomePage/Header.vue' //导致有问题
 
 export default {
   name: 'App',
-  // components:{ Header},
+  // components:{ 
+  //   header:Header
+  // },
 
   data: () => ({
     //

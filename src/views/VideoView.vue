@@ -11,14 +11,15 @@
               <v-card-title>
 
                 <!--标题-->
-                <v-row>
+                <v-row :style="{width:'100%'}">
                   <v-col>
                     <h2> {{ video.title }}</h2>
                   </v-col>
-                </v-row>
+                  </v-row>
                 
                 <v-row>
-                  <v-col>
+               
+                  <v-col >
                     <div style="font-weight: normal;font-size: 17px;color: grey;">
                       <!--发布时间-->
                       <span style="margin-right: 20px;">
@@ -71,6 +72,7 @@
                   <div class="video_func">
 
                     <span title="点赞" class="like"><!-- style=" display: flex;flex-direction: column; //按行从上到下"-->
+                      <v-card-actions>
                       <div>
                         <!-- 获取是否点赞，并在点击时切换状态和更新数量 -->
                         <v-btn icon :color="video.liked ? 'blue' : undefined" @click="likeHandle" size="large"
@@ -80,8 +82,10 @@
                         </v-btn>
                       </div>
                       <div>
-                        <p>{{ video.like_amount }}</p>
+                        <!--居中看这里-->
+                        <p class="d-flex align-center my-auto">{{ video.like_amount }}</p>
                       </div>
+                      </v-card-actions>
                     </span>
 
                     <span title="收藏" class="star">
@@ -199,7 +203,7 @@
           <v-col cols="12" md="3">
             <div>
               <v-card>
-                <h3>我是右侧</h3>
+                <v-card-title><h3>我是右侧</h3></v-card-title>
 
                 <el-button icon="el-icon-user" circle></el-button>
                 {{ video.author_name }}
