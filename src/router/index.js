@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomePage/HomeView.vue'
-
+import Register from '../views/register/RegisterView.vue'
+import Login from '../views/login/LoginView.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -88,6 +89,17 @@ const routes = [
     name:'study',
     component: () => import(/* webpackChunkName: "about" */ '../views/LabelPage/StudyView.vue')
   },
+  /*Y 0517 第一次合并*/
+  {
+     path: '/register', 
+    name: 'register',
+    component: Register
+  },
+  {
+    path: '/login', 
+    name: 'login',
+    component: Login
+  }
 
 ]
 
