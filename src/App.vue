@@ -1,13 +1,6 @@
 <template>
   <v-app>
-    
-        <!-- <Header></Header> -->
-    
-
-    <v-main>
       <router-view />
-    </v-main>
-
   </v-app>
 </template>
 
@@ -76,7 +69,4 @@ export default {
   margin-left: 20px;
 }
 
-/* .partitions {
-  display: flex;
-} */
 </style>
