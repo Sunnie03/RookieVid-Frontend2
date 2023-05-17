@@ -1,14 +1,13 @@
 <template>
-  <v-app>
-    
-        <!-- <Header></Header> -->
-    
-
+  <v-app :dark="isDark" class="my-app">
     <v-main>
       <router-view />
     </v-main>
-
+    
   </v-app>
+  <!-- <div id="app">
+    <router-view/>
+  </div> -->
 </template>
 
 <script>
@@ -29,6 +28,11 @@ export default {
 </script>
 
 <style>
+.my-app {
+  font-family: sans-serif;
+  background-color: white;
+}
+
 .app {
   display: flex;
   flex-direction: column;
