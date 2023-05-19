@@ -12,8 +12,8 @@ import axios from 'axios';
 axios.defaults.baseURL='http://101.43.159.45:8000/api'
 Vue.prototype.$http=axios;
 
-// import SvgIcon from '@jamescoyle/vue-icon'
-// import { mdiAccount } from '@mdi/js'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiAccount } from '@mdi/js'
 // import axios from 'axios';
 // Vue.prototype.$axios = axios; //这样每个Vue文件内都可以直接使用
 

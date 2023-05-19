@@ -1,22 +1,26 @@
 <template>
   <div class="video" title="视频播放页面">
-    <el-container>
-      <div :style="{ 'width': '80vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
+    <v-container>
+      <div :style="{ 'width': '80vw', 'margin-top': '30px' }" class="mx-auto">
+
+        <!--左侧-->
         <v-row>
-          <!--左侧-->
-          <v-col cols="12" md="8">
-            <v-card flat>
+          <v-col cols="12" md="9">
+            <v-card class="mt-10 mx-auto" min-height="60vh" outlinedflat>
               <!--视频head介绍-->
               <v-card-title>
+
                 <!--标题-->
-                <v-row align-content="stretch" height="60px">
-                  <v-col cols="12" md="12" style="padding-bottom: 0px;" class="playvideo_title">
+                <v-row :style="{width:'100%'}">
+                  <v-col>
                     <h2> {{ video.title }}</h2>
                   </v-col>
-
-                  <v-col cols="12" md="12" height="20px">
-                    <div class="video_information"
-                      style="font-weight: normal;font-size: 17px;color: grey;max-height: 20px;">
+                  </v-row>
+                
+                <v-row>
+               
+                  <v-col >
+                    <div style="font-weight: normal;font-size: 17px;color: grey;">
                       <!--发布时间-->
                       <span style="margin-right: 20px;">
                         <v-icon
@@ -43,293 +47,187 @@
                     </div>
                   </v-col>
                 </v-row>
+
+
               </v-card-title>
+
 
               <v-card-text>
                 <!--视频播放器-->
-                <div class="video_player" :style="{ 'margin-top': '15px' }">
-                  <video controls style="width:916px;min-height:550px">
-                    <source v-bind:src="video.url">
-                    </source>
-                    <!-- <source src="../assets/hz.mp4">
+                <!-- <v-card> -->
+                <v-row>
+                  <div class="player" style="margin: 20px;">
+                    <video controls style="justify-content: center;width:1300px;height:650px">
+                      <source v-bind:src="video.url">
+                      </source>
+                      <!-- <source src="../assets/hz.mp4">
                   </source> -->
-                  </video>
-                </div>
+                    </video>
+                  </div>
+                </v-row>
+                <!-- </v-card> -->
 
                 <!--视频功能栏-->
                 <v-card>
                   <div class="video_func">
-                    <span class="like" style="margin-right:30px">
-                      <!-- 获取是否点赞，并在点击时切换状态和更新数量 -->
-                      <v-btn icon :color="video.liked ? 'blue' : undefined" @click="likeHandle" size="large"
-                        style="width: 50px;height: 50px;">
-                        <v-icon style="font-size: 30px;">{{ video.liked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline'
-                        }}</v-icon>
-                      </v-btn>
-                      <!--居中看这里-->
-                      <p class="d-flex align-center my-auto">{{ video.like_amount }}</p>
+
+                    <span title="点赞" class="like"><!-- style=" display: flex;flex-direction: column; //按行从上到下"-->
+                      <v-card-actions>
+                      <div>
+                        <!-- 获取是否点赞，并在点击时切换状态和更新数量 -->
+                        <v-btn icon :color="video.liked ? 'blue' : undefined" @click="likeHandle" size="large"
+                          style="width: 50px;height: 50px;">
+                          <v-icon style="font-size: 30px;">{{ video.liked ? 'mdi-thumb-up' : 'mdi-thumb-up-outline'
+                          }}</v-icon>
+                        </v-btn>
+                      </div>
+                      <div>
+                        <!--居中看这里-->
+                        <p class="d-flex align-center my-auto">{{ video.like_amount }}</p>
+                      </div>
+                      </v-card-actions>
                     </span>
 
-                    <span class="star" style="margin-right:30px">
+                    <span title="收藏" class="star">
                       <!-- 获取是否收藏，并在点击时切换状态和更新数量 -->
                       <v-btn icon :color="video.stared ? 'blue' : undefined" @click="StarHandle" size="large"
                         style="width: 50px;height: 50px;">
                         <v-icon style="font-size: 30px;">{{ video.stared ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
                       </v-btn>
-                      <p class="d-flex align-center my-auto">{{ video.star_amount }}</p>
+                      <div>
+                        <p>{{ video.star_amount }}</p>
+                      </div>
                     </span>
 
-                    <span title="投诉" class="complaint" @click="Complain" style="margin-right:30px">
+                    <span title="投诉" class="complaint" @click="Complain" style="align-items: center;">
                       <v-btn icon size="large" style="width: 50px;height: 50px;">
                         <v-icon>mdi-alert-outline</v-icon>
                       </v-btn>
-                      <p class="d-flex align-center my-auto">稿件投诉</p>
+                      <p style="display=flex;align-items: center;">稿件投诉</p>
                     </span>
 
                     <span title="转载声明">
                       <v-btn icon disabled size="large" style="width: 50px;height: 50px;">
                         <v-icon>mdi-cancel</v-icon>
                       </v-btn>
-                      <p class="d-flex align-center my-auto">未经许可，不许转载</p>
+                      <p>未经许可，不许转载</p>
                     </span>
+
+                    <!-- <span title="分享" class="share">
+                  <img class="img_func" src="@/assets/video/icon_04.png" alt="" />
+                </span> -->
                   </div>
                 </v-card>
-
-                <div class="video_dsp" style="margin-left: 20px;margin-top: 30px;margin-bottom: 50px;">
-                  <p>{{ video.description }}</p>
+                <!-- <v-card> -->
+                <div class="introduction">
+                  <p>视频简介{{ video.description }}</p>
+                  <p>......</p>
                 </div>
 
                 <!--分区-->
                 <div class="video_partition">
-                  <el-button plain class="v_part_c">{{ video.label }}</el-button>
+                  <el-button plain class="v_part_c">分区{{ video.label }}</el-button>
                   <!-- <v-btn @click="test()">press me</v-btn> -->
                 </div>
+
               </v-card-text>
             </v-card>
 
             <v-divider height="6" class="mt-4"></v-divider>
-            <img src="@/assets/video/picture4.jpeg" style="margin-top: 27px;" width="100%" height="200px"></img>
+
+            <!-- </v-card> -->
 
             <!--评论区-->
             <v-card class="mt-10 mb-10" flat>
-              <v-row :style="{ width: '100%' }">
-                <v-col style="font-weight: bold;font-size: 20px;">评论 {{ video.comment_amount }}</v-col>
+              <v-row class="ptl-3">
+                <v-col cols="12" md="1">评论 10 <!--{{ video.comments.review_amount }}--></v-col>
               </v-row>
 
-              <v-row align-content="stretch" :style="{ width: '100%', 'margin-bottom': '15px' }" align="center">
-                <!--justify="center"-->
-                <!--当前用户头像-->
-                <v-col cols="12" md="1" class="d-flex" align="center">
+              <v-row class="pa-4">
+                <v-col cols="12" md="1">
                   <v-avatar>
-                    <img :src="video.author_image_url" />
-                    <!-- <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John"> -->
+                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
                   </v-avatar>
                 </v-col>
                 <!--评论输入框-->
-                <v-col cols="12" md="11" align="center" class="d-flex">
-                  <!-- <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入内容"
+                <v-col cols="12" md="5">
+                  <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入内容"
                     v-model="textarea2">
                   </el-input>
-                <el-button slot="append" icon="el-icon-search" @click="PostComment()"></el-button> -->
-                  <!-- <v-text-field v-model="commentInput" label="写下你的评论..." outlined append-icon="mdi-send"
-                    @click:append="postComment" />
-                  <v-btn color="primary" @click="postComment">发布</v-btn> -->
-
-                  <!-- <el-input class="comment-input" v-model="comment" placeholder="写下你的评论..."></el-input> -->
-                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"
-                    suffix-icon="el-icon-s-promotion">
-                  </el-input>
-                  <el-button class="comment-btn" type="primary" @click="PostComment">发布</el-button>
+                </v-col>
+                <v-col cols="12" md="1">
+                  <el-button slot="append" icon="el-icon-search" @click="PostComment()"></el-button>
                 </v-col>
               </v-row>
 
-              <v-divider /><!--为了调整样式，之后可以删-->
+              <v-row>
+                <v-col cols="12" md="1">
+                  <v-avatar>
+                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                  </v-avatar> </v-col>
+                <v-col cols="12" md="5">
+                  <h2>lllll</h2>
+                  <!-- <p>1,000,000 subscribers</p> -->
+                  <!-- <br /> -->
+                  <scan>你好！</scan>
+                  <br></br>
+                  <scan>2023-05-15 14:21{{ video.comments.created_at }}</scan>
+                  <scan> <el-link type="primary">回复</el-link></scan>
 
-              <!--评论样式-->
-              <v-card flat class="mb-3" @mouseenter="showDelete = true" @mouseleave="showDelete = false"
-                v-for="(comment_item, index) in this.comments" :key="index">
-                <v-row>
-                  <v-col cols="12" md="1">
-                    <v-avatar>
-                      <img :src="comment_item.avatar_url" />
-                    </v-avatar>
-                  </v-col>
+                  <v-row class="mt-4">
+                    <br />
+                    <v-col cols="12" md="1">
+                      <v-avatar>
+                        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                      </v-avatar>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                      <h3>llll</h3>
+                      <scan>这条是在回复评论</scan>
+                    </v-col>
+                  </v-row>
 
-                  <v-col cols="12" md="11">
-                    <!--评论者用户名-->
-                    <div style="align-items: center;margin-bottom: 14px;">
-                      <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                        {{ comment_item.user_name }}
-                      </span>
-                      <span style="align-items: center!important;"><el-tag v-if="comment_item.user_id = video.author_id"
-                          type="info" effect="plain" size="mini">作者</el-tag></span>
-                    </div>
+                  <v-row>
+                    <p>共1条回复，点击查看</p>
+                  </v-row>
 
-                    <!--一级评论内容-->
-                    <div style="">{{ comment_item.content }}</div>
-                    <div style="align-items: center;">
-                      <scan style="font-size: 14px;color: grey;margin-right: 40px;">
-                        {{ comment_item.created_at }}
-                      </scan>
-                      <scan style="margin-right: 40px;">
-                        <el-button type="text" @click="popInput">回复</el-button>
-                      </scan>
-                      <pan v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
-                          cancel-button-text='不用了'><el-button slot="reference" type="text"
-                            @click="deleteComment(comment_id)">删除</el-button></el-popconfirm>
-                      </pan>
-                    </div>
-
-                    <!--二级评论内容-->
-                    <div v-if="comment_item.reply_amount > 0">
-                      <v-card flat v-for="(reply_item, r_index) in comment_item.reply" :keys="r_index">
-                        <v-row class="mt-4">
-                          <!--二级评论用户头像-->
-                          <v-col cols="12" md="1">
-                            <v-avatar>
-                              <img :src="reply_item.avatar_url" />
-                            </v-avatar>
-                          </v-col>
-
-                          <v-col cols="12" md="11">
-                            <!--二级评论者用户名-->
-                            <div style="align-items: center;margin-bottom: 14px;">
-                              <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                                {{ reply_item.user_name }}
-                              </span>
-                              <span style="align-items: center!important;"><el-tag
-                                  v-if="reply_item.user_id = video.author_id" type="info" effect="plain"
-                                  size="mini">作者</el-tag>
-                              </span>
-                            </div>
-                            <!--二级评论内容-->
-                            <div>{{ reply_item.content }}</div>
-                            <div style="align-items: center;">
-                              <scan style="font-size: 14px;color: grey;margin-right: 40px;">{{ reply_item.created_at }}
-                              </scan>
-                              <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
-                                  cancel-button-text='不用了'><el-button slot="reference" type="text"
-                                    @click="deleteComment(comment_id)">删除</el-button></el-popconfirm></span>
-                            </div>
-                          </v-col>
-                        </v-row>
-                      </v-card>
-
-                      <div v-if="comment_item.reply_amount > 2">
-                        <v-row>
-                          <p>共{{ comment_item.reply_amount }}条回复，<el-button type="text" @click="">点击查看</el-button></p>
-                        </v-row>
-                      </div>
-                    </div>
-
-                    <v-row>
-                      <v-divider height="6" style="margin-top: 20px;"></v-divider>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-card>
+                  <v-row>
+                    <v-divider height="6" class="ma-2"></v-divider>
+                  </v-row>
+                </v-col>
+              </v-row>
             </v-card>
           </v-col>
 
           <!--右侧-->
-          <v-col cols="12" md="4">
-            <div class="right-col" style="width:100%;margin-left: 30px;">
-              <!--作者信息-->
-              <v-card flat>
-                <div style="margin:15px;margin-top:20px;margin-bottom: 20px;">
-                  <v-row style="width:100%;margin-top:10px">
-                    <v-col cols="12" md="3">
-                      <div style="margin-top: 10px;">
-                        <v-avatar>
-                          <img :src="video.author_image_url" />
-                        </v-avatar>
-                      </div>
-                    </v-col>
+          <v-col cols="12" md="3">
+            <div>
+              <v-card>
+                <v-card-title><h3>我是右侧</h3></v-card-title>
 
-                    <v-col cols="12" md="9">
-                      <v-row style="margin-top: 7px;">
-                        <div>
-                          <!-- <router-link :to="'/user/' + video.author_id">  -->
-                          <h1>{{ video.author_name }}</h1>
-                          <!-- </router-link> -->
-                        </div>
-                      </v-row>
-
-                      <v-row>
-                        <div style="margin-top: 7px;margin-bottom: 7px;">
-                          {{ video.author_description }}
-                        </div>
-                      </v-row>
-
-                      <v-row>
-                        <div style="margin-bottom: 20px;margin-top: 3px">
-                          <span v-if="video.isFollowed"> <!--如果已关注-->
-                            <v-btn depressed @click="DisFollow">
-                              <i class="el-icon-check"></i> 已关注{{ video.author_follower_amount }}
-                            </v-btn>
-                          </span>
-                          <span v-else> <!--如果未关注-->
-                            <v-btn depressed color="primary" @click="Follow">
-                              +关注 {{ video.author_follower_amount }}
-                            </v-btn>
-                          </span>
-                        </div>
-                      </v-row>
-                    </v-col>
-                  </v-row>
-                </div>
-              </v-card>
-
-              <!--图片2-->
-              <img src="@/assets/video/picture2.jpeg" style="margin-top: 20px;" width="100%" height="200px"></img>
-              <v-divider height="6" style="margin-top: 20px;"></v-divider>
-
-              <!--推荐视频列表-->
-              <v-card flat>
-                <div style="font-size: 18px;margin-top: 20px;">
-                  推荐视频列表
-                </div>
-
-                <vard v-for="(recommend_item, index) in this.videos_recommend" :key="index">
-                  <div class="recommend_block" style="padding-top: 20px;padding-bottom: 10px;">
-                    <v-row>
-                      <v-col cols="12" md="6">
-                        <img :src="recommend_item.cover_url" width="100%" />
-                      </v-col>
-
-                      <v-col class="rec_introdction" cols="12" md="6">
-                        <div class="rec_video_title">
-                          {{ recommend_item.title }}
-                        </div>
-
-                        <div style="margin-top: 10px;margin-bottom: 10px;">
-                          <el-tag type="info" effect="plain" size="mini">作者 </el-tag>{{ recommend_item.user_name }}
-                        </div>
-
-                        <div>
-                          <span style="margin-right: 25px;">
-                            <v-icon
-                              style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
-                            {{ recommend_item.view_amount }}
-                          </span>
-                          <span>
-                            <v-icon
-                              style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-text-box-outline</v-icon>
-                            {{ recommend_item.comment_amount }}
-                          </span>
-                        </div>
-
-                      </v-col>
-                    </v-row>
-                  </div>
-                </vard>
+                <el-button icon="el-icon-user" circle></el-button>
+                {{ video.author_name }}
 
               </v-card>
             </div>
           </v-col>
         </v-row>
+
+        <v-row>
+          <v-col cols="12" md="8">
+            lll
+          </v-col>
+          <v-col cols="12" md="4">
+            aaa
+          </v-col>
+        </v-row>
+
       </div>
-    </el-container>
+    </v-container>
+
+    <!-- <v-app-bar app bottom>
+      lll
+    </v-app-bar> -->
 
   </div>
 </template>
@@ -338,8 +236,6 @@
 
 <script>
 import axios from 'axios';
-//import { response } from 'express';
-//import { request } from 'http';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
@@ -349,8 +245,7 @@ import 'video.js/dist/video-js.css';
 export default {
   data() {
     return {
-      textarea: '',
-      showDelete: false,
+      textarea2: '',
       form: {
         name: '',
         region: '',
@@ -361,87 +256,35 @@ export default {
         resource: '',
         desc: ''
       },
-      videoWidth: 0,
-      videoHeight: 0,
       video: {
         // path: mdiAccount,
         title: '',
         url: '',
         author_id: '',
         author_name: '',
-        author_image_url: '',
-        author_description: '',
-        author_follower_amount: '',
-        isFollowed: false,
+        author_image: '',
         view_amount: '',
         create_time: '',
         like_amount: 0,
         liked: false,
         star_amount: 0,
         stared: false,
+        comments: {
+          user_id: '',
+          video_id: '',
+          content: '',
+          created_at: '',
+        },
         description: '',
         label: '',
         comment_amount: '',
       },
-      /*以下为评论呈现相关的遍历数组*/
-      // c_user_name: [""],
-      // c_user_image_url: [""],
-      // c_user_r_time: [""],
-      // c_content: [""],
-      // c_reply_amount: [""],
-      // c_reply: [""],
-      comments: [""],
-      videos_recommend: [""],
-
-      /*遍历数组到此结束*/
-
-      // comment: {
-      //   user_id: '',
-      //   user_name: '',
-      //   user_image_url: '',
-      //   video_id: '',
-      //   content: '',
-      //   created_at: '',
-      //   reply_amount: '',
-      //   reply: {
-      //     id: '',
-      //     user_id: '',
-      //     video_id: '',
-      //     user_name: '',
-      //     user_image_url: '',
-      //     comment_id: '',
-      //     content: '',
-      //     created_at: '',
-      //   }
-      // },
     }
   },
   created() {
     this.fetchVideoData();
   },
-  // mounted() { /*计算视频长宽*/
-  //   this.$nextTick(() => {
-  //     this.updateVideoSize();
-  //     window.addEventListener('resize', this.updateVideoSize);
-  //   });
-  // },
-  // beforeDestroy() { /*计算视频长宽*/
-  //   window.removeEventListener('resize', this.updateVideoSize);
-  // },
   methods: {
-    // updateVideoSize() { /*计算视频长宽*/
-    //   const video = this.$refs.video;
-    //   const videoAspectRatio = video.videoWidth / video.videoHeight;
-    //   const containerAspectRatio = 1030 / 830; // 根据容器的宽高比设置，这里为 1030:830
-    //   if (videoAspectRatio > containerAspectRatio) {
-    //     this.videoWidth = 1030;
-    //     this.videoHeight = 1030 / videoAspectRatio;
-    //   } else {
-    //     this.videoWidth = 830 * videoAspectRatio;
-    //     this.videoHeight = 830;
-    //   }
-    //   console.log(this.videoWidth,this.videoHeight);
-    // },
     onSubmit() {
       console.log('submit!');
     },
@@ -449,9 +292,10 @@ export default {
       console.log(this.$route.params.id)
     },
     fetchVideoData() {
-      axios.get('/videos/view_video', { params: { video_id: 1 } }) //之后把这个换成参数
+      axios.get('/videos/view_video', { params: { video_id: 1 } })
         // axios.get('videos/view_video', { params: { video_id: this.$route.params.id } })
         .then(response => {
+          //console.log()
           console.log(response);
           // if(response.errno == 0) {
           //   alert(response.data.msg);
@@ -463,10 +307,7 @@ export default {
           this.video.title = response.data.video.title;
           this.video.author_id = response.data.video.user_id;
           this.video.author_name = response.data.video.user_name;
-          this.video.author_image_url = response.data.video.avatar_url;//这部分还没有？？是这个吗？？
-          this.video.author_description = response.data.video.user_description;
-          this.video.author_follower_amount = response.data.video.follower_amount;
-          //this.video.isFollowed=response.data.video.1;
+          this.video.author_image = response.data.video.avatar_url;//这部分还没有？？是这个吗？？
 
           this.video.view_amount = response.data.video.view_amount;
           this.video.create_time = response.data.video.created_at;
@@ -481,28 +322,11 @@ export default {
           this.video.description = response.data.video.description;
           this.video.label = response.data.video.label;
 
-          /*关于评论comment的值*/
-          /*需要在这里把每个评论的二级评论的值引出来吗*/
-          /*遍历获取所有一级评论*/
-          response.data.comment.forEach((comment, index) => {
-            this.comments[index] = comment;
-          })
+          //this.video.comments = response.data.video.comments;
         })
         .catch(error => {
           console.log(error);
-        })
-
-      /*获取推荐视频*/
-      axios.get('/videos/get_related_video', { params: { video_id: 1, num: 8 } })
-        .then(response => {
-          console.log(response);
-          response.data.video.forEach((video, index) => {
-            this.videos_recommend[index] = video;
-          })
-        })
-        .catch(error => {
-          console.log(error);
-        })
+        });
     },
     likeHandle() {
       if (this.$data.video.liked) {
@@ -518,13 +342,15 @@ export default {
       axios.post('videos/like_video', { params: { video_id: this.$route.params.id } }) //往后端传数据有问题
         .then(function (response) {
           console.log(response);
+          //self.$data.video.liked = response.data.liked;//确定不是反过来吗???
+          //self.liked = response.data.liked;//确定不是反过来吗???
+          //self.$data.video.like_amount = response.data.like_amount; //这个和上面的那个写法哪一个是对的？？？
         })
         .catch(function (error) {
           console.log('Error: ' + error);
         });
     },
-    StarHandle() { //点击收藏键触发
-      //先发送，再获取？？
+    StarHandle() {
       if (this.$data.video.stared) {
         this.$data.video.stared = false;
         this.$data.video.star_amount -= 1;
@@ -535,9 +361,11 @@ export default {
       }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
 
       var self = this;//这两个this不是一个this吧
-      axios.post('videos/favorite_video', { params: { video_id: this.$route.params.id, favorite_id: 1 } }) //往后端传数据有问题
+      axios.post('videos/favorite_video', { params: { video_id: this.$route.params.id, } }) //往后端传数据有问题
         .then(function (response) {
           console.log(response);
+          self.$data.video.stared = response.data.stared;//确定不是反过来吗???
+          self.$data.video.star_amount = response.data.fav_amount;
         })
         .catch(function (error) {
           console.log('Error: ' + error);
@@ -562,18 +390,8 @@ export default {
           message: '取消投诉'
         });
       });
-      /*标记投诉状态？？*/
     },
-    PostComment() { //这个是发布评论的接口
-      if (!this.textarea)//content为空
-      {
-        this.$message({
-          message: '评论不能为空',
-          type: 'warning'
-        });
-        return;
-      }
-
+    PostComment() {
       var self = this;//
       var date = new Date();
       var year = date.getFullYear();
@@ -584,64 +402,31 @@ export default {
       //var second = date.getSeconds();
       var date_time = `${year}-${month}-${day} ${hour}:${minute}`;
 
-      request = {
-        video_id: this.$route.params.id,
-        content: this.$data.textarea,
-        created_at: date_time,
-      };
-      // { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time }}
-      axios.post('/videos/comment_video', { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time } }) //往后端传数据有问题
-        .then(response => {
-          console.log(request);
+      axios.post('videos/comment_video', { params: { video_id: this.$route.params.id, content: this.$data.textarea2, created_at: date_time } }) //往后端传数据有问题
+        .then(function (response) {
           console.log(response);
-          this.textarea = '';
+          // self.$data.video.comments.video_id = response.data.;//确定不是反过来吗???
+          // self.$data.video.comments.user_id=;
+          // self.$data.video.comments.content=;
+          // self.$data.video.comments.created_at;
         })
-        .catch(error => {
+        .catch(function (error) {
           console.log('Error: ' + error);
         });
-    },
-    popInput() { /*弹出评论框*/
-
-    },
-    deleteComment(comment_id) {
-      axios.post('/videos/delete_comment', { params: { comment_id } })
-        .then(response => {
-          console.log(reponse);
-        })
-        .catch(error => {
-          console.log('Error: ' + error);
-        });
-    },
-    Follow() {
-      this.$data.video.isFollowed = true;
-      this.$data.video.author_follower_amount++;
-    },
-    DisFollow() {
-      this.$data.video.isFollowed = false;
-      this.$data.video.author_follower_amount--;
     }
-
-    // submitComment() {
-    //   this.submittingComment = true;
-    //   // 发布评论逻辑
-    //   setTimeout(() => {
-    //     this.commentInput = "";
-    //     this.submittingComment = false;
-    //   }, 1000);
-    // },
   }
 }
 </script>
 
 <style>
-/* .video {
+.video {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
   min-height: 100vh;
   width: 80%;
   margin-right: 20px;
-} */
+}
 
 .info {
   display: flex;
@@ -667,14 +452,6 @@ export default {
   flex: 1;
 }
 
-.playvideo_title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .video_show {
   display: flex;
   flex-direction: column;
@@ -682,21 +459,17 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
-/* .player {
+.player {
+  /* display: flex; */
   display: flex;
-} */
-
-.video_player {
-  border: 1px solid gray;
-  display: inline-block;
+  justify-content: center;
 }
 
-.video_player video {
+.player video {
   display: flex;
-  width: 802px;
-  height: 400px;
-  padding-top: 20px;
-  padding-bottom: 15px;
+  width: 1300px;
+  height: 650px;
+  padding: 10px;
 }
 
 .video_func {
@@ -707,17 +480,26 @@ export default {
   display: flex;
   align-items: center;
   height: 100%;
+  /* height: 28px; */
+  /* line-height: 28px; */
+  /**/
   flex-direction: row;
   padding-left: 30px;
+  /* justify-content: space-between;
+  position: relative; */
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
 .video_func>span {
+  width: 92px;
+  margin-right: 8px;
   white-space: nowrap;
   position: relative;
   display: inline-flex;
   align-items: center;
+  /* flex: 1; */
+  fill: var(--text2);
 }
 
 .img_func {
@@ -762,18 +544,5 @@ export default {
 .comment-count {
   flex-direction: row;
   flex: 1;
-}
-
-/* .recommend_block {
-  border: 1px solid gray;
-  display: inline-block;
-} */
-
-.rec_video_title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 </style>

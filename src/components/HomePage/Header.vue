@@ -13,21 +13,31 @@
         <el-row type="flex">
           <el-input placeholder="请输入内容" v-model="input">
           </el-input>
-          <!--【下面这个button是用来点击搜索的，绑定方法为search_by_key需完善】-->
-          <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
+          <el-button type="primary" icon="el-icon-search" @click="search"></el-button>
         </el-row>
       </div>
 
       <!--导航栏菜单-->
       <div class="guide_menu">
         <el-row type="flex" justify="end">
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+          <el-menu :default-active="activeIndex1" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
 
-            <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-            <el-menu-item index="2"><router-link to="/person" class="no_underline">用户主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/creation" class="no_underline">创作中心</router-link></el-menu-item>
-            <el-menu-item index="4"><router-link to="/message" class="no_underline">消息</router-link></el-menu-item>
+            <el-menu-item index="1"><router-link to="/">Home</router-link></el-menu-item>
+            <el-submenu index="2">
+              <template slot="title">个人中心</template>
+              <el-menu-item index="2-1"><router-link to="/person">用户主页</router-link></el-menu-item>
+              <el-menu-item index="2-2">选项2</el-menu-item>
+              <el-menu-item index="2-3">选项3</el-menu-item>
+              <el-submenu index="2-4">
+                <template slot="title">选项4</template>
+                <el-menu-item index="2-4-1">选项1</el-menu-item>
+                <el-menu-item index="2-4-2">选项2</el-menu-item>
+                <el-menu-item index="2-4-3">选项3</el-menu-item>
+              </el-submenu>
+            </el-submenu>
+            <el-menu-item index="3"><router-link to="/">创作中心</router-link></el-menu-item>
+            <el-menu-item index="4"><router-link to="/">消息</router-link></el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -42,23 +52,23 @@
 </template>
 
 <script>
+//import HomeView from './views/HomeView.vue'
 export default {
-  name: 'Header',
   data() {
     return {
       activeIndex: "1",
-      activeIndex2: "1",
+      activeIndex2: "1"
+    };
+    return {
       input: ""
     };
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
-    },
-    search_by_key(key) {
-      console.log(key);
-    },
+    }
   },
+  components: { router }
 }
 </script>
 
@@ -66,6 +76,7 @@ export default {
 .header {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .head_guide {
@@ -112,4 +123,5 @@ export default {
 /* .partitions {
   display: flex;
 } */
+
 </style>
