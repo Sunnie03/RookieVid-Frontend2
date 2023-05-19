@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Register from '../views/register/RegisterView.vue'
 import Login from '../views/login/LoginView.vue'
+//import Header from '@/components/HomePage/Header'
+import HomeView from '@/views/HomePage/HomeView.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -9,7 +12,8 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HomePage/HomeView.vue')
+    // component: () => import(/* webpackChunkName: "about" */ '../views/HomePage/HomeView.vue')
+    component: HomeView
   },
   {
     path: '/creation',
@@ -26,16 +30,23 @@ const routes = [
     name: 'message',
     component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/MessageView.vue')
   },
-   /*其它页面*/
+   /*视频播放页面*/
   {
     path: '/video/:id',/*注意这里*/
     name: 'video',
     component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue')
   },
+  /*搜索页面*/
   {
     path:'/search',
     name:'search',
     component: () => import(/* webpackChunkName: "about" */ '../views/SearchView.vue')
+  },
+  /*用户的个人主页页面*/
+  {
+    path: '/user/:id',/*注意这里*/
+    name: 'user',
+    component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue')
   },
    /*分区的标签页面*/
    {
