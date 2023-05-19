@@ -14,7 +14,9 @@
           <el-input placeholder="请输入内容" v-model="input">
           </el-input>
           <!--【下面这个button是用来点击搜索的，绑定方法为search_by_key需完善】-->
-          <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
+          <router-link :to="{ path: '/search',  query:{'keyword':this.input}}">
+             <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
+          </router-link>
         </el-row>
       </div>
 
