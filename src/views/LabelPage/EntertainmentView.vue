@@ -3,36 +3,45 @@
     <div class="top-carousel">
       <el-carousel :interval="4000" type="card" height="400px">
         <el-carousel-item v-for="(video,index) in this.top_videos" :key="index">
-          <img class="top-img" :src="video.cover_url" style="height:100%">
+          <router-link :to="{name:'video',params:{'id':video.video_id}}">
+            <img class="top-img" :src="video.cover_url" style="height:100%">
+              <div class="top-overlay" >
+               <div class="top-title">{{ video.title }}</div>
+              </div>
+          </router-link>
+          
         </el-carousel-item>
 
       </el-carousel>
 
     </div>
-    <div class="recommend-container">
-      <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
-        <router-link :to="{name:'video',params:{'id':video.video_id}}">
-         <img class="recommend-img" :src="video.cover_url">
-        </router-link>
-        <div class="overlay">
-          <span class="play-info">
-            <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
-            {{video.view_amount }}</span>
-          <span class="like-info">
-            <img class="like-icon" src="../../assets/display/thumb-up.svg">
-            {{ video.like_amount }}
-          </span>
-        </div>
-        <router-link :to="{name:'video',params:{'id':video.video_id}}">
-          <div class="recommend-title">{{ video.title }}</div>
-        </router-link>
-        <div class="author">
-          <span class="author-tag">作者</span>
-          <span class="author-name">{{ video.user_name }}</span>
-          <span class="time">{{ video.created_at.split('T')[0] }}</span>
+    <div class="recommend-display">
+      <div class="recommend-container">
+        <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
+          <router-link :to="{name:'video',params:{'id':video.video_id}}">
+          <img class="recommend-img" :src="video.cover_url">
+          </router-link>
+          <div class="overlay">
+            <span class="play-info">
+              <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
+              {{video.view_amount }}</span>
+            <span class="like-info">
+              <img class="like-icon" src="../../assets/display/thumb-up.svg">
+              {{ video.like_amount }}
+            </span>
+          </div>
+          <router-link :to="{name:'video',params:{'id':video.video_id}}">
+            <div class="recommend-title">{{ video.title }}</div>
+          </router-link>
+          <div class="author">
+            <span class="author-tag">作者</span>
+            <span class="author-name">{{ video.user_name }}</span>
+            <span class="time">{{ video.created_at.split('T')[0] }}</span>
+          </div>
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -81,11 +90,13 @@ height:100%;
 width:100%;
 margin-top:5%;
 }
+
+
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
   opacity: 0.75;
-  line-height: 200px;
+  line-height: 100px;
   margin: 0;
 }
 
@@ -96,12 +107,17 @@ margin-top:5%;
 .el-carousel__item:nth-child(2n+1) {
   background-color: #d3dce6;
 }
+.recommend-display{
+  margin-top:50px;
+  float: flex;
+  padding: 10px;
+}
 .recommend-container {
-
-display: grid;
-grid-template-columns: repeat(5, 1fr);
-grid-gap: 50px;
-justify-items: center;
+  width:70%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 50px;
+  justify-items: center;
 }
 .recommend-item {
   width: 100%;
@@ -126,6 +142,40 @@ background-color:rgba(255, 255, 255,0.5);
 display: flex;
 justify-content: space-between;
 /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+}
+.top-overlay{
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 10%;
+background-color:rgba(255, 255, 255,0.5); 
+display: flex;
+justify-content: space-between;
+  
+}
+.top-title{
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  box-sizing: border-box;
+  word-break:break-all;
+  text-overflow:ellipsis;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:1;
+  overflow:hidden;
 }
 
 .play-info, .like-info {

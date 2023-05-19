@@ -11,6 +11,7 @@ const routes = [
     name: 'home',
     component: () => import(/* webpackChunkName: "about" */ '../views/HomePage/HomeView.vue')
   },
+ 
   {
     path: '/creation',
     name: 'creation',
@@ -87,6 +88,11 @@ const routes = [
     path:'/study',
     name:'study',
     component: () => import(/* webpackChunkName: "about" */ '../views/LabelPage/StudyView.vue')
+  },
+  {
+    path: '/search_result',/*注意这里*/
+    name: 'search_result',
+    component: () => import(/* webpackChunkName: "about" */ '../views/SearchResult.vue')
   },
   /*Y 0517 第一次合并*/
   {

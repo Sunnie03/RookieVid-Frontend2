@@ -1,39 +1,31 @@
 <template>
   <div class="home">
-
+    <div class="partition">
+    <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+      background-color="#ceeef9" text-color="#000000" active-text-color="#ffd04b">
+      <el-row type="flex" justify="center">
+        <el-menu-item index="1"><router-link to="/home">首页</router-link></el-menu-item>
+        <el-menu-item index="2"><router-link to="/entertainment">娱乐</router-link></el-menu-item>
+        <el-menu-item index="3"><router-link to="/film">影视</router-link></el-menu-item>
+        <el-menu-item index="4"> <router-link to="/game">游戏</router-link> </el-menu-item>
+        <el-menu-item index="5"><router-link to="/sports">运动</router-link> </el-menu-item>
+        <el-menu-item index="6"><router-link to="/food">美食</router-link> </el-menu-item>
+        <el-menu-item index="7"><router-link to="/technology">科技</router-link> </el-menu-item>
+        <el-menu-item index="8"><router-link to="/military">军事</router-link> </el-menu-item>
+        <el-menu-item index="9"><router-link to="/music">音乐</router-link> </el-menu-item>
+        <el-menu-item index="10"><router-link to="/study">学习</router-link> </el-menu-item>
+      </el-row>
+    </el-menu>
+  </div>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <!-- <h1>This is home</h1> -->
 
     <!--header：logo+导航栏-->
     <!-- <Header: :headerMode="headMode" /> -->
-    <div class="partition">
-      <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-        background-color="#ceeef9" text-color="#000000" active-text-color="#ffd04b">
-        <el-row type="flex" justify="center">
-          <el-menu-item index="1">首页</el-menu-item>
-          <el-menu-item index="2">娱乐</el-menu-item>
-          <el-menu-item index="3">生活</el-menu-item>
-          <el-menu-item index="4"> <router-link :to="{name:'video',params:{'id':'BV123123'}}">学习</router-link> </el-menu-item>
-          <el-menu-item index="5"><router-link to="/video">游戏</router-link> </el-menu-item>
-          <el-menu-item index="6"><router-link to="/person">运动</router-link> </el-menu-item>
-          <el-menu-item index="7"><router-link to="/person">美食</router-link> </el-menu-item>
-          <el-menu-item index="8"><el-link :to="{path:'/person'}">音乐</el-link> </el-menu-item>
-          <el-menu-item index="9"><router-link to="/person">影视</router-link> </el-menu-item>
-          <el-menu-item index="10"><router-link to="/person">科技</router-link> </el-menu-item>
-          <el-button class="part" round><router-link to="/person">主要按钮</router-link></el-button>
-        </el-row>
-      </el-menu>
-    </div>
-    <v-btn
-      depressed
-      color="primary"
-    >
-    PPPP
-    </v-btn>
+    
     <div class="container">
     <div class="carousel-container" >
-      <!-- <div>titles</div> -->
-      <!-- <div v-for="(title,index) in this.titles" :key="index">{{ title }}</div> -->
+     
       <div class="carousel-wrapper">
         <div class="carousel-images">
           <div class="carousel-image" 
@@ -50,6 +42,9 @@
         </div>
       </div>
     </div>
+    <!-- <router-link :to="'search'">
+      <el-button>test</el-button>
+    </router-link> -->
     <div class="recommend">
       <div class="menu">娱乐
         <router-link :to="'/entertainment'" v-slot="{ navigate }" custom>
@@ -324,9 +319,7 @@ export default{
         (this.currentIndex + this.images.length + offset) % this.images.length
       );
     },
-    video_play(video_id){
-    
-    },
+
     getData(text){
       Promise.all([
         axios.get('/videos/get_video_by_hotness'),
