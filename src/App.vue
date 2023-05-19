@@ -2,6 +2,9 @@
   <v-app>
       <router-view />
   </v-app>
+  <!-- <div id="app">
+    <router-view/>
+  </div> -->
 </template>
 
 <script>
@@ -16,6 +19,11 @@ export default {
 </script>
 
 <style>
+.my-app {
+  font-family: sans-serif;
+  background-color: white;
+}
+
 .app {
   display: flex;
   flex-direction: column;
