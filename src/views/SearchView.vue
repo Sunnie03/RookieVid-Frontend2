@@ -19,9 +19,7 @@
 
 <script>
 import axios from 'axios'
-import Search from "@/components/SearchHeader.vue"
   export default {
-    components:Search,
     data(){
       return{
         input:"",
