@@ -15,30 +15,36 @@
                 <!-- </router-link> -->
             <!-- </el-row> -->
         </div>
-        <div class="search-container">
-          <div v-for="(video,index) in this.search_videos" :key="index" class="recommend-item">
-            <router-link :to="{name:'video',params:{'id':video.video_id}}">
-            <img class="recommend-img" :src="video.cover_url">
-            </router-link>
-            <div class="overlay">
-              <span class="play-info">
-                <img class="play-icon" src="../assets/display/play_circle_outline.svg">
-                {{video.view_amount }}</span>
-              <span class="like-info">
-                <img class="like-icon" src="../assets/display/thumb-up.svg">
-                {{ video.like_amount }}
-              </span>
+        <div class="navigation">
+           <ul class="nav-list">
+             <li class="nav-item">视频</li>
+             <li class="nav-item">用户</li>
+          </ul>
+        </div>
+            <div class="search-container">
+              <div v-for="(video,index) in this.search_videos" :key="index" class="recommend-item">
+                <router-link :to="{name:'video',params:{'id':video.video_id}}">
+                <img class="recommend-img" :src="video.cover_url">
+                </router-link>
+                <div class="overlay">
+                  <span class="play-info">
+                    <img class="play-icon" src="../assets/display/play_circle_outline.svg">
+                    {{video.view_amount }}</span>
+                  <span class="like-info">
+                    <img class="like-icon" src="../assets/display/thumb-up.svg">
+                    {{ video.like_amount }}
+                  </span>
+                </div>
+                <router-link :to="{name:'video',params:{'id':video.video_id}}">
+                  <div class="recommend-title">{{ video.title }}</div>
+                </router-link>
+                <div class="author">
+                  <span class="author-tag">作者</span>
+                  <span class="author-name">{{ video.user_name }}</span>
+                  <span class="time">{{ video.created_at.split('T')[0] }}</span>
+                </div>
+              </div>
             </div>
-            <router-link :to="{name:'video',params:{'id':video.video_id}}">
-              <div class="recommend-title">{{ video.title }}</div>
-            </router-link>
-            <div class="author">
-              <span class="author-tag">作者</span>
-              <span class="author-name">{{ video.user_name }}</span>
-              <span class="time">{{ video.created_at.split('T')[0] }}</span>
-            </div>
-      </div>
-     </div>
     </div>
 </template>
 
@@ -90,7 +96,7 @@ import axios from 'axios'
         },
         getData(text){
         console.log(text);
-        axios.get('videos/search_video',{params:{keyword:text}})
+        axios.get('videos/search',{params:{keyword:text}})
         .then((response)=>{
             console.log(text);
           console.log(response.data);
@@ -111,6 +117,7 @@ import axios from 'axios'
 </script>
 
 <style>
+
 .search-container {
   margin:50px;
   margin-top:50px;
@@ -120,6 +127,28 @@ import axios from 'axios'
   /* grid-template-columns: repeat(auto-fill, minmax(20%, 1fr)); */
   grid-gap: 50px;
   justify-items: center;
+}
+.navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+}
+
+.nav-item {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background-color: #ccc;
 }
 .recommend-item {
   width: 100%;
