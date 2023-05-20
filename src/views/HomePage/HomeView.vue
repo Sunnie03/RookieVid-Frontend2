@@ -57,15 +57,15 @@
     </router-link> -->
     <div class="recommend">
       <div class="menu">娱乐
-        <router-link :to="'/entertainment'" v-slot="{ navigate }" custom>
-          <el-button @click="navigate" size="small" style="align-self:flex-end;">查看全部  ></el-button>
-        </router-link>
+        <!-- <router-link :to="'/entertainment'" v-slot="{ navigate }" custom> -->
+          <el-button @click="goPartition('entertainment')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+        <!-- </router-link> -->
       </div>
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition1" :key="index" class="recommend-item">
-          <router-link :to="{name:'video',params:{'id':video.video_id}}">
-           <img class="recommend-img" :src="video.cover_url">
-          </router-link>
+          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+          <!-- </router-link> -->
           <div class="overlay">
             <span class="play-info">
               <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -75,9 +75,9 @@
               {{ video.like_amount }}
             </span>
           </div>
-          <router-link :to="{name:'video',params:{'id':video.video_id}}">
-            <div class="recommend-title">{{ video.title }}</div>
-          </router-link>
+          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+            <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+          <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
             <span class="author-name">{{ video.user_name }}</span>
@@ -334,12 +334,21 @@ export default {
     }, 3000);
   },
   methods: {
+
     getImageIndex(offset) {
       return (
         (this.currentIndex + this.images.length + offset) % this.images.length
       );
     },
-
+    goPartition(partition){
+        const partition_url='/'+partition;
+        console.log(partition_url);
+        window.open(partition_url,'_blank');
+    },
+    videoPlay(id){
+        const video_play_url='/video/'+id;
+        window.open(video_play_url,'_blank');
+      },
     getData(text){
       Promise.all([
         axios.get('/videos/get_video_by_hotness'),

@@ -13,6 +13,7 @@
           drag 
           :on-change="onUploadVideo"
           accept=".mp4"
+          :limit="1"
           >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -94,7 +95,7 @@
 import Header from '@/components/HomePage/Header.vue'
 import axios from 'axios'
 export default {
-  name: 'HomeView',//当前引入页面
+  name: 'CreationView',//当前引入页面
   components: {
     Header,
   },
@@ -195,7 +196,7 @@ export default {
 .upload-form{
   width: 700px;
   margin: 50px auto;
-  background-color: rgba(198, 231, 244, 0.95);
+  background-color: rgba(198, 231, 244, 0.5);
   padding: 30px;
   border-radius: 10px;
   opacity: 0.7;
