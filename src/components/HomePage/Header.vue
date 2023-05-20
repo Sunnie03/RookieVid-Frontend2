@@ -14,8 +14,8 @@
           <el-input placeholder="请输入内容" v-model="input">
           </el-input>
           <!--【下面这个button是用来点击搜索的，绑定方法为search_by_key需完善】-->
-          <router-link :to="{ path: '/search',  query:{'keyword':this.input}}">
-             <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
+          <router-link :to="{ path: '/search', query: { 'keyword': this.input } }">
+            <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
           </router-link>
         </el-row>
       </div>
@@ -27,9 +27,12 @@
             active-text-color="#89d1e8">
 
             <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-            <el-menu-item index="2"><router-link to="/person" class="no_underline" target="_blank">用户主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/creation" class="no_underline" target="_blank">创作中心</router-link></el-menu-item>
-            <el-menu-item index="4"><router-link to="/message" class="no_underline" target="_blank">消息</router-link></el-menu-item>
+            <el-menu-item index="2"><router-link to="/person" class="no_underline"
+                target="_blank">用户主页</router-link></el-menu-item>
+            <el-menu-item index="3"><router-link to="/creation" class="no_underline"
+                target="_blank">创作中心</router-link></el-menu-item>
+            <el-menu-item index="4"><router-link to="/message" class="no_underline"
+                target="_blank">消息</router-link></el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -112,5 +115,4 @@ export default {
 
 /* .partitions {
   display: flex;
-} */
-</style>
+} */</style>

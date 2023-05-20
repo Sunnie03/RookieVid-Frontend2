@@ -79,7 +79,7 @@
                       <p class="d-flex align-center my-auto">{{ video.star_amount }}</p>
                     </span>
 
-                  
+
 
                     <!--投诉-->
                     <span title="投诉" class="complaint" @click="Complain()" style="margin-right:30px">
@@ -139,7 +139,7 @@
                   <v-btn color="primary" @click="postComment">发布</v-btn> -->
 
                   <!-- <el-input class="comment-input" v-model="comment" placeholder="写下你的评论..."></el-input> -->
-                  <el-input type="textarea_comment" :rows="2" placeholder="请输入内容" v-model="textarea"
+                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
                     suffix-icon="el-icon-s-promotion">
                   </el-input>
                   <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
@@ -149,8 +149,9 @@
               <v-divider /><!--为了调整样式，之后可以删-->
 
               <!--评论样式-->
-              <v-card flat class="mb-3" @mouseenter="showDelete = true" @mouseleave="showDelete = false"
-                v-for="(comment_item, index) in this.comments" :key="index">
+
+              <v-card v-if="video.comment_cnt_id > 0" flat class="mb-3" @mouseenter="showDelete = true"
+                @mouseleave="showDelete = false" v-for="(comment_item, index) in this.comments" :key="index">
                 <v-row>
                   <v-col cols="12" md="1">
                     <v-avatar>
@@ -175,7 +176,7 @@
                         {{ comment_item.created_at }}
                       </scan>
                       <scan style="margin-right: 40px;">
-                        <el-button type="text" @click="popInput">回复</el-button>
+                        <el-button type="text" @click="PostReply(comment_item.id)">回复</el-button>
                       </scan>
                       <pan v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
                           cancel-button-text='不用了'><el-button slot="reference" type="text"
@@ -293,7 +294,7 @@
                   推荐视频列表
                 </div>
 
-                <vard v-for="(recommend_item, index) in this.videos_recommend" :key="index">
+                <v-card v-for="(recommend_item, index) in this.videos_recommend" :key="index">
                   <div class="recommend_block" style="padding-top: 20px;padding-bottom: 10px;">
                     <v-row>
                       <v-col cols="12" md="6">
@@ -325,7 +326,7 @@
                       </v-col>
                     </v-row>
                   </div>
-                </vard>
+                </v-card>
 
               </v-card>
             </div>
@@ -341,6 +342,7 @@
 
 <script>
 import axios from 'axios';
+//import { request } from 'http';
 //import { response } from 'express';
 //import { response } from 'express';
 //import { request } from 'http';
@@ -386,6 +388,7 @@ export default {
         description: '',
         label: '',
         comment_amount: '',
+        comment_cnt_id: '',
       },
       /*以下为评论呈现相关的遍历数组*/
       comments: [""],
@@ -474,8 +477,9 @@ export default {
           this.video.view_amount = response.data.video.view_amount;
           this.video.create_time = response.data.video.created_at;
           this.video.comment_amount = response.data.video.comment_amount;
+          this.video.comment_cnt_id = response.data.video.comment.legth;
 
-          this.$data.video.url = response.data.video.video_url;
+          this.video.url = response.data.video.video_url;
           this.video.like_amount = response.data.video.like_amount;
           //this.video.liked=response.data.liked;
           this.video.star_amount = response.data.video.fav_amount;
@@ -483,11 +487,16 @@ export default {
 
           this.video.description = response.data.video.description;
           this.video.label = response.data.video.label;
-
+          //console.log("xxx" + this.video.url)
           /*遍历获取所有一级评论*/
-          response.data.comment.forEach((comment, index) => {
-            this.comments[index] = comment;
-          })
+
+          //console.log(this.video.comment_cnt_id);
+          //console.log(response.data.comment.length);
+          if (response.data.comment.length > 0) {
+            response.data.comment.forEach((comment, index) => {
+              this.comments[index] = comment;
+            })
+          }
         })
         .catch(error => {
           console.log(error);
@@ -603,6 +612,9 @@ export default {
       /*标记投诉状态？？*/
     },
     PostComment() { //这个是发布评论的接口
+      /*判断当前是否登录*/
+
+      /*判断评论输入框内容是否为空*/
       if (!this.textarea_comment)//content为空
       {
         this.$message({
@@ -612,30 +624,22 @@ export default {
         return;
       }
 
-      var self = this;//
-      var date = new Date();
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1; // 月份从 0 开始计算
-      var day = date.getDate();
-      var hour = date.getHours();
-      var minute = date.getMinutes();
-      //var second = date.getSeconds();
-      var date_time = `${year}-${month}-${day} ${hour}:${minute}`;
-
-      request = {
+      var request = {
         video_id: this.$route.params.id,
-        content: this.$data.textarea,
-        created_at: date_time,
+        content: this.textarea_comment,
       };
-      // { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time }}
-      axios.post('/videos/comment_video', { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time } }) //往后端传数据有问题
+      axios.post('/videos/comment_video', { params: request }) //往后端传数据有问题
         .then(response => {
           console.log(request);
           console.log(response);
-          this.textarea = '';
+          this.textarea_comment = ''; /*清空评论输入框*/
         })
         .catch(error => {
           console.log('Error: ' + error);
+          this.$message({
+            message: '发生错误，评论失败',
+            type: 'info'
+          });
         });
     },
     popInput() { /*弹出评论框*/
@@ -643,6 +647,8 @@ export default {
     },//可以删
     /*删除评论*/
     deleteComment(comment_id) {
+      /*判断是否登录*/
+      /*判断是否有删除权限*/
       axios.post('/videos/delete_comment', { params: { comment_id: 1 } })/*需把1改了*/
         .then(response => {
           console.log(reponse);
@@ -651,8 +657,8 @@ export default {
           console.log('Error: ' + error);
         });
     },
-    /*回复评论*/
-    PostReply() {
+    /*回复一级评论*/
+    PostReply(comment_id) {
       if (!this.textarea_comment)//content为空
       {
         this.$message({
@@ -662,29 +668,23 @@ export default {
         return;
       }
 
-      var self = this;//
-      var date = new Date();
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1; // 月份从 0 开始计算
-      var day = date.getDate();
-      var hour = date.getHours();
-      var minute = date.getMinutes();
-      //var second = date.getSeconds();
-      var date_time = `${year}-${month}-${day} ${hour}:${minute}`;
-
-      request = {
+      var request = {
+        comment_id:comment_id, /*所回复的一级评论的id；到底要不要独立有待商榷*/
+        content: this.$data.textarea_comment,
         video_id: this.$route.params.id,
-        content: this.$data.textarea,
-        created_at: date_time,
       };
-      axios.post('/videos/reply_comment', { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time } }) //往后端传数据有问题
+      axios.post('/videos/reply_comment', { params:request}) //往后端传数据有问题
         .then(response => {
           console.log(request);
           console.log(response);
-          this.textarea = '';
+          this.textarea_comment = '';
         })
         .catch(error => {
           console.log('Error: ' + error);
+          this.$message({
+            message: '发生错误，评论失败',
+            type: 'info'
+          });
         });
     },
     /*删除回复*/
