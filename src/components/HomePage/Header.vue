@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-
+    <!-- <v-app-bar> -->
     <!--主页最上方导航栏 链接-->
     <div class="head_guide">
       <!--logo图标-->
@@ -16,7 +16,7 @@
           <!--【下面这个button是用来点击搜索的，绑定方法为search_by_key需完善】-->
 
           <!-- <router-link :to="{ path: '/search',  query:{'keyword':this.input}}" target="_blank"> -->
-             <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
+          <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
           <!-- </router-link> -->
 
         </el-row>
@@ -45,6 +45,7 @@
       </div>
 
     </div>
+    <!-- </v-app-bar> -->
   </div>
 </template>
 
@@ -65,28 +66,28 @@ export default {
       // console.log(this.input);
       // console.log(key);
       // console.log(this.input);
-      if(this.input===""){
+      if (this.input === "") {
         console.log('输入内容不能为空');
         this.$message.error('输入内容不能为空');
         return false;
       }
-          const currentPath = this.$route.path;
-          const currentKeyword = this.$route.query.keyword;
+      const currentPath = this.$route.path;
+      const currentKeyword = this.$route.query.keyword;
 
-          const targetPath = '/search';
-          const targetKeyword = this.input;
+      const targetPath = '/search';
+      const targetKeyword = this.input;
 
-            // 判断当前路由是否已经是目标路由
-          if (currentPath === targetPath && currentKeyword === targetKeyword) {
-              return; // 避免重复导航
-           }
-          // this.$router.push({ path: '/search', query: { keyword: this.input } })
-          const key=this.input;
-          this.input=""
-          // console.log('key:'+key)
-          const url='/search?keyword='+key
-          console.log(url);
-          window.open(url,'_blank')
+      // 判断当前路由是否已经是目标路由
+      if (currentPath === targetPath && currentKeyword === targetKeyword) {
+        return; // 避免重复导航
+      }
+      // this.$router.push({ path: '/search', query: { keyword: this.input } })
+      const key = this.input;
+      this.input = ""
+      // console.log('key:'+key)
+      const url = '/search?keyword=' + key
+      console.log(url);
+      window.open(url, '_blank')
 
     },
     open_login(){
@@ -153,14 +154,16 @@ export default {
   flex-direction: row;
   /* flex: 2; */
 }
-.search-input{
-  background-color:white;
-  width:80%;
+
+.search-input {
+  background-color: white;
+  width: 80%;
   border-radius: 5px;
   /* text-align: left; */
-  padding-left:3%;
+  padding-left: 3%;
   /* height:100%; */
 }
+
 .userPhoto {
   justify-content: center;
   align-items: center;
@@ -170,4 +173,5 @@ export default {
 
 /* .partitions {
   display: flex;
-} */</style>
+} */
+</style>

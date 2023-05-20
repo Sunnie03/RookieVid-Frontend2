@@ -1,5 +1,6 @@
 <template>
   <div class="video" title="视频播放页面">
+      <Header />
     <el-container>
       <div :style="{ 'width': '80vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
         <v-row>
@@ -348,11 +349,16 @@ import axios from 'axios';
 //import { request } from 'http';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import Header from '@/components/HomePage/Header.vue'
 
 // import SvgIcon from '@jamescoyle/vue-icon';
 // import { mdiAccount } from '@mdi/js';
 //import { allowedGetters } from 'video.js/dist/types/tech/middleware';
 export default {
+  name: 'VideoView',//当前引入页面
+  components: {
+    Header,
+  },
   data() {
     return {
       textarea_comment: '',
@@ -669,11 +675,11 @@ export default {
       }
 
       var request = {
-        comment_id:comment_id, /*所回复的一级评论的id；到底要不要独立有待商榷*/
+        comment_id: comment_id, /*所回复的一级评论的id；到底要不要独立有待商榷*/
         content: this.$data.textarea_comment,
         video_id: this.$route.params.id,
       };
-      axios.post('/videos/reply_comment', { params:request}) //往后端传数据有问题
+      axios.post('/videos/reply_comment', { params: request }) //往后端传数据有问题
         .then(response => {
           console.log(request);
           console.log(response);
