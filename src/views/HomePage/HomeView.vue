@@ -432,7 +432,7 @@ export default {
       },
     getData(text){
       Promise.all([
-        axios.get('/videos/get_video_by_hotness'),
+        axios.get('/videos/get_video_by_hotness',{params:{num:10}}),
         axios.get('/videos/get_video_by_label',{params:{label:text,num:5}})
       ])
       .then(([response1,response2])=>{
@@ -440,15 +440,19 @@ export default {
         // console.log(response2.data);
         if (Array.isArray(response1.data.video)) {
           response1.data.video.forEach((video, index) => {
+            if(index<6){ 
+              this.$set(this.hot_videos,index,video)
+               console.log('hot'+this.hot_videos[index]);
+            }
             // this.images[index] = video.cover_url;
             // this.titles[index] = video.title;
             // console.log(this.images[index]);
             // this.videos[index] = video.video_url;
             // this.hot_videos[index]=video;
-            this.$set(this.hot_videos,index,video)
-            // console.log('hot'+this.hot_videos[index]);
-            if(index<4){
-              this.$set(this.top_videos,index,video);
+           
+            else {
+              this.$set(this.top_videos,index-6,video);
+
             }
             
           });
