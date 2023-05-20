@@ -22,11 +22,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/CreationView.vue')
   },
   {
-    path: '/person',
-    name: 'person',
-    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/PersonView.vue')
-  },
-  {
     path: '/message',
     name: 'message',
     component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/MessageView.vue')
@@ -128,7 +123,40 @@ const routes = [
     name: 'check',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/CheckView.vue')
   },
+  /* Person页面 */
 
+  {
+    path: '/person',
+    name: 'person',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/PersonView.vue')
+  },
+  {
+    path: '/myVideo',
+    name: 'myVideo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myVideoView.vue')
+  },
+  {
+    path: '/myChange',
+    name: 'myChange',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myChangeView.vue')
+  },
+  {
+    path: '/collect',
+    name: 'collect',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collectView.vue')
+  },
 ]
 
 const router = new VueRouter({
