@@ -8,13 +8,13 @@
 
     <div class="top-carousel">
       <el-carousel :interval="4000" type="card" height="400px">
-        <el-carousel-item v-for="(video,index) in this.top_videos" :key="index">
-          <router-link :to="{name:'video',params:{'id':video.video_id}}">
-            <img class="top-img" :src="video.cover_url" style="height:100%">
-              <div class="top-overlay" >
+        <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
+          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+            <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.video_id)">
+              <div class="top-overlay" @click="videoPlay(video.video_id)">
                <div class="top-title">{{ video.title }}</div>
               </div>
-          </router-link>
+          <!-- </router-link> -->
           
         </el-carousel-item>
 
@@ -24,9 +24,9 @@
     <div class="recommend-display">
       <div class="recommend-container">
         <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
-          <router-link :to="{name:'video',params:{'id':video.video_id}}">
-          <img class="recommend-img" :src="video.cover_url">
-          </router-link>
+          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+          <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+          <!-- </router-link> -->
           <div class="overlay">
             <span class="play-info">
               <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -36,9 +36,9 @@
               {{ video.like_amount }}
             </span>
           </div>
-          <router-link :to="{name:'video',params:{'id':video.video_id}}">
-            <div class="recommend-title">{{ video.title }}</div>
-          </router-link>
+          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+            <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }} </div>
+          <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
             <span class="author-name">{{ video.user_name }}</span>
@@ -72,6 +72,10 @@ export default {
       this.getData('娱乐',5);
   },
   methods:{
+      videoPlay(id){
+        const video_play_url='/video/'+id
+        window.open(video_play_url,'_blank');
+      },
       getData(text,id){
           axios.get('/videos/get_video_by_label',{params:{label:text,num:id}})
           .then((response)=>{
