@@ -54,12 +54,14 @@
 <script>
 import Header from '@/components/HomePage/Header.vue'
 import Partition from '@/components/HomePage/Partition.vue'
+import Partitionvideo from '@/components/HomePage/PartitionVideoShow.vue'
 import axios from 'axios'
 export default {
   name: 'EntertainmentView',//当前引入页面
   components: {
     Header,
     Partition,
+    Partitionvideo
   },
   data(){
       return {
@@ -83,6 +85,7 @@ export default {
               if(id===-1){ response.data.video.forEach((video,index) => {
                   // this.videos[index]=video;
                   this.$set(this.videos,index,video)
+                  console.log(this.videos[index]);
               });}
               else {
                 response.data.video.forEach((video,index) => {
@@ -105,7 +108,7 @@ export default {
 .recreation{
 height:100%;
 width:100%;
-margin-top:5%;
+/* margin-top:5%; */
 }
 
 
@@ -155,34 +158,39 @@ bottom: 40%;
 left: 0;
 width: 100%;
 height: 10%;
-background-color:rgba(255, 255, 255,0.5); 
+/* background-color:rgba(255, 255, 255,0.5);  */
 display: flex;
 justify-content: space-between;
-/* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+}
+.top-img{
+  height:100%;
+  width:100%;
 }
 .top-overlay{
 position: absolute;
 bottom: 0;
 left: 0;
 width: 100%;
-height: 10%;
-background-color:rgba(255, 255, 255,0.5); 
+height: 30%;
+/* background-color:rgba(255, 255, 255,0.5);  */
+background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
 display: flex;
 justify-content: space-between;
   
 }
 .top-title{
   position: relative;
-  bottom: 0;
+  bottom: -60%;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 30%;
   /* background-color: rgba(0, 0, 0, 0.5); */
-  color: black;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   padding: 10px;
   box-sizing: border-box;
@@ -198,7 +206,7 @@ justify-content: space-between;
 .play-info, .like-info {
 display: flex;
 align-items: center;
-color: rgb(78, 77, 77);
+color: white;
 font-weight:bold;
 margin-left: 8px;
 margin-right:8px;
