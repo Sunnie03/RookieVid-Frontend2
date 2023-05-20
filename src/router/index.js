@@ -34,7 +34,7 @@ const routes = [
    /*视频播放页面*/
   {
     path: '/video/:id',/*注意这里*/
-    name: 'video',
+    name: 'video/:id',
     component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue')
   },
   /*搜索页面*/
@@ -115,7 +115,19 @@ const routes = [
     path: '/login', 
     name: 'login',
     component: Login
-  }
+  },
+  /*管理端页面*/
+  /*投诉列表*/
+  {
+    path: '/admin/complain', 
+    name: 'complainList',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/ComplainView.vue')
+  },
+  {
+    path: '/admin/check', 
+    name: 'check',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/CheckView.vue')
+  },
 
 ]
 

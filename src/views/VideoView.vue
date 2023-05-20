@@ -72,14 +72,17 @@
 
                     <span class="star" style="margin-right:30px">
                       <!-- 获取是否收藏，并在点击时切换状态和更新数量 -->
-                      <v-btn icon :color="video.stared ? 'blue' : undefined" @click="StarHandle" size="large"
+                      <v-btn icon :color="video.stared ? 'blue' : undefined" @click="OpenStarWindow()" size="large"
                         style="width: 50px;height: 50px;">
                         <v-icon style="font-size: 30px;">{{ video.stared ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
                       </v-btn>
                       <p class="d-flex align-center my-auto">{{ video.star_amount }}</p>
                     </span>
 
-                    <span title="投诉" class="complaint" @click="Complain" style="margin-right:30px">
+                  
+
+                    <!--投诉-->
+                    <span title="投诉" class="complaint" @click="Complain()" style="margin-right:30px">
                       <v-btn icon size="large" style="width: 50px;height: 50px;">
                         <v-icon>mdi-alert-outline</v-icon>
                       </v-btn>
@@ -136,10 +139,10 @@
                   <v-btn color="primary" @click="postComment">发布</v-btn> -->
 
                   <!-- <el-input class="comment-input" v-model="comment" placeholder="写下你的评论..."></el-input> -->
-                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"
+                  <el-input type="textarea_comment" :rows="2" placeholder="请输入内容" v-model="textarea"
                     suffix-icon="el-icon-s-promotion">
                   </el-input>
-                  <el-button class="comment-btn" type="primary" @click="PostComment">发布</el-button>
+                  <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
                 </v-col>
               </v-row>
 
@@ -339,6 +342,7 @@
 <script>
 import axios from 'axios';
 //import { response } from 'express';
+//import { response } from 'express';
 //import { request } from 'http';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
@@ -349,7 +353,7 @@ import 'video.js/dist/video-js.css';
 export default {
   data() {
     return {
-      textarea: '',
+      textarea_comment: '',
       showDelete: false,
       form: {
         name: '',
@@ -384,36 +388,33 @@ export default {
         comment_amount: '',
       },
       /*以下为评论呈现相关的遍历数组*/
-      // c_user_name: [""],
-      // c_user_image_url: [""],
-      // c_user_r_time: [""],
-      // c_content: [""],
-      // c_reply_amount: [""],
-      // c_reply: [""],
       comments: [""],
       videos_recommend: [""],
-
       /*遍历数组到此结束*/
 
-      // comment: {
-      //   user_id: '',
-      //   user_name: '',
-      //   user_image_url: '',
-      //   video_id: '',
-      //   content: '',
-      //   created_at: '',
-      //   reply_amount: '',
-      //   reply: {
-      //     id: '',
-      //     user_id: '',
-      //     video_id: '',
-      //     user_name: '',
-      //     user_image_url: '',
-      //     comment_id: '',
-      //     content: '',
-      //     created_at: '',
-      //   }
-      // },
+      /*收藏相关量*/
+      StarWindowVisable: false,
+      NewStarV: true,
+      starbox: [""],
+      starTitle: '',
+
+      gridData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
     }
   },
   created() {
@@ -449,10 +450,12 @@ export default {
       console.log(this.$route.params.id)
     },
     fetchVideoData() {
-      axios.get('/videos/view_video', { params: { video_id: 1 } }) //之后把这个换成参数
-        // axios.get('videos/view_video', { params: { video_id: this.$route.params.id } })
+      /*获取视频详情页相关数据（在刷新时加载一次）*/
+      // axios.get('/videos/view_video', { params: { video_id: 1 } }) //之后把这个换成参数
+      axios.get('/videos/view_video', { params: { video_id: this.$route.params.id } })
         .then(response => {
           console.log(response);
+          console.log(this.$route.params.id)
           // if(response.errno == 0) {
           //   alert(response.data.msg);
           // }else {
@@ -481,8 +484,6 @@ export default {
           this.video.description = response.data.video.description;
           this.video.label = response.data.video.label;
 
-          /*关于评论comment的值*/
-          /*需要在这里把每个评论的二级评论的值引出来吗*/
           /*遍历获取所有一级评论*/
           response.data.comment.forEach((comment, index) => {
             this.comments[index] = comment;
@@ -492,8 +493,8 @@ export default {
           console.log(error);
         })
 
-      /*获取推荐视频*/
-      axios.get('/videos/get_related_video', { params: { video_id: 1, num: 8 } })
+      /*获取推荐视频列表*/
+      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 15 } })
         .then(response => {
           console.log(response);
           response.data.video.forEach((video, index) => {
@@ -504,24 +505,59 @@ export default {
           console.log(error);
         })
     },
-    likeHandle() {
-      if (this.$data.video.liked) {
-        this.$data.video.liked = false;
-        this.$data.video.like_amount -= 1;
-      }
-      else {
-        this.$data.video.liked = true;
-        this.$data.video.like_amount += 1;
-      }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
-
+    likeHandle() { /*处理用户是否已点赞该视频*/
       var self = this;//
-      axios.post('videos/like_video', { params: { video_id: this.$route.params.id } }) //往后端传数据有问题
+      axios.post('/videos/like_video', { params: { video_id: this.$route.params.id } }) //往后端传数据有问题
         .then(function (response) {
           console.log(response);
+
+          if (response.data.errno == 1016) /*用户未登录*/ {
+            self.$message.warning("请先登录！");
+            self.$router.push('/login');
+            return;
+          }
+
+          /*如果是实时更新（async？），就不需要这一段；如果是手动刷新才更新，就需要以下这段*/
+          if (self.$data.video.liked) {
+            self.$data.video.liked = false;
+            self.$data.video.like_amount -= 1;
+          }
+          else {
+            self.$data.video.liked = true;
+            self.$data.video.like_amount += 1;
+          }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
         })
         .catch(function (error) {
           console.log('Error: ' + error);
         });
+    },
+    /*点击收藏键，打开收藏夹*/
+    OpenStarWindow() {
+      StarWindowVisable = true;
+      axios.get('/videos/get_favorite')
+        .then(reponse => {
+          console.log(response);
+          /*下面这个待完善，获取所有收藏夹的名字和该视频在收藏夹中的情况*/
+          response.data.favorite_id.forEach((favorite_id, index) => {
+            this.starbox[index] = favorite_id;
+
+          }).catch(error => {
+            console.log(error);
+          })
+        })
+    },
+    /*创建新的收藏夹*/
+    CreateStar() {
+      axios.get('/videos/create_favorite', { params: { title: this.$data.starTitle } })
+        .then(reponse => {
+          console.log(response);
+          /*Q??【需要立刻显示，这个该怎么实现】*/
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      NewStarV = true;
+      starTitle = '';
     },
     StarHandle() { //点击收藏键触发
       //先发送，再获取？？
@@ -535,7 +571,7 @@ export default {
       }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
 
       var self = this;//这两个this不是一个this吧
-      axios.post('videos/favorite_video', { params: { video_id: this.$route.params.id, favorite_id: 1 } }) //往后端传数据有问题
+      axios.post('/videos/favorite_video', { params: { video_id: this.$route.params.id, favorite_id: 1 } }) //往后端传数据有问题
         .then(function (response) {
           console.log(response);
         })
@@ -550,6 +586,8 @@ export default {
         // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
         // inputErrorMessage: '邮箱格式不正确'
       }).then(({ value }) => {
+        /*投诉视频接口*/
+        /*axios.post()*/
         this.$message({
           type: 'success',
           message: '您的投诉已成功发送，正在等待管理员审核'
@@ -565,7 +603,7 @@ export default {
       /*标记投诉状态？？*/
     },
     PostComment() { //这个是发布评论的接口
-      if (!this.textarea)//content为空
+      if (!this.textarea_comment)//content为空
       {
         this.$message({
           message: '评论不能为空',
@@ -602,9 +640,10 @@ export default {
     },
     popInput() { /*弹出评论框*/
 
-    },
+    },//可以删
+    /*删除评论*/
     deleteComment(comment_id) {
-      axios.post('/videos/delete_comment', { params: { comment_id } })
+      axios.post('/videos/delete_comment', { params: { comment_id: 1 } })/*需把1改了*/
         .then(response => {
           console.log(reponse);
         })
@@ -612,11 +651,67 @@ export default {
           console.log('Error: ' + error);
         });
     },
+    /*回复评论*/
+    PostReply() {
+      if (!this.textarea_comment)//content为空
+      {
+        this.$message({
+          message: '评论不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+
+      var self = this;//
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1; // 月份从 0 开始计算
+      var day = date.getDate();
+      var hour = date.getHours();
+      var minute = date.getMinutes();
+      //var second = date.getSeconds();
+      var date_time = `${year}-${month}-${day} ${hour}:${minute}`;
+
+      request = {
+        video_id: this.$route.params.id,
+        content: this.$data.textarea,
+        created_at: date_time,
+      };
+      axios.post('/videos/reply_comment', { params: { video_id: this.$route.params.id, content: this.$data.textarea, created_at: date_time } }) //往后端传数据有问题
+        .then(response => {
+          console.log(request);
+          console.log(response);
+          this.textarea = '';
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
+    },
+    /*删除回复*/
+    DeleteReply() {
+      ;
+    },
+    /*关注视频作者*/
     Follow() {
+      axios.post('/account/create_follow', { params: { id: 1, following_id: 1 } })//??
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
       this.$data.video.isFollowed = true;
       this.$data.video.author_follower_amount++;
     },
+    /*取关视频作者*/
     DisFollow() {
+      axios.post('/account/remove_follow', { params: { id: 1, following_id: 1 } })//??
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
       this.$data.video.isFollowed = false;
       this.$data.video.author_follower_amount--;
     }
