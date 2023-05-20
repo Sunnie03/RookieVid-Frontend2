@@ -35,6 +35,9 @@ methods: {
 </script>
 
 <style scoped>
+.el-menu-demo{
+    overflow: hidden;
+}
 /*设置点击前的样式 */
 a{
     text-decoration: none;

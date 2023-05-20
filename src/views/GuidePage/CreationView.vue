@@ -4,6 +4,7 @@
     <div class="upload-body">
        <!--导航栏-->
       <Header />
+      <navMenu />
       <el-form :model="form" status-icon:rules="rules" ref="form" label-width="100px" class="upload-form">
         <div style="display:flex">
           <div style="flex:1"></div>
@@ -93,11 +94,13 @@
 
 // @ is an alias to /src
 import Header from '@/components/HomePage/Header.vue'
+import navMenu from '@/components/PersonPage/navMenu.vue'
 import axios from 'axios'
 export default {
   name: 'CreationView',//当前引入页面
   components: {
     Header,
+    navMenu
   },
   data() {
     return {

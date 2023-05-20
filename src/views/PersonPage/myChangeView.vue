@@ -1,6 +1,7 @@
 <template>
     <div class="person-container">
         <!-- 根标签 -->
+        <top-header></top-header>
         <my-component></my-component>
 
         <el-col :span="4" style="height:100%">
@@ -40,10 +41,14 @@ import router from '@/router'
 import axios from 'axios'
 // import { callbackify } from 'util'
 import NavComponent from '../../components/PersonPage/navMenu.vue';
+import Header from '../../components/HomePage/Header.vue'
 
+// Vue.component('my-component', NavComponent);
 export default {
   components: {
-    'my-component': NavComponent
+    'my-component': NavComponent,
+    'top-header':Header,
+  
   },
   data () {
     return {

@@ -66,10 +66,11 @@ export default {
           this.$store.commit("logAdmin", res.data.status);  //是否是管理员
           this.$store.commit('$_setToken', res.data.token)  //这里就是要更改token
           alert("登录成功！")
-          window.opener = null
           console.log(this.$store.state.token)    //打印当前token
-          // window.close()
           //刷新首页
+          
+          window.opener.location.reload()
+          window.close()
           // this.$router.push({name:'home'})
         } else {
           alert(res.data.msg)
@@ -81,7 +82,7 @@ export default {
     },
     closeForm (formName) {
       //关闭本页面，首页不做操作
-      window.opener = null
+      window.opener = null;
       window.close()
     }
   }

@@ -1,6 +1,7 @@
 <template>
   <div class="person-container">
       <!-- 根标签 -->
+      <top-header></top-header>
       <my-component></my-component>
 
       <el-col :span="4" style="height:100%">
@@ -64,20 +65,20 @@ import router from '@/router'
 import axios from 'axios'
 // import { callbackify } from 'util'
 import NavComponent from '../../components/PersonPage/navMenu.vue';
+import Header from '@/components/HomePage/Header.vue'
 
 // Vue.component('my-component', NavComponent);
 export default {
   components: {
-    'my-component': NavComponent
+    'my-component': NavComponent,
+    'top-header':Header,
+  
   },
 data () {
   return {
     username: '',
     avatar: '',
-    images:[''],
-      titles:[''],
-      videos:[''],
-      partition:[''],
+    partition:[''],
   }
 },
 created() {
@@ -124,11 +125,10 @@ methods: {
       console.log(res);
       if(res.data.errno == 0){  //获取成功
         if (Array.isArray(res.data.video)) {
-          res.data.video.forEach((video,index)=>{
-            this.partition[index]=video; 
-          })
+            this.partition = res.data.video; 
+            console.log(this.partition)
         } else {    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!只展示一条数据
-
+            alert("获取数据出错")
         }
       }
     }).catch(
@@ -141,14 +141,13 @@ methods: {
 
 <style scoped>
 .person-container {
-  border: 1px;
   background-color: antiquewhite;
+  border: 1px;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 .photo {
   border-style: double;
@@ -168,12 +167,13 @@ height: 150px;
 text-align: center;
 }
 .info-container{
+background-color: antiquewhite;
 color: #4a5045;
 text-align:justify;
 font-size: 15px;
 height:100%;
-margin: 20px 30px 20px 30px;
 padding-left: 30px;
+margin-top: 20px;
 }
 .titles-container {
   display:flex; 
@@ -183,10 +183,14 @@ padding-left: 30px;
   height: 100px;
   opacity: 0.9;
 }
+el-main {
+  overflow: auto;
+}
 
 
 /*首页抄的视频代码*/
  .recommend-container {
+  background-color: antiquewhite;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
@@ -196,7 +200,7 @@ padding-left: 30px;
     width: 85%;
     height: 250px;
     position: relative;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
 }
 .recommend-img{
   width:100%;

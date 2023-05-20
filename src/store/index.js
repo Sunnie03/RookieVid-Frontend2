@@ -24,6 +24,7 @@ export default new Vuex.Store({
     },
     logout(state) {
       state.isLogin = false;
+      state.token = '';
     },
     logAdmin(state, value) {
       if(value == 1)  { //登录的是管理员

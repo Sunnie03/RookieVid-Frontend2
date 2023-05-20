@@ -40,7 +40,7 @@
       </div>
 
       <div class="userPhoto">
-        <el-button icon="el-icon-user" circle></el-button>
+        <el-button icon="el-icon-user" circle @click="open_login"></el-button>
         登录
       </div>
 
@@ -89,6 +89,27 @@ export default {
           window.open(url,'_blank')
 
     },
+    open_login(){
+      const currentPath = this.$route.path;
+
+          const loginPath = '/login';
+          let Token = this.$store.state.token;
+            // 判断当前路由是否已经是目标路由
+          if (currentPath === loginPath) {
+              return; // 避免重复导航
+          } else if(this.$store.state.isLogin || !(Token === 'null' || Token === '' || Token === undefined)) {//已经登录
+              
+              if(confirm("您已登录，请确认是否登出？")){
+                this.$store.commit('logout')
+                
+              } else {
+                return;
+              }
+          }
+          // this.$router.push(loginPath)
+          let routeData = this.$router.resolve({ path: loginPath});
+          window.open(routeData.href);
+    }
   },
 }
 </script>
