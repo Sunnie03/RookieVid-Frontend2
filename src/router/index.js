@@ -34,7 +34,7 @@ const routes = [
    /*视频播放页面*/
   {
     path: '/video/:id',/*注意这里*/
-    name: 'video/:id',
+    name: 'video/',
     component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue')
   },
   /*搜索页面*/
