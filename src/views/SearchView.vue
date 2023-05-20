@@ -28,13 +28,7 @@
       </el-tabs > -->
       <el-tabs v-model="selectTab" class="search-navigation">
         <el-tab-pane label="视频" name="video" >
-          
-        </el-tab-pane>
-        <el-tab-pane label="用户" name="user" >
-            
-        </el-tab-pane>
-      </el-tabs>
-      <div class="video-result">
+          <div class="video-result">
             <div v-if="search_videos.length===0" class="blank-container">
               <div class="blank-msg">这里什么都没有吖</div>
             </div>
@@ -42,7 +36,9 @@
               <SearchVideo :partition="search_videos"></SearchVideo>
              </div>
           </div>
-    <div class="users-result">
+        </el-tab-pane>
+        <el-tab-pane label="用户" name="user" >
+          <div class="users-result">
             <div v-if="search_users.length===0" class="blank-container">
               <div class="blank-msg">这里什么都没有吖</div>
             </div>
@@ -52,6 +48,10 @@
               </div>
             </div>
           </div>
+        </el-tab-pane>
+      </el-tabs>
+     
+   
           <!-- <div class="search-container">
             <div v-for="(video,index) in this.search_videos" :key="index" class="recommend-item">
               <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
