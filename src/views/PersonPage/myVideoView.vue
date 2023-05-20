@@ -109,6 +109,9 @@ methods: {
       if(res.data.errno == 0){  //获取成功
         this.username = res.data.context.username,
         this.avatar = res.data.context.avatar_url   //这是头像
+      }else {
+        alert(res.data.msg)
+        // if(errno == )
       }
     }).catch(
       console.error()
@@ -120,9 +123,13 @@ methods: {
     .then((res) => {
       console.log(res);
       if(res.data.errno == 0){  //获取成功
-        res.data.video.forEach((video,index)=>{
-          this.partition[index]=video; 
-        })
+        if (Array.isArray(res.data.video)) {
+          res.data.video.forEach((video,index)=>{
+            this.partition[index]=video; 
+          })
+        } else {    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!只展示一条数据
+
+        }
       }
     }).catch(
       console.error()

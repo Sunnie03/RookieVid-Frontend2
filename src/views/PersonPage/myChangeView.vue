@@ -73,6 +73,9 @@ export default {
         if(res.data.errno == 0){  //获取成功
           this.username = res.data.context.username,
           this.avatar = res.data.context.avatar_url   //这是头像
+        } else {
+            alert(res.data.msg)
+            // if(res.data.errno == )
         }
       }).catch(
         console.error()

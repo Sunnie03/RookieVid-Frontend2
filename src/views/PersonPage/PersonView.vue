@@ -81,6 +81,9 @@ export default {
           this.email = res.data.context.email
           this.signature = res.data.context.signature  //这是个性签名
           this.avatar = res.data.context.avatar_url   //这是头像
+        }else {
+            alert(res.data.msg)
+            // if(res.data.errno == )
         }
       }).catch(
         console.error()
