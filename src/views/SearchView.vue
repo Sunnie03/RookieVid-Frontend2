@@ -1,9 +1,12 @@
 <template>
-  <div class="video-container" >
+  <div class="search-video-container" >
+    <Header/>
+    <div class="top-row">
+      <div style="flex:1"></div>
       <div class="search-bar">
-        <el-row >
+        <el-row type="flex">
           <!-- <el-col :span="12" :offset="6"> -->
-            <el-input placeholder="请输入内容" v-model="input" ></el-input>
+            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2">
             <el-button type="primary" icon="el-icon-search" @click="go"></el-button>
           <!-- </el-col> -->
         </el-row>
@@ -15,17 +18,23 @@
               <!-- </router-link> -->
           <!-- </el-row> -->
       </div>
+      <div style="flex:1"></div>
+      </div>
       <div class="navigation">
          <ul class="nav-list">
            <li class="nav-item">视频</li>
            <li class="nav-item">用户</li>
         </ul>
       </div>
+      <div v-if="search_videos.length===0" class="blank-container">
+          <div class="blank-msg">这里什么都没有吖</div>
+      </div>
+      <div v-else>
           <div class="search-container">
             <div v-for="(video,index) in this.search_videos" :key="index" class="recommend-item">
-              <router-link :to="{name:'video',params:{'id':video.video_id}}">
-              <img class="recommend-img" :src="video.cover_url">
-              </router-link>
+              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}" target="_blank"> -->
+              <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+              <!-- </router-link> -->
               <div class="overlay">
                 <span class="play-info">
                   <img class="play-icon" src="../assets/display/play_circle_outline.svg">
@@ -35,9 +44,9 @@
                   {{ video.like_amount }}
                 </span>
               </div>
-              <router-link :to="{name:'video',params:{'id':video.video_id}}">
-                <div class="recommend-title">{{ video.title }}</div>
-              </router-link>
+              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}" target="_blank"> -->
+                <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+              <!-- </router-link> -->
               <div class="author">
                 <span class="author-tag">作者</span>
                 <span class="author-name">{{ video.user_name }}</span>
@@ -45,6 +54,7 @@
               </div>
             </div>
           </div>
+        </div>
   </div>
 </template>
 
@@ -69,18 +79,25 @@ export default {
   },
   mounted(){
     const keyword=this.$route.query.keyword;
+    this.input=keyword;
     console.log(keyword);
   //   console.log(this.$route.query.targetdata);
   },
   watch: {
-      '$route.query.keyword'(newKeyword, oldKeyword) {
+    '$route.query.keyword'(newKeyword, oldKeyword) {
       if (newKeyword !== oldKeyword) {
         this.getData(newKeyword);
-     }
-   }
+        window.location.reload();
+        } 
+    },
+ 
   },
   methods: {
     // searchVideo(){ 
+      videoPlay(id){
+        const video_play_url='/video/'+id
+        window.open(video_play_url,'_blank');
+      },
       go(){
           console.log(this.input);
           const currentPath = this.$route.path;
@@ -130,6 +147,48 @@ grid-template-columns: repeat(5, 1fr) ;
 grid-gap: 50px;
 justify-items: center;
 }
+.top-row {
+  display: flex;
+  /* justify-content: space-between; */
+  padding: 5px;
+  /* box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); */
+  align-items: center;
+  flex-direction: row;
+}
+
+.search-bar {
+  /* display: flex; */
+  position:center;
+  width: 500px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  /* flex: 2; */
+}
+.search-input2{
+  background-color: white;
+  border-color: grey;
+  width:80%;
+  border-radius: 5px;
+  /* text-align: left; */
+  padding-left:3%;
+  
+  border: 1px solid rgb(221, 221, 221);
+  background-color: rgba(219, 219, 219, 0.3);
+  /* height:100%; */
+}
+.search-input2:focus {
+  outline: none;
+  border-color: rgb(147, 227, 252);
+  box-shadow: 0 0 5px rgb(105, 163, 255);
+  background-color: white;
+}
+
+.search-input2::placeholder {
+  color: rgb(107, 107, 107);
+  
+}
+
 .navigation {
 display: flex;
 justify-content: center;
@@ -151,6 +210,18 @@ cursor: pointer;
 
 .nav-item:hover {
 background-color: #ccc;
+}
+.blank-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* 根据需要调整容器的高度 */
+}
+
+.blank-msg {
+  font-size: 24px;
+  font-weight: bold;
+  color:rgb(163, 154, 154)
 }
 .recommend-item {
 width: 100%;
