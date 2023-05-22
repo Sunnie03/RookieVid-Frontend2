@@ -436,13 +436,13 @@ export default {
         axios.get('/videos/get_video_by_label',{params:{label:text,num:5}})
       ])
       .then(([response1,response2])=>{
-        // console.log(response1.data);
-        // console.log(response2.data);
+        console.log(response1.data);
+        console.log(response2.data);
         if (Array.isArray(response1.data.video)) {
           response1.data.video.forEach((video, index) => {
             if(index<6){ 
               this.$set(this.hot_videos,index,video)
-               console.log('hot'+this.hot_videos[index]);
+              //  console.log('hot'+this.hot_videos[index]);
             }
             // this.images[index] = video.cover_url;
             // this.titles[index] = video.title;

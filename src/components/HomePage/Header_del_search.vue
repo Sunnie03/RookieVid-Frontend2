@@ -8,19 +8,6 @@
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
 
-      <!--搜索框-->
-      <div class="search">
-        <el-row type="flex">
-          <input placeholder="请输入内容" v-model="input" class="search-input"  @keydown.enter="search_by_key">
-          <!-- </el-input> -->
-          <!--【下面这个button是用来点击搜索的，绑定方法为search_by_key需完善】-->
-
-          <!-- <router-link :to="{ path: '/search',  query:{'keyword':this.input}}" target="_blank"> -->
-          <el-button type="primary" icon="el-icon-search" @click="search_by_key"></el-button>
-          <!-- </router-link> -->
-
-        </el-row>
-      </div>
 
       <!--导航栏菜单-->
       <div class="guide_menu">
@@ -62,34 +49,7 @@ export default {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    search_by_key() {
-      // console.log(this.input);
-      // console.log(key);
-      // console.log(this.input);
-      if (this.input === "") {
-        console.log('输入内容不能为空');
-        this.$message.error('输入内容不能为空');
-        return false;
-      }
-      const currentPath = this.$route.path;
-      const currentKeyword = this.$route.query.keyword;
-
-      const targetPath = '/search';
-      const targetKeyword = this.input;
-
-      // 判断当前路由是否已经是目标路由
-      if (currentPath === targetPath && currentKeyword === targetKeyword) {
-        return; // 避免重复导航
-      }
-      // this.$router.push({ path: '/search', query: { keyword: this.input } })
-      const key = this.input;
-      this.input = ""
-      // console.log('key:'+key)
-      const url = '/search?keyword=' + key
-      console.log(url);
-      window.open(url, '_blank')
-
-    },
+   
     open_login(){
       const currentPath = this.$route.path;
 
@@ -146,23 +106,7 @@ export default {
   flex: 1;
 }
 
-.search {
-  /* display: flex; */
-  width: 500px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  /* flex: 2; */
-}
 
-.search-input {
-  background-color: white;
-  width: 80%;
-  border-radius: 5px;
-  /* text-align: left; */
-  padding-left: 3%;
-  /* height:100%; */
-}
 
 .userPhoto {
   justify-content: center;

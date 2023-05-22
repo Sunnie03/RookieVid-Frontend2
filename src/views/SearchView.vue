@@ -1,12 +1,12 @@
 <template>
   <div class="search-video-container" >
-    <Header/>
+    <Header_search/>
     <div class="top-row">
       <div style="flex:1"></div>
       <div class="search-bar">
         <el-row type="flex">
           <!-- <el-col :span="12" :offset="6"> -->
-            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2">
+            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2" @keydown.enter="go">
             <el-button type="primary" icon="el-icon-search" @click="go"></el-button>
           <!-- </el-col> -->
         </el-row>
@@ -26,7 +26,7 @@
            <li class="nav-item" @click="selectedTab = 'user'">用户</li>
         </ul>
       </el-tabs > -->
-      <el-tabs v-model="selectTab" class="search-navigation">
+      <el-tabs v-model="selectedTab" class="search-navigation">
         <el-tab-pane label="视频" name="video" >
           <div class="video-result">
             <div v-if="search_videos.length===0" class="blank-container">
@@ -43,8 +43,10 @@
               <div class="blank-msg">这里什么都没有吖</div>
             </div>
             <div v-else>
-              <div v-for="(user,index) in this.search_users" :key="index" class="search-user">
-                {{ user.username }}
+              <div v-for="(user, index) in search_users" :key="index" class="user-row">
+                <img :src="user.avatar_url" class="user-avatar">
+                <div class="user-name">{{ user.username }}</div>
+                <button class="follow-button">+关注</button>
               </div>
             </div>
           </div>
@@ -78,13 +80,13 @@
 
 <script>
 import axios from 'axios'
-import Header from '@/components/HomePage/Header.vue'
+import Header_search from '@/components/HomePage/Header_del_search.vue'
 import SearchVideo from '@/components/HomePage/PartitionVideoShow.vue'
 // import {mapActions} from 'Vuex'
 export default {
   name: 'SearchView',//当前引入页面
   components: {
-    Header,
+    Header_search,
     SearchVideo,
   },
   data(){
@@ -92,7 +94,7 @@ export default {
       input:"",
       search_videos:[],
       search_users:[],
-      selectedTab: '视频' // 默认选中视频
+      selectedTab: 'video' // 默认选中视频
     }
   },
   created(){
@@ -192,6 +194,7 @@ justify-items: center;
 
 .search-bar {
   /* display: flex; */
+  margin-top:30px;
   position:center;
   width: 500px;
   justify-content: center;
@@ -208,7 +211,7 @@ justify-items: center;
   padding-left:3%;
   
   border: 1px solid rgb(221, 221, 221);
-  background-color: rgba(219, 219, 219, 0.3);
+  background-color: rgba(230, 230, 230, 0.303);
   /* height:100%; */
 }
 .search-input2:focus {
@@ -223,7 +226,7 @@ justify-items: center;
   
 }
 .search-navigation{
-  margin:50px;
+  margin:20px;
 }
 .navigation {
 display: flex;
@@ -254,6 +257,9 @@ background-color: #ccc;
   height: 200px; /* 根据需要调整容器的高度 */
 }
 .video-result{
+  margin:50px;
+}
+.users-result{
   margin:50px;
 }
 .blank-msg {
@@ -368,5 +374,43 @@ font-size:smaller;
 margin-top:5px;
 margin-left:30px;
 
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.follow-button {
+  margin-left:6%;
+  background-color: #22b8cf;
+
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
