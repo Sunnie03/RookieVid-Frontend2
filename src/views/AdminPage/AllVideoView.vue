@@ -1,31 +1,31 @@
 <template>
-  <div class="admin_complain">
-
+  <div class="admin_all_video">
     <!--导航栏-->
     <AdminHeader />
     <!--管理栏的导航栏-->
     <AdminGuide />
-
+    <!--【下面补全该页面代码】-->
     <el-container>
-      <div :style="{ 'width': '60vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
+      <div :style="{ 'width': '50vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
         <div style="margin-bottom: 15px;">
-          <h1>投诉视频列表</h1>
+          <h1>全部视频</h1>
         </div>
+        <!--for循环-->
         <v-card height="200px">
-          <div class="complained_video_block" style="padding-top: 20px;padding-bottom: 10px;">
+          <div class="show_video_block" style="padding-top: 20px;padding-bottom: 10px;padding-left: 20px;">
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="12" md="5">
                 <!-- <img :src="recommend_item.cover_url" width="100%" /> -->
-                <img src="../../assets/web_logo.png" height="100%" />
+                <img src="../../assets/web_logo.png" height="160px" />
               </v-col>
 
-              <v-col class="complain_introdction" cols="12" md="6">
+              <v-col class="complain_introdction" cols="12" md="7">
                 <div class="complain_video_title">
-                  投诉视频标题{{ }}
+                  <h3>视频标题{{ }}</h3>
                 </div>
 
                 <div style="margin-top: 10px;margin-bottom: 10px;">
-                  <el-tag type="info" effect="plain" size="mini">作者 </el-tag>{{ }}
+                  <el-tag type="info" effect="plain" size="mini">作者 </el-tag> 作者{{ }}
                 </div>
 
                 <div>
@@ -40,26 +40,12 @@
                     6{{ }}
                   </span>
                 </div>
-
-                <div>
-                  投诉人用户名{{ }}
-                </div>
-                <div>
-                  投诉理由{{ }}
-                </div>
-
-                <span>
-                  <!--将被投诉视频加入待审核列表，和投稿视频一起重新审核-->
-                  <el-button type="primary" plain @click="审核列表">重置</el-button>
-                </span>
-
               </v-col>
             </v-row>
           </div>
         </v-card>
       </div>
     </el-container>
-    <!--【下面补全该页面代码】-->
   </div>
 </template>
 
@@ -67,10 +53,25 @@
 import AdminHeader from '@/components/AdminPage/AdminHeader.vue'
 import AdminGuide from '@/components/AdminPage/AdminGuide.vue'
 export default {
-  name: 'complaintList',//当前引入页面
+  name: 'allVideo',//当前引入页面
   components: {
     AdminHeader,
     AdminGuide,
   },
+  data() {
+    return {
+
+    }
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      let Headers = { 'Authorization': this.$store.getters.getStorage };/*获取token*/
+      axios.get('/super_admin/get_review_video',{headers:Headers, params: { favorite_id: 1 } })
+    }
+  }
 }
+
 </script>
