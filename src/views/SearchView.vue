@@ -6,7 +6,7 @@
       <div class="search-bar">
         <el-row type="flex">
           <!-- <el-col :span="12" :offset="6"> -->
-            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2" @keydown.enter="go">
+            <input :placeholder="input ? input : '请输入内容'" type="text" v-model="input" class="search-input2" @keydown.enter="go">
             <el-button type="primary" icon="el-icon-search" @click="go"></el-button>
           <!-- </el-col> -->
         </el-row>
