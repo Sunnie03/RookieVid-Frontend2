@@ -2,7 +2,7 @@
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition" :key="index" class="recommend-item">
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)" >
+           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)" >
           <!-- </router-link> -->
           <div class="overlay">
             <span class="play-info">
@@ -14,7 +14,7 @@
             </span>
           </div>
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+            <div class="recommend-title" @click="videoPlay(video.id)">{{ video.title }}</div>
           <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
@@ -35,6 +35,7 @@ export default ({
         
         videoPlay(id){
         const video_play_url='/video/'+id;
+        console.log(video_paly_url);
         window.open(video_play_url,'_blank');
         },
 

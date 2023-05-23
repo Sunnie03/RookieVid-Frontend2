@@ -10,8 +10,8 @@
       <el-carousel :interval="4000" type="card" height="400px">
         <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.video_id)">
-              <div class="top-overlay" @click="videoPlay(video.video_id)">
+            <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
+              <div class="top-overlay" @click="videoPlay(video.id)">
                <div class="top-title">{{ video.title }}</div>
               </div>
           <!-- </router-link> -->
@@ -42,9 +42,15 @@
           <div class="author">
             <span class="author-tag">作者</span>
             <span class="author-name">{{ video.user_name }}</span>
-            <span class="time">{{ video.created_at.split('T')[0] }}</span>
+            <span class="time">{{ video.created_at?video.created_at.split('T')[0]:''}}</span>
           </div>
         </div>
+      </div>
+      <div class="ranking-container">
+          <div class="ranking-item" v-for="(video,index) in this.ranking_list" :key="index">
+            <span class="ranking-number">{{ index+1 }}</span>
+            <span class="video-title">{{ video.title }}</span>
+          </div>
       </div>
     </div>
     
@@ -67,33 +73,60 @@ export default {
       return {
           videos:[""],
           top_videos:[""],
+          ranking_list:[""],
       }
   },
   created(){
-      this.getData('娱乐',-1);
+      this.getAll('娱乐',-1);
       this.getData('娱乐',5);
+      this.getData('娱乐',8);
   },
   methods:{
       videoPlay(id){
         const video_play_url='/video/'+id
         window.open(video_play_url,'_blank');
       },
+      getAll(text,id){
+        axios.get('/videos/get_video_by_label',{params:{label:text,num:id}})
+        .then((response)=>{
+          console.log(response.data);
+          if(response.data.errno!=0){
+            console.log(response.data.msg);
+            alert(response.data.msg);
+          }
+          else{
+            response.data.video.forEach((video,index)=>{
+              this.$set(this.videos,index,video);
+            })
+          }
+        })
+      },
       getData(text,id){
           axios.get('/videos/get_video_by_label',{params:{label:text,num:id}})
           .then((response)=>{
+              console.log(id);
               console.log(response.data);
-              if(id===-1){ response.data.video.forEach((video,index) => {
-                  // this.videos[index]=video;
-                  this.$set(this.videos,index,video)
-                  console.log(this.videos[index]);
-              });}
-              else {
-                response.data.video.forEach((video,index) => {
+              if(id===5){
+                if(response.data.errno!=0){
+                  console.log(response.data.msg);
+                  alert(response.data.msg);
+                 }
+                 else{response.data.video.forEach((video,index) => {
                   // this.videos[index]=video;
                   this.$set(this.top_videos,index,video)
-              });
+                 });}  
               }
-             
+              else if(id===8){
+                if(response.data.errno!=0){
+                  console.log(response.data.msg);
+                  alert(response.data.msg);
+                }
+                else{
+                  response.data.video.forEach((video,index)=>{
+                     this.$set(this.ranking_list,index,video)
+                  });
+                }
+              }
           })
           .catch(error => {
              console.log(error);
@@ -111,7 +144,9 @@ width:100%;
 /* margin-top:5%; */
 }
 
-
+.top-carousel{
+  margin-top:30px;
+}
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
@@ -129,8 +164,9 @@ width:100%;
 }
 .recommend-display{
   margin-top:50px;
-  float: flex;
+  display: flex;
   padding: 10px;
+  flex-direction:row;
 }
 .recommend-container {
   width:70%;
@@ -138,6 +174,26 @@ width:100%;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 50px;
   justify-items: center;
+}
+.ranking-container{
+  width:30%;
+  margin-left:50px;
+}
+.ranking-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ranking-number {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.video-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .recommend-item {
   width: 100%;

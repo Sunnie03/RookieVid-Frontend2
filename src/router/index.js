@@ -95,11 +95,11 @@ const routes = [
     name:'study',
     component: () => import(/* webpackChunkName: "about" */ '../views/LabelPage/StudyView.vue')
   },
-  {
-    path: '/search_result',/*注意这里*/
-    name: 'search_result',
-    component: () => import(/* webpackChunkName: "about" */ '../views/SearchResult.vue')
-  },
+  // {
+  //   path: '/search_result',/*注意这里*/
+  //   name: 'search_result',
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/SearchResult.vue')
+  // },
   /*Y 0517 第一次合并*/
   {
      path: '/register', 
