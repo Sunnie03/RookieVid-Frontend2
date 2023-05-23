@@ -8,7 +8,6 @@ export default new Vuex.Store({
     isLogin: false,
     isAdmin: false,
     token: localStorage.getItem('token') ? localStorage.getItem('token'):'', //token
-
   },
   getters: {  //监听数据变化
     getStorage(state){  //获取本地存储的登录信息
