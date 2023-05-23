@@ -18,16 +18,16 @@
       <div class="hot-display">
         <el-carousel class="hot-carousel" indicator-position="outside" height="470px" >
           <el-carousel-item v-for="(video,index) in this.hot_videos" :key="index" >
-            <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.video_id)" >
+            <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.id)" >
             <div class="hot-carousel-overlay">
-              <div class="hot-carousel-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+              <div class="hot-carousel-title" @click="videoPlay(video.id)">{{ video.title }}</div>
             </div>
           </el-carousel-item>
         </el-carousel>
         <div class="hot-video-display">
 
           <div v-for="(video,index) in top_videos" :key="index" class="recommend-item">
-            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)">
             <div class="overlay" >
               <span class="play-info">
                 <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -38,7 +38,7 @@
               </span>
             </div>
             <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-              <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+              <div class="recommend-title" @click="videoPlay(video.id)">{{ video.title }}</div>
             <!-- </router-link> -->
             <div class="author">
               <span class="author-tag">作者</span>
@@ -473,7 +473,7 @@ export default {
           if(text==='音乐'){this.$set(this.partition8,index,video)}
           if(text==='学习'){this.$set(this.partition9,index,video)}
           if(text==='生活'){this.$set(this.partition10,index,video)}
-          console.log(this.partition2[index]);
+          // console.log(this.partition2[index]);
         })
       })
       .catch(error => {
