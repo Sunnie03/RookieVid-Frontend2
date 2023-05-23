@@ -52,10 +52,10 @@
               <v-card-text>
                 <!--视频播放器-->
                 <div class="video_player" :style="{ 'margin-top': '15px' }">
-                  <video controls style="width:916px;min-height:550px">
+                  <video controls :src="video.url" muted style="width:916px;height:550px">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
-                    <source src="../assets/hz.mp4"/>
+                    <!-- <source src="../assets/hz.mp4" /> -->
                     <!--【有问题，本地也播放不了】-->
                   </video>
                 </div>
@@ -482,7 +482,9 @@
                   <div class="recommend_block" style="padding-top: 20px;padding-bottom: 10px;">
                     <v-row>
                       <v-col cols="12" md="6">
-                        <img :src="recommend_item.cover_url" width="100%" @click="jumpTo(recommend_item.id)" />
+                        <div style="padding-left: 15px;">
+                          <img :src="recommend_item.cover_url" width="100%" @click="jumpTo(recommend_item.id)" />
+                        </div>
                       </v-col>
 
                       <v-col class="rec_introdction" cols="12" md="6">
@@ -564,6 +566,7 @@ export default {
       /*视频相关信息*/
       // videoWidth: 0,
       // videoHeight: 0,
+      videoURL:'../assets/hz.mp4',/*debug用*/
       video: {
         // path: mdiAccount,
         /*视频*/
@@ -636,6 +639,11 @@ export default {
 
     /*获取视频详情页相关数据（在刷新时加载一次）*/
     fetchVideoData() {
+      /*输出登录信息*/
+      console.log(this.$store.state.isLogin);
+      console.log(this.$store.state.isAdmin);
+      let Headers={'Authorization': this.$store.getters.getStorage};
+      console.log(Headers);
       axios.get('/videos/view_video', { params: { video_id: this.$route.params.id } })
         .then(response => {
           console.log(response);
@@ -743,7 +751,6 @@ export default {
       axios.post('/videos/like_video', { params: { video_id: this.$route.params.id } }) //往后端传数据有问题
         .then(function (response) {
           console.log(response);
-
           if (response.data.errno == 2) /*用户未登录*/ {
             self.$message.warning("请先登录！");
             self.$router.push('/login');
@@ -795,7 +802,7 @@ export default {
       else {
         /*接口成功*/
         this.newStarInput = false;
-        this.starCreateNewInput='';
+        this.starCreateNewInput = '';
       }
     },
     /*点击收藏键，打开收藏夹*/
@@ -1051,29 +1058,29 @@ export default {
   margin-right: 20px;
 } */
 
-.info {
+/* .info {
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
   padding: 20px;
-  /*有什么用吗？*/
-}
+} */
 
-.title {
+/* .title {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
-}
+} */
 
+/*
 .authorPhoto {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  /* float: inline-end; */
+  //float: inline-end;
   flex: 1;
 }
+*/
 
 .playvideo_title {
   display: -webkit-box;
@@ -1083,12 +1090,12 @@ export default {
   text-overflow: ellipsis;
 }
 
-.video_show {
+/* .video_show {
   display: flex;
   flex-direction: column;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
-}
+} */
 
 /* .player {
   display: flex;
@@ -1102,7 +1109,7 @@ export default {
 .video_player video {
   display: flex;
   width: 802px;
-  height: 400px;
+  /* height: 400px; */
   padding-top: 20px;
   padding-bottom: 15px;
 }
@@ -1133,13 +1140,13 @@ export default {
   line-height: 50px;
 }
 
-.introduction {
+/* .introduction {
   width: 600px;
   padding-left: 50px;
   padding-top: 15px;
   padding-bottom: 15px;
   box-sizing: border-box;
-}
+} */
 
 .video_partition {
   margin: 20px;
@@ -1163,28 +1170,28 @@ export default {
 .starCreateNewDiv.active {
   border: 2px solid blue;
 }
-
+/* 
 .comment {
   display: flex;
   margin-top: 20px;
   margin-left: 50px;
   z-index: 0;
   position: relative;
-}
-
+} */
+/* 
 .comment-header {
   flex-direction: row;
-}
+} */
 
-.comment-title {
+/* .comment-title {
   flex-direction: row;
   flex: 1;
-}
+} */
 
-.comment-count {
+/* .comment-count {
   flex-direction: row;
   flex: 1;
-}
+} */
 
 /* .recommend_block {
   border: 1px solid gray;

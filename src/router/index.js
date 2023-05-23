@@ -114,6 +114,11 @@ const routes = [
   /*管理端页面*/
   /*投诉列表*/
   {
+    path: '/admin', 
+    name: 'allVideo',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/AllVideoView.vue')
+  },
+  {
     path: '/admin/complain', 
     name: 'complainList',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/ComplainView.vue')
