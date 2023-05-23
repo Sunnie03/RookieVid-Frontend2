@@ -473,7 +473,7 @@ export default {
           if(text==='音乐'){this.$set(this.partition8,index,video)}
           if(text==='学习'){this.$set(this.partition9,index,video)}
           if(text==='生活'){this.$set(this.partition10,index,video)}
-          console.log(this.partition2[index]);
+          // console.log(this.partition2[index]);
         })
       })
       .catch(error => {

@@ -35,6 +35,7 @@ export default ({
         
         videoPlay(id){
         const video_play_url='/video/'+id;
+        console.log(video_paly_url);
         window.open(video_play_url,'_blank');
         },
 

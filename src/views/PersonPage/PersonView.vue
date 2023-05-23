@@ -76,7 +76,7 @@ export default {
     },
     getData() {
       let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers })
+      axios.get('/account/display_profile',{ headers: Headers,params:{user_id:1} })
       .then((res) => {
         console.log(res);
         console.log(Headers);
