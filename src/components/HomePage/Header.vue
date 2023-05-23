@@ -104,6 +104,7 @@ export default {
                 this.$store.commit('logout')
                 
               } else {
+                location.reload()
                 return;
               }
           }

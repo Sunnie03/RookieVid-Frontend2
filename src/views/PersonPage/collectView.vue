@@ -13,7 +13,7 @@
           
             <div class="recommend-container">
               <div v-for="(favorite,index) in this.partition" :key="index" class="recommend-item" >
-                 <img class="recommend-img" src="../../../image/logo.png" v-on:click="playVideo(video.id)">
+                 <img class="recommend-img" src="../../../image/logo.png" @click="openCollect(favorite.id,favorite.title)">
                 <!-- <div class="overlay">
                   <span class="play-info">
                     <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -23,13 +23,42 @@
                     {{ video.like_amount }}
                   </span>
                 </div> -->
-                   <a class="titles" >{{ favorite.title }}</a> 
-                <div class="author"> 
-                  <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button>
-                  <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
-                  <span class="time">{{ favorite.description }}</span> 
-                 </div>
+                  <a class="titles" @click="openCollect(favorite.id,favorite.title)">这是标题： {{ favorite.title }}</a> 
+                  <div class="author"> 
+                    <span class="time" style="float:left">这是description{{ favorite.description }}</span>
+                    <el-button v-on:click="removeCollect(favorite.id)" size="small" style="align-self:flex-end;float:left ">删除  </el-button>
+                    <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
+                     
+                  </div>
               </div>
+              <div  class="recommend-item" >
+                
+                <img class="recommend-img" src="../../../image/newCollect.png" @click="openForm">
+               
+                 <a class="titles" style="text-align:center" @click="openForm" >新建收藏夹 {{ favorite.title }}</a> 
+                 
+                <el-dialog title="新收藏夹" :visible.sync="dialogFormVisible">
+                  <el-form :model="form">
+                    <el-form-item label="收藏夹名称" :label-width="formLabelWidth">
+                      <el-input v-model="form.collectName" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="一句话描述" :label-width="formLabelWidth">
+                      <el-input v-model="form.collectDes" autocomplete="off"></el-input>
+                    </el-form-item>
+                    
+                    
+                    <el-form-item label="是否公开" :label-width="formLabelWidth">
+                      <el-radio v-model="form.radio" label="1" @click="publicColl">公开</el-radio>
+                      <el-radio v-model="form.radio" label="2" @click="privateColl">不公开</el-radio>
+                    </el-form-item>
+
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="newCollect, dialogFormVisible = false">确 定</el-button>
+                  </div>
+                </el-dialog>
+             </div>
             </div>
           </div>
         <!-- </el-main> -->
@@ -56,20 +85,26 @@ export default {
     return {
         username: '',
         avatar: '',
-        images:[''],
-        titles:[''],
         favorite:[''],
         partition:[''],
+        form:{
+          collectName: '',
+          collectDes: '',
+          radio: 0,
+        },
+        dialogFormVisible: Boolean,
+        formLabelWidth: '120px',
     }
   },
   created() {
+    this.dialogFormVisible = false
     this.getData();
     this.getCollects()
   },
   methods: {
     getData() {
-      let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers })
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 3} })
       .then((res) => {
         console.log(res);
         console.log(Headers);
@@ -82,26 +117,79 @@ export default {
       )
     },
     getCollects() {
-      let Headers={'Authorization': this.$store.state.token}
+      let Headers={'Authorization': this.$store.getters.getStorage}
       axios.get('/videos/get_favorite',{ headers: Headers })
       .then((res) => {
         console.log(res);
         if(res.data.errno == 0){  //获取成功
             if (Array.isArray(res.data.favorite)) {
-                res.data.favorite.forEach((favorite,index)=>{
-                    this.partition[index]=favorite; 
-                })
-            } else {
-                this.partition=res.data.favorite;
+              this.partition = res.data.favorite; 
+              console.log(this.partition)
+            } else {    //我估计传回来的是空
+              alert("获取数据出错")
+              console.log("收藏夹列表为空")
             }
         } else {
             alert(res.data.msg)
             // if(res.data.errno == )
         }
+        console.log(res);
       }).catch(
         console.error()
       )
-    }
+    },
+    openForm(){
+      this.dialogFormVisible = true;
+    },
+    closeForm(){
+      this.dialogFormVisible = false
+    },
+    newCollect() {  //创建收藏夹
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      let formData  = new FormData();
+      formData.append("title", this.form.collectName);
+      formData.append("description",this.form.collectDes);
+      formData.append("is_private",this.form.radio);
+      axios.post('/videos/create_favorite', formData,{headers: Headers})
+      .then((res) =>  {
+          //处理成功响应
+          if(res.errno == 0){
+            alert("创建成功！");
+            //还得刷新页面记得
+            location.reload()
+          } else {
+            alert(res.msg)
+          }
+          console.log(res.msg)
+         
+        })
+        .catch(
+          //处理失败响应
+          console.error())
+    },
+    openCollect(collect_id, collect_name) {
+      
+      let collect_url='/collVideo/'+collect_id+'/'+collect_name;
+      window.open(collect_url,'_blank');
+    },
+    publicColl() {
+      this.radio = 1;
+    },
+    privateColl () {
+      this.radio = 0;
+    },
+    removeCollect() {
+
+    },
+    handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+    handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+        this.hasCover=true;
+        console.log(this.dialogImageUrl)
+      },
   }
   }
   </script>
@@ -115,7 +203,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
   }
   .photo {
     border-style: double;
@@ -155,7 +243,7 @@ export default {
   /*首页抄的视频代码*/
    .recommend-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     margin-top: 30px;
   }
@@ -167,7 +255,7 @@ export default {
   }
   .recommend-img{
     width:100%;
-    height:60%;
+    height:100%;
     object-fit:cover;
     border-radius: 6px;
   }
@@ -184,17 +272,7 @@ export default {
     /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
   }
     
-  .play-info, .like-info {
-    display: flex;
-    align-items: center;
-    color: rgb(78, 77, 77);
-    font-weight:bold;
-    margin-left: 8px;
-    margin-right:8px;
-  }
-  .play-icon, .like-icon{
-    margin:5px;
-  }
+
   a{
     text-decoration: none;
   }
@@ -209,7 +287,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 14px;
+      font-size: 20px;
       font-weight: bold;
       padding: 10px;
       box-sizing: border-box;
@@ -254,10 +332,9 @@ export default {
     /* margin-right:0; */
   }
   .time{
-    color:grey;
-    font-size:smaller;
+    font-size:medium;
     margin-top:5px;
-    text-align: right;
+    margin-left: 0px;
     width: 100%;
   }
   .v-application ul, .v-application ol {

@@ -24,6 +24,9 @@
       </el-col>
       
       <div class="info-container">
+        <a id="TOPUp" href="#topAnchor">
+          <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
+        </a>
         <div class="titles-container" >
           <img class="photo" :src="avatar">
           <div class="text-title" > 昵称：{{ username }}</div>
@@ -102,8 +105,8 @@ methods: {
     this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数
   },
   getData() {
-    let Headers={'Authorization': this.$store.state.token}
-    axios.get('/account/display_profile',{ headers: Headers })
+    let Headers={'Authorization': this.$store.getters.getStorage}
+    axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
     .then((res) => {
       console.log(res);
       console.log(Headers);
@@ -119,15 +122,15 @@ methods: {
     )
   },
   getVideo() {
-    let Headers={'Authorization': this.$store.state.token}
-    axios.get('/videos/get_video',{ headers: Headers })
+    let Headers={'Authorization': this.$store.getters.getStorage}
+    axios.get('/videos/get_video',{ headers: Headers, params:{user_id: 1} })
     .then((res) => {
       console.log(res);
       if(res.data.errno == 0){  //获取成功
         if (Array.isArray(res.data.video)) {
             this.partition = res.data.video; 
             console.log(this.partition)
-        } else {    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!只展示一条数据
+        } else {    //我估计传回来的是空
             alert("获取数据出错")
         }
       }
@@ -300,4 +303,16 @@ a{
 .v-application ul, .v-application ol {
   padding-left: 0px
 }
+
+#TOPUp{
+  position: fixed;
+  right: 45px;
+  bottom: 100px;
+  width: 40px;
+  height: 40px;
+  z-index: 99999999;
+  box-shadow: 0px 0px 4px 4px #ecefef;
+  border-radius: 600px;
+}
+
 </style>

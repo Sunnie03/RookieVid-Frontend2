@@ -5,8 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {  //全局管理的数据存储
-    isLogin: false,
-    isAdmin: false,
+    isLogin: localStorage.getItem('isLogin') ? localStorage.getItem('isLogin'): false, 
+    isAdmin: localStorage.getItem('isAdmin') ? localStorage.getItem('isAdmin'): false, 
     token: localStorage.getItem('token') ? localStorage.getItem('token'):'', //token
 
   },
@@ -20,26 +20,24 @@ export default new Vuex.Store({
   },
   mutations: {  //全局方法
     login(state) {
-      state.isLogin = true;
+      localStorage.setItem('isLogin', true);
     },
     logout(state) {
-      state.isLogin = false;
-      state.token = '';
+      localStorage.removeItem('isLogin');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('token');
     },
     logAdmin(state, value) {
       if(value == 1)  { //登录的是管理员
-        state.isAdmin = true;
+        localStorage.setItem('isAdmin', true);
       } else {  //是普通用户
-        state.isAdmin = false;
+        localStorage.setItem('isAdmin', false);
       }
     },
     $_setToken(state,value) { //设置存储token
       state.token = value;
       localStorage.setItem('token', value);
     },
-    $_removeStorage(state, value) { //删除token
-      localStorage.removeItem('token');
-    }
   },
   actions: {
   },

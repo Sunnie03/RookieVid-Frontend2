@@ -128,34 +128,27 @@ const routes = [
   {
     path: '/person',
     name: 'person',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/PersonView.vue')
   },
   {
     path: '/myVideo',
     name: 'myVideo',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myVideoView.vue')
   },
   {
     path: '/myChange',
     name: 'myChange',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myChangeView.vue')
   },
   {
     path: '/collect',
     name: 'collect',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collectView.vue')
+  },
+  {
+    path: '/collVideo/:collect_id/:collect_name',
+    name: 'collectVideo',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collVideoView.vue')
   },
 ]
 

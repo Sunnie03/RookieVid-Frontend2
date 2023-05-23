@@ -87,7 +87,7 @@ export default {
   methods: {
     submitForm (formName) {
       let formData  = new FormData();
-      formData.append("username", this.form.username,);
+      formData.append("username", this.form.username);
       formData.append("password_1",this.form.password);
       formData.append("password_2",this.form.checkPass);
       formData.append("email",this.form.email);
