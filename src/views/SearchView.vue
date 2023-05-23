@@ -1,12 +1,12 @@
 <template>
   <div class="search-video-container" >
-    <Header/>
+    <Header_search/>
     <div class="top-row">
       <div style="flex:1"></div>
       <div class="search-bar">
         <el-row type="flex">
           <!-- <el-col :span="12" :offset="6"> -->
-            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2">
+            <input :placeholder="input ? input : '请输入内容'"  v-model="input" class="search-input2" @keydown.enter="go">
             <el-button type="primary" icon="el-icon-search" @click="go"></el-button>
           <!-- </el-col> -->
         </el-row>
@@ -20,21 +20,43 @@
       </div>
       <div style="flex:1"></div>
       </div>
-      <div class="navigation">
+      <!-- <el-tabs class="navigation">
          <ul class="nav-list">
-           <li class="nav-item">视频</li>
-           <li class="nav-item">用户</li>
+           <li class="nav-item" @click="selectedTab = 'video'">视频</li>
+           <li class="nav-item" @click="selectedTab = 'user'">用户</li>
         </ul>
-      </div>
-      <div v-if="search_videos.length===0" class="blank-container">
-          <div class="blank-msg">这里什么都没有吖</div>
-      </div>
-      <div v-else>
-          <div class="search-container">
+      </el-tabs > -->
+      <el-tabs v-model="selectedTab" class="search-navigation">
+        <el-tab-pane label="视频" name="video" >
+          <div class="video-result">
+            <div v-if="search_videos.length===0" class="blank-container">
+              <div class="blank-msg">这里什么都没有吖</div>
+            </div>
+            <div v-else>
+              <SearchVideo :partition="search_videos"></SearchVideo>
+             </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="用户" name="user" >
+          <div class="users-result">
+            <div v-if="search_users.length===0" class="blank-container">
+              <div class="blank-msg">这里什么都没有吖</div>
+            </div>
+            <div v-else>
+              <div v-for="(user, index) in search_users" :key="index" class="user-row">
+                <img :src="user.avatar_url" class="user-avatar">
+                <div class="user-name">{{ user.username }}</div>
+                <button class="follow-button">+关注</button>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+     
+   
+          <!-- <div class="search-container">
             <div v-for="(video,index) in this.search_videos" :key="index" class="recommend-item">
-              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}" target="_blank"> -->
               <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
-              <!-- </router-link> -->
               <div class="overlay">
                 <span class="play-info">
                   <img class="play-icon" src="../assets/display/play_circle_outline.svg">
@@ -44,33 +66,35 @@
                   {{ video.like_amount }}
                 </span>
               </div>
-              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}" target="_blank"> -->
                 <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
-              <!-- </router-link> -->
               <div class="author">
                 <span class="author-tag">作者</span>
                 <span class="author-name">{{ video.user_name }}</span>
                 <span class="time">{{ video.created_at.split('T')[0] }}</span>
               </div>
             </div>
-          </div>
-        </div>
+          </div> -->
+    
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Header from '@/components/HomePage/Header.vue'
+import Header_search from '@/components/HomePage/Header_del_search.vue'
+import SearchVideo from '@/components/HomePage/PartitionVideoShow.vue'
 // import {mapActions} from 'Vuex'
 export default {
   name: 'SearchView',//当前引入页面
   components: {
-    Header,
+    Header_search,
+    SearchVideo,
   },
   data(){
     return{
       input:"",
       search_videos:[],
+      search_users:[],
+      selectedTab: 'video' // 默认选中视频
     }
   },
   created(){
@@ -94,6 +118,9 @@ export default {
   },
   methods: {
     // searchVideo(){ 
+      handleClick(tab) {
+        console.log(tab, event);
+      },
       videoPlay(id){
         const video_play_url='/video/'+id
         window.open(video_play_url,'_blank');
@@ -118,11 +145,20 @@ export default {
       axios.get('videos/search',{params:{keyword:text}})
       .then((response)=>{
           console.log(text);
-        console.log(response.data);
-        response.data.video.forEach((video,index) => {
+          console.log(response.data);
+           response.data.video.forEach((video,index) => {
                 // this.search_videos[index]=video;
                 this.$set(this.search_videos,index,video)  
         });
+        if(Array.isArray(response.data.user)){response.data.user.forEach((user,index)=>{
+            this.$set(this.search_users,index,user)
+            console.log('users'+this.search_users[index])
+          });}
+          // else{
+          //   this.user=response.data.user;
+          //   console.log('single'+this.user);
+          // }
+          
         
       })
       .catch(error => {
@@ -137,16 +173,16 @@ export default {
 
 <style>
 
-.search-container {
+
+/* .search-container {
 margin:50px;
 margin-top:50px;
 
 display: grid;
 grid-template-columns: repeat(5, 1fr) ;
-/* grid-template-columns: repeat(auto-fill, minmax(20%, 1fr)); */
 grid-gap: 50px;
 justify-items: center;
-}
+} */
 .top-row {
   display: flex;
   /* justify-content: space-between; */
@@ -158,6 +194,7 @@ justify-items: center;
 
 .search-bar {
   /* display: flex; */
+  margin-top:30px;
   position:center;
   width: 500px;
   justify-content: center;
@@ -174,7 +211,7 @@ justify-items: center;
   padding-left:3%;
   
   border: 1px solid rgb(221, 221, 221);
-  background-color: rgba(219, 219, 219, 0.3);
+  background-color: rgba(230, 230, 230, 0.303);
   /* height:100%; */
 }
 .search-input2:focus {
@@ -188,7 +225,9 @@ justify-items: center;
   color: rgb(107, 107, 107);
   
 }
-
+.search-navigation{
+  margin:20px;
+}
 .navigation {
 display: flex;
 justify-content: center;
@@ -217,12 +256,18 @@ background-color: #ccc;
   align-items: center;
   height: 200px; /* 根据需要调整容器的高度 */
 }
-
+.video-result{
+  margin:50px;
+}
+.users-result{
+  margin:50px;
+}
 .blank-msg {
   font-size: 24px;
   font-weight: bold;
   color:rgb(163, 154, 154)
 }
+
 .recommend-item {
 width: 100%;
 height: 250px;
@@ -237,21 +282,23 @@ border-radius: 6px;
 }
 
 .overlay {
-position: absolute;
-bottom: 40%;
-left: 0;
-width: 100%;
-height: 10%;
-background-color:rgba(255, 255, 255,0.5); 
-display: flex;
-justify-content: space-between;
+  position: absolute;
+  bottom: 40%;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  /* background-color:rgba(255, 255, 255,0.5);  */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0,0,0, 1));
+  display: flex;
+  justify-content: space-between;
+  transition: opacity 0.3s ease;
 /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
 }
 
 .play-info, .like-info {
 display: flex;
 align-items: center;
-color: rgb(78, 77, 77);
+color: white;
 font-weight:bold;
 margin-left: 8px;
 margin-right:8px;
@@ -327,5 +374,43 @@ font-size:smaller;
 margin-top:5px;
 margin-left:30px;
 
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.follow-button {
+  margin-left:6%;
+  background-color: #22b8cf;
+
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>

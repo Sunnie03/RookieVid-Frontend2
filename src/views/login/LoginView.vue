@@ -61,13 +61,17 @@ export default {
       axios.post('/account/login', formData)
       .then((res) => {
         if(res.data.errno == 0) {
-          //登录成功，关闭本页面，把首页置为已登录状态
+           //登录成功，关闭本页面，把首页置为已登录状态
+           this.$store.commit("login");  //登录
+          this.$store.commit("logAdmin", res.data.status);  //是否是管理员
+          this.$store.commit('$_setToken', res.data.token)  //这里就是要更改token
           alert("登录成功！")
-          window.opener = null
+          console.log(this.$store.state.token)    //打印当前token
+          //刷新首页
+          
+          window.opener.location.reload()
           window.close()
-          this.$store.commit("login");
-          // 识别管理员
-          //如何刷新首页？
+          // this.$router.push({name:'home'})
         } else {
           alert(res.data.msg)
         }
@@ -78,7 +82,7 @@ export default {
     },
     closeForm (formName) {
       //关闭本页面，首页不做操作
-      window.opener = null
+      window.opener = null;
       window.close()
     }
   }

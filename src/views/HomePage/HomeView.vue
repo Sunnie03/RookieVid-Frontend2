@@ -8,33 +8,49 @@
 
     <!--【需增加部分】HomeView编写代码，显示推荐视频-->
     <!--【注意】点击搜索的跳转的button在Header里-->
-    
-<!--   
-    <div class="partition">
-    <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-      background-color="#ceeef9" text-color="#000000" active-text-color="#ffd04b">
-      <el-row type="flex" justify="center">
-        <el-menu-item index="1"><router-link to="/home">首页</router-link></el-menu-item>
-        <el-menu-item index="2"><router-link to="/entertainment">娱乐</router-link></el-menu-item>
-        <el-menu-item index="3"><router-link to="/film">影视</router-link></el-menu-item>
-        <el-menu-item index="4"> <router-link to="/game">游戏</router-link> </el-menu-item>
-        <el-menu-item index="5"><router-link to="/sports">运动</router-link> </el-menu-item>
-        <el-menu-item index="6"><router-link to="/food">美食</router-link> </el-menu-item>
-        <el-menu-item index="7"><router-link to="/technology">科技</router-link> </el-menu-item>
-        <el-menu-item index="8"><router-link to="/military">军事</router-link> </el-menu-item>
-        <el-menu-item index="9"><router-link to="/music">音乐</router-link> </el-menu-item>
-        <el-menu-item index="10"><router-link to="/study">学习</router-link> </el-menu-item>
-      </el-row>
-    </el-menu>
-  </div> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <!-- <h1>This is home</h1> -->
-
+  
     <!--header：logo+导航栏-->
     <!-- <Header: :headerMode="headMode" /> -->
     
     <div class="container">
-    <div class="carousel-container" >
+
+
+      <div class="hot-display">
+        <el-carousel class="hot-carousel" indicator-position="outside" height="470px" >
+          <el-carousel-item v-for="(video,index) in this.hot_videos" :key="index" >
+            <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.video_id)" >
+            <div class="hot-carousel-overlay">
+              <div class="hot-carousel-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+        <div class="hot-video-display">
+
+          <div v-for="(video,index) in top_videos" :key="index" class="recommend-item">
+            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+            <div class="overlay" >
+              <span class="play-info">
+                <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
+                {{video.view_amount }}</span>
+              <span class="like-info">
+                <img class="like-icon" src="../../assets/display/thumb-up.svg">
+                {{ video.like_amount }}
+              </span>
+            </div>
+            <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+              <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
+            <!-- </router-link> -->
+            <div class="author">
+              <span class="author-tag">作者</span>
+              <span class="author-name">{{ video.user_name }}</span>
+              <span class="time">{{ video.created_at.split('T')[0] }}</span>
+            </div>
+
+          </div>
+          </div>
+      </div>
+     
+    <!-- <div class="carousel-container" >
      
       <div class="carousel-wrapper">
         <div class="carousel-images">
@@ -51,21 +67,17 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- <router-link :to="'search'">
       <el-button>test</el-button>
     </router-link> -->
-    <div class="recommend">
-      <div class="menu">娱乐
-        <!-- <router-link :to="'/entertainment'" v-slot="{ navigate }" custom> -->
+    <!-- <div class="recommend">
+      <div class="menu">娱乐  
           <el-button @click="goPartition('entertainment')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
-        <!-- </router-link> -->
-      </div>
+      </div>   
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition1" :key="index" class="recommend-item">
-          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
-          <!-- </router-link> -->
+           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)" >
           <div class="overlay">
             <span class="play-info">
               <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -75,9 +87,7 @@
               {{ video.like_amount }}
             </span>
           </div>
-          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
             <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }}</div>
-          <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
             <span class="author-name">{{ video.user_name }}</span>
@@ -85,8 +95,78 @@
           </div>
         </div>
       </div>
+    </div> -->
+    <div class="recommend">
+      <div class="menu">娱乐
+          <el-button @click="goPartition('entertainment')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition1" ></Partitionvideo>
     </div>
     <div class="recommend">
+      <div class="menu">影视
+          <el-button @click="goPartition('film')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition2" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">游戏
+          <el-button @click="goPartition('game')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition3" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">运动
+          <el-button @click="goPartition('sports')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition4" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">美食
+          <el-button @click="goPartition('food')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition5" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">科技
+          <el-button @click="goPartition('technology')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition6" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">军事
+          <el-button @click="goPartition('military')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition7" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">音乐
+          <el-button @click="goPartition('music')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition8" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">学习
+          <el-button @click="goPartition('study')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition9" ></Partitionvideo>
+    </div>
+    <div class="recommend">
+      <div class="menu">生活
+          <el-button @click="goPartition('life')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+      </div>   
+      <Partitionvideo  :partition="partition10" ></Partitionvideo>
+    </div>
+    <!-- <Partitionvideo :menu_name="'影视'" :partition="partition2" :partition_name="'film'"></Partitionvideo>
+    <Partitionvideo :menu_name="'游戏'" :partition="partition3" :partition_name="'game'"></Partitionvideo> -->
+    <!-- <Partitionvideo :menu_name="'运动'" :partition="partition4" :partition_name="'sports'"></Partitionvideo>
+    <Partitionvideo :menu_name="'美食'" :partition="partition5" :partition_name="'food'"></Partitionvideo> -->
+    <!-- <Partitionvideo :menu_name="'科技'" :partition="partition6" :partition_name="'technology'"></Partitionvideo>
+    <Partitionvideo :menu_name="'军事'" :partition="partition7" :partition_name="'military'"></Partitionvideo>
+    <Partitionvideo :menu_name="'音乐'" :partition="partition8" :partition_name="'music'"></Partitionvideo>
+    <Partitionvideo :menu_name="'学习'" :partition="partition9" :partition_name="'study'"></Partitionvideo>
+    <Partitionvideo :menu_name="'生活'" :partition="partition10" :partition_name="'life'"></Partitionvideo> -->
+
+    <!-- <div class="recommend">
       <div class="menu">生活</div>
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition2" :key="index" class="recommend-item">
@@ -269,7 +349,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   </div>
 </template>
@@ -278,26 +358,26 @@
 // @ is an alias to /src
 import Header from '@/components/HomePage/Header.vue'
 import Partition from '@/components/HomePage/Partition.vue'
+import Partitionvideo from '@/components/HomePage/PartitionVideoShow.vue'
 import axios from 'axios'
-import { RouterLink } from 'vue-router'
 export default {
   name: 'HomeView',//当前引入页面
   components: {
     Header,
     Partition,
+    Partitionvideo
   },
-
-
 
   data(){
     return{
-      images:[
-        ""
-        // "../assets/testImg/1.jpeg",
-        // "../assets/testImg/2.jpeg"
-      ],
-      titles:[""],
-      videos:[""],
+      // images:[
+      //   ""
+      //   // "../assets/testImg/1.jpeg",
+      //   // "../assets/testImg/2.jpeg"
+      // ],
+      // titles:[""],
+      hot_videos:[""],
+      top_videos:[""],
       partition1:[""],
       partition2:[""],
       partition3:[""],
@@ -307,39 +387,40 @@ export default {
       partition7:[""],
       partition8:[""],
       partition9:[""],
+      partition10:[""],
 
-      currentIndex: 0,
+      // currentIndex: 0,
     }
   },
   created(){
     this.getData(),
     this.getData('娱乐')
-    this.getData('生活')
-    this.getData('学习')
+    this.getData('影视')
     this.getData('游戏')
     this.getData('运动')
     this.getData('美食')
-    this.getData('音乐')
-    this.getData('影视')
     this.getData('科技')
-    
+    this.getData('军事')
+    this.getData('音乐')
+    this.getData('学习')
+    this.getData('生活')
     // this.getData("")
   },
   mounted() {
   // this.getData("mounted");
   
-  setInterval(() => {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length;
+  // setInterval(() => {
+  //     this.currentIndex = (this.currentIndex + 1) % this.images.length;
       
-    }, 3000);
+  //   }, 3000);
   },
   methods: {
-
-    getImageIndex(offset) {
-      return (
-        (this.currentIndex + this.images.length + offset) % this.images.length
-      );
-    },
+    
+    // getImageIndex(offset) {
+    //   return (
+    //     (this.currentIndex + this.images.length + offset) % this.images.length
+    //   );
+    // },
     goPartition(partition){
         const partition_url='/'+partition;
         console.log(partition_url);
@@ -351,7 +432,7 @@ export default {
       },
     getData(text){
       Promise.all([
-        axios.get('/videos/get_video_by_hotness'),
+        axios.get('/videos/get_video_by_hotness',{params:{num:10}}),
         axios.get('/videos/get_video_by_label',{params:{label:text,num:5}})
       ])
       .then(([response1,response2])=>{
@@ -359,26 +440,40 @@ export default {
         console.log(response2.data);
         if (Array.isArray(response1.data.video)) {
           response1.data.video.forEach((video, index) => {
-            this.images[index] = video.cover_url;
-            this.titles[index] = video.title;
-            this.videos[index] = video.video_url;
+            if(index<6){ 
+              this.$set(this.hot_videos,index,video)
+              //  console.log('hot'+this.hot_videos[index]);
+            }
+            // this.images[index] = video.cover_url;
+            // this.titles[index] = video.title;
+            // console.log(this.images[index]);
+            // this.videos[index] = video.video_url;
+            // this.hot_videos[index]=video;
+           
+            else {
+              this.$set(this.top_videos,index-6,video);
+
+            }
+            
           });
+          
         } else {
           console.log(`Error in getData(${text}): response.data is not an array`);
         }
         // console.log(response.data);
         response2.data.video.forEach((video,index)=>{
-          console.log(text);
-          if(text==='娱乐'){this.partition1[index]=video;}  
-          if(text==='生活'){this.partition2[index]=video;}
-          if(text==='学习'){this.partition3[index]=video;}
-          if(text==='游戏'){this.partition4[index]=video;}  
-          if(text==='运动'){this.partition5[index]=video;}
-          if(text==='美食'){this.partition6[index]=video;}
-          if(text==='音乐'){this.partition7[index]=video;}  
-          if(text==='影视'){this.partition8[index]=video;}
-          if(text==='科技'){this.partition9[index]=video;}
-          // console.log(this.partition1[index]);
+          // console.log(text);
+          if(text==='娱乐'){this.$set(this.partition1,index,video)}  
+          if(text==='影视'){this.$set(this.partition2,index,video)}
+          if(text==='游戏'){this.$set(this.partition3,index,video)}
+          if(text==='运动'){this.$set(this.partition4,index,video)}  
+          if(text==='美食'){this.$set(this.partition5,index,video)}
+          if(text==='科技'){this.$set(this.partition6,index,video)}
+          if(text==='军事'){this.$set(this.partition7,index,video)}  
+          if(text==='音乐'){this.$set(this.partition8,index,video)}
+          if(text==='学习'){this.$set(this.partition9,index,video)}
+          if(text==='生活'){this.$set(this.partition10,index,video)}
+          console.log(this.partition2[index]);
         })
       })
       .catch(error => {
@@ -439,149 +534,109 @@ export default {
     // }
     
   },
-  computed: {
-    currentImage() {
-      return this.images[this.currentIndex];
-    }
-  }
+  // computed: {
+  //   currentImage() {
+  //     return this.images[this.currentIndex];
+  //   }
+  // }
   
 }
 </script>
 
 <style>
-.home_container{
+.home{
   display: flex;
   flex-direction: column;
 }
-.menu{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  line-height: 60px;
-  margin-top:20px;
-  font-size: 30px;
-  font-weight: bold;
-  font-family: Arial, sans-serif;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  line-height: 1.5;
-  text-shadow: 2px 2px 2px #ccc;
-  flex:1;
- }
- .recommend-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 50px;
-  justify-items: center;
+.container{
+  height:100%;
+  margin:50px;
 }
-.recommend-item {
-    width: 100%;
-    height: 250px;
-    position: relative;
-    margin-bottom: 20px;
+.hot-display{
+  display:flex;
 }
-.recommend-img{
-  width:100%;
-  height:60%;
-  object-fit:cover;
-  border-radius: 6px;
+.hot-carousel{
+  width:58%;
+  /* border-radius: 5px; */
+  /* backgroud-color:rgba(255,255,255,0); */
+
+}
+.el-carousel-item{
+  height:100%;
+  /* border-radius: 5px; */
 }
 
-.overlay {
+.hot-carousel-img{
+  height:100%;
+  width:100%;
+  /* border-radius:10px; */
+}
+.hot-carousel-overlay{
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
   position: absolute;
-  bottom: 40%;
+  bottom: 0;
   left: 0;
   width: 100%;
-  height: 10%;
-  background-color:rgba(255, 255, 255,0.5); 
+  height: 40%;
+  /* background-color:rgba(154, 104, 54, 0.5);  */
   display: flex;
   justify-content: space-between;
-  /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
 }
-  
-.play-info, .like-info {
+.hot-carousel-title{
+  position: relative;
+  bottom: -70%;
+  /* top:0; */
+  left: 0;
+  width: 100%;
+  height: 20%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  color: white;
   display: flex;
+  justify-content: center;
   align-items: center;
-  color: rgb(78, 77, 77);
-  font-weight:bold;
-  margin-left: 8px;
-  margin-right:8px;
-}
-.play-icon, .like-icon{
-  margin:5px;
-}
-a{
-  text-decoration: none;
-}
-.router-link-active {
-  text-decoration: none;
-}
-.recommend-title {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20%;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 15px !important;
-    font-weight: bold;
-    padding: 10px;
-    box-sizing: border-box;
-    word-break:break-all;
-    text-overflow:ellipsis;
-    word-break:break-all;
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:2;
-    overflow:hidden;
-  }
- 
-.recommend-title:hover{
-    color:#1e90ff;
-  }
-
-.author {
-  display: flex;
-  /* justify-content: space-between; */
-  align-items: center;
-  margin-top: 8px;
-  margin-left:5px;
-}
-
-.author-tag {
-  /* width:50px;
-  height:30px; */
-  border: 1px solid #20bcf0;
-  font-weight:bold;
-  color: #20bcf0;
-  font-size: 10px;
-  background-color: rgba(35, 179, 241, 0.1);
-  border-radius: 4px;
-  padding: 2px 8px;
-  margin-right: 8px;
-}
-
-.author-name {
+  font-size: 20px;
   font-weight: bold;
-  color: grey;
-  padding: 2px 8px;
-  /* margin-right:0; */
-}
-.time{
-  color:grey;
-  font-size:smaller;
-  margin-top:5px;
-  margin-left:30px;
-  
+  padding: 10px;
+  box-sizing: border-box;
+  word-break:break-all;
+  text-overflow:ellipsis;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:1;
+  overflow:hidden;
+
 }
 
-.carousel-container {
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+     background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+     background-color: #d3dce6;
+  }
+
+
+ .hot-video-display{
+  margin-left:50px;
+  width:40%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 50px;
+  grid-row-gap:0;
+  justify-items: center;
+ }
+ 
+
+/* .carousel-container {
   padding-top:10px;
   width: 80%;
   height: 400px;
@@ -607,7 +662,6 @@ a{
   justify-content: center;
   align-items: center;
   height: 100%;
-  /* transform: translateX(calc(-40% - 20px)); */
   position: relative;
   top: 0;
   left: 50%;
@@ -621,7 +675,7 @@ a{
   height: 100%;
   background-position: center center;
   background-size: cover;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
   /* width: 100%;
   height: 100%;
   position: absolute;
@@ -634,9 +688,9 @@ a{
   transition: all 1s ease;
   z-index: 1;
   transform: scale(1.1); */
-}
+/* } */
 
-.carousel-image.active {
+/* .carousel-image.active {
   opacity: 1;
   transform: translateX(0) scale(1);
   z-index: 2;
@@ -655,5 +709,5 @@ a{
 }
 .container{
   margin:50px;
-}
+} */
 </style>
