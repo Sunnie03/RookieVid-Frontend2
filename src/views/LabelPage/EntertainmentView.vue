@@ -10,8 +10,8 @@
       <el-carousel :interval="4000" type="card" height="400px">
         <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.video_id)">
-              <div class="top-overlay" @click="videoPlay(video.video_id)">
+            <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
+              <div class="top-overlay" @click="videoPlay(video.id)">
                <div class="top-title">{{ video.title }}</div>
               </div>
           <!-- </router-link> -->
