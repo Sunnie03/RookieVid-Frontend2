@@ -118,19 +118,20 @@ export default {
     },
     getCollects() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/videos/get_favorite',{ headers: Headers })
+      axios.get('/account/get_favorite',{ headers: Headers, user_id: 3})
       .then((res) => {
+        
         console.log(res);
-        if(res.data.errno == 0){  //获取成功
-            if (Array.isArray(res.data.favorite)) {
-              this.partition = res.data.favorite; 
+        if(res.errno == 0){  //获取成功
+            if (Array.isArray(res.favorite)) {
+              this.partition = res.favorite; 
               console.log(this.partition)
             } else {    //我估计传回来的是空
               alert("获取数据出错")
               console.log("收藏夹列表为空")
             }
         } else {
-            alert(res.data.msg)
+            alert(res.msg)
             // if(res.data.errno == )
         }
         console.log(res);

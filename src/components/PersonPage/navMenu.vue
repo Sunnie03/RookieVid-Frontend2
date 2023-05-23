@@ -16,8 +16,12 @@
         <el-menu-item index="3" >
             <router-link to="/collect" custom>收藏夹</router-link>
         </el-menu-item>
-        <el-menu-item index="4">关注列表</el-menu-item>
-        <el-menu-item index="5">粉丝 </el-menu-item>
+        <el-menu-item index="4">
+            <router-link :to="{name:'myFollow'}" custom>关注列表</router-link>
+        </el-menu-item>
+        <el-menu-item index="5">
+             <router-link :to="{name:'myFans'}" custom>粉丝</router-link>
+        </el-menu-item>
         <el-menu-item index="6">消息通知</el-menu-item>
         </el-row> 
     </el-menu>

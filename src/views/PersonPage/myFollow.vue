@@ -4,24 +4,7 @@
         <top-header></top-header>
         <my-component></my-component>
 
-        <el-col :span="4" style="height:100%">
-          <el-menu
-            default-active="1-4-1"
-            class="el-menu-vertical-demo" style="height:100%;type:flex;justify:center" >
-            <el-menu-item index="1" class="verti-menu is-active" v-on:click="openPerson">
-              <i class="el-icon-s-order"></i>
-              <span slot="title">基本信息</span>
-            </el-menu-item>
-            <el-menu-item index="2" class="verti-menu" v-on:click="openVideo">
-              <i class="el-icon-edit" ></i>
-              <span slot="title">我的投稿</span>
-            </el-menu-item>
-            <el-menu-item index="3" class="verti-menu" v-on:click="openChange">
-              <i class="el-icon-setting"></i>
-              <span slot="title">修改个人资料</span>
-            </el-menu-item>
-          </el-menu>
-        </el-col>
+        
         
         <el-main>
           <div class="title-container" >
@@ -35,7 +18,6 @@
         </el-main>
           
     </div>
-         
 </template>
 
 <script>
@@ -96,7 +78,7 @@ export default {
       )
     }
   }
-}
+  }
 </script>
 
 <style scoped>
@@ -108,53 +90,37 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-}
-.photo {
+    overflow: auto;
+  }
+  .photo {
     border-style: double;
     width: 80px;
     height: 80px;
     border-radius: 50% ;
     vertical-align: middle;
-}
-.text-title {
+  }
+  .text-title {
     display:inline;
     font-size: 30px;
     background-repeat: repeat;
     margin-left: 40px;
-}
-.verti-menu{
-  height: 150px;
-  text-align: center;
   }
-.el-main {
+  
+  .info-container{
   color: #4a5045;
-  line-height: 80px;
   text-align:justify;
-  font-size: 25px;
+  font-size: 15px;
   height:100%;
-}
-.title-container {
+  margin: 20px 30px 20px 30px;
+  padding-left: 30px;
+  }
+  .titles-container {
     display:flex; 
     justify-content: center;
     align-items: center;
     border:#09553d 1px;
     height: 100px;
     opacity: 0.9;
-}
-.text {
-  border: 1px solid #6b80e0;
-  /*font-weight:bold;*/
-  font-size: 20px;
-  background-color: rgb(225, 241, 239);
-  border-radius: 4px;
-  padding: 2px 8px;
-  height: 80px;
-  margin: 20px 8px 5px 50px;
-  width: 80%;
-}
-.v-application ul, .v-application ol {
-  padding-left: 0px
-}
-
+  }
+  
 </style>

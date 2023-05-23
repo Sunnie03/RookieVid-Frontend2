@@ -155,6 +155,16 @@ const routes = [
     name: 'collectVideo',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collVideoView.vue')
   },
+  {
+    path: '/following',
+    name: 'myFollow',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFollow.vue')
+  },
+  {
+    path: '/followers',
+    name: 'myFans',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFans.vue')
+  },
 ]
 
 const router = new VueRouter({

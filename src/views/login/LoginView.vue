@@ -62,15 +62,15 @@ export default {
       .then((res) => {
         if(res.data.errno == 0) {
            //登录成功，关闭本页面，把首页置为已登录状态
-          this.$store.commit("login");  //登录
-          this.$store.commit("logAdmin", res.data.status);  //是否是管理员
+          this.$store.commit("$_login");  //登录
+          this.$store.commit("$_logAdmin", res.data.status);  //是否是管理员
           this.$store.commit('$_setToken', res.data.token)  //这里就是要更改token
           alert("登录成功！")
           console.log(this.$store.state.token)    //打印当前token
           //刷新首页
           console.log(this.$store.state)
           window.opener.location.reload()
-          // window.close()
+          window.close()
           // this.$router.push({name:'home'})
         } else {
           alert(res.data.msg)

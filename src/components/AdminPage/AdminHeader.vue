@@ -71,7 +71,7 @@ export default {
           } else if(this.$store.state.isLogin || !(Token === 'null' || Token === '' || Token === undefined)) {//已经登录
               
               if(confirm("您已登录，请确认是否登出？")){
-                this.$store.commit('logout')
+                this.$store.commit('$_logout')
                 
               } else {
                 return;
