@@ -113,7 +113,7 @@ export default {
     sendVerification() {
         let formData  = new FormData();
         formData.append("email",this.form.email);
-        axios.post('/account/sendvcode',formData)
+        axios.post('/account/send_vcode',formData)
         .then(response => {
           //处理成功响应
           if(response.data.errno == 1000){

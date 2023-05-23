@@ -5,8 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {  //全局管理的数据存储
-    isLogin: localStorage.getItem('isLogin') ? localStorage.getItem('isLogin'): false, 
-    isAdmin: localStorage.getItem('isAdmin') ? localStorage.getItem('isAdmin'): false, 
+    isLogin: localStorage.getItem('isLogin') ,
+    isAdmin: localStorage.getItem('isAdmin') , 
     token: localStorage.getItem('token') ? localStorage.getItem('token'):'', //token
   },
   getters: {  //监听数据变化

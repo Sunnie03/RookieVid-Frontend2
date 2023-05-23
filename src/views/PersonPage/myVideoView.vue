@@ -123,12 +123,12 @@ methods: {
   },
   getVideo() {
     let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/videos/get_video',{ headers: Headers, params:{user_id: 1} })
+    axios.get('/account/get_videos',{ headers: Headers, params:{user_id: 1} })
     .then((res) => {
       console.log(res);
       if(res.data.errno == 0){  //获取成功
-        if (Array.isArray(res.data.video)) {
-            this.partition = res.data.video; 
+        if (Array.isArray(res.data.data)) {
+            this.partition = res.data.data; 
             console.log(this.partition)
         } else {    //我估计传回来的是空
             alert("获取数据出错")
@@ -218,16 +218,16 @@ el-main {
   left: 0;
   width: 100%;
   height: 10%;
-  background-color:rgba(255, 255, 255,0.5); 
+  /*background-color:rgba(255, 255, 255,0.5); */
   display: flex;
   justify-content: space-between;
-  /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)); 
 }
   
 .play-info, .like-info {
   display: flex;
   align-items: center;
-  color: rgb(78, 77, 77);
+  color: #fff;/*rgb(78, 77, 77);*/
   font-weight:bold;
   margin-left: 8px;
   margin-right:8px;
