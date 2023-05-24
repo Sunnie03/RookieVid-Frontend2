@@ -176,6 +176,16 @@ const routes = [
     name: 'lookOthersCollect',
     component: () => import(/* webpackChunkName: "about" */ '../views/OthersPage/othersCollectView.vue')
   },
+  {
+    path: '/myCreation',
+    name: 'myCreation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue')
+  },
+  {
+    path: '/amendCreation/:id',
+    name: 'amendCreation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/AmendCreation.vue')
+  },
 ]
 
 const router = new VueRouter({
