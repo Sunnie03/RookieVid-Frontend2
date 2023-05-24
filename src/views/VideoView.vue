@@ -51,8 +51,8 @@
 
               <v-card-text>
                 <!--视频播放器-->
-                <div class="video_player" :style="{ 'margin-top': '15px' }">
-                  <video controls :src="video.url" muted style="width:916px;height:550px">
+                <div class="video_player" style="margin-top:15px;width=100%">
+                  <video controls :src="video.url" muted style="width:100%;min-height:550px">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
                     <!-- <source src="../assets/hz.mp4" /> -->
@@ -165,16 +165,24 @@
                 <!--当前用户头像-->
                 <v-col cols="12" md="1" class="d-flex" align="center">
                   <v-avatar>
-                    <img :src="video.author_image_url" />
+                    <img :src="user.user_avatar" />
                   </v-avatar>
                 </v-col>
                 <!--一级评论输入框-->
-                <v-col cols="12" md="11" align="center" class="d-flex">
-                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
-                    suffix-icon="el-icon-s-promotion">
-                  </el-input>
-                  <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
-                </v-col>
+                <!--登录后，可以输入，发布评论-->
+                  <v-col v-if="this.$store.state.isLogin" cols="12" md="11" align="center" class="d-flex">
+                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
+                      suffix-icon="el-icon-s-promotion">
+                    </el-input>
+                    <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
+                  </v-col>
+                  <!--没有登录，输入不了-->
+                  <v-col v-else cols="12" md="11" align="center" class="d-flex">
+                    <el-input type="textarea" :rows="2" placeholder="登录后才可以发布评论" v-model="textarea_comment"
+                      suffix-icon="el-icon-s-promotion" @click="clickSend" :disabled="true" >
+                    </el-input>
+                    <el-button class="comment-btn" type="primary" disabled @click="clickSend">发布</el-button>
+                  </v-col>
               </v-row>
 
               <v-divider /><!--为了调整样式，之后可以删-->
@@ -196,7 +204,7 @@
                         {{ comment_item.user_name }}
                       </span>
                       <!--作者的tag-->
-                      <span style="align-items: center!important;"><el-tag v-if="comment_item.user_id = video.author_id"
+                      <span style="align-items: center!important;"><el-tag v-if="comment_item.user_id == video.author_id"
                           type="info" effect="plain" size="mini">作者</el-tag></span>
                     </div>
 
@@ -205,7 +213,8 @@
                     <!--一级评论时间【需要精确到什么程度？】-->
                     <div style="align-items: center;">
                       <span style="font-size: 14px;color: grey;margin-right: 40px;">
-                        {{ comment_item.created_at.split('T')[0] }}
+                        {{ comment_item.created_at.split('T')[0] }} {{ comment_item.created_at.split('T')[1].split('.')[0]
+                        }}
                       </span>
 
                       <!--回复键，点击弹出reply的输入框-->
@@ -240,7 +249,7 @@
                                   {{ reply_item.user_name }}
                                 </span>
                                 <span style="align-items: center!important;"><el-tag
-                                    v-if="reply_item.user_id = video.author_id" type="info" effect="plain"
+                                    v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
                                     size="mini">作者</el-tag>
                                 </span>
                               </div>
@@ -248,7 +257,8 @@
                               <div>{{ reply_item.content }}</div>
                               <div style="align-items: center;">
                                 <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                  reply_item.created_at.split('T')[0] }}
+                                  reply_item.created_at.split('T')[0] }} {{
+    reply_item.created_at.split('T')[1].split('.')[0] }}
                                 </span>
                                 <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
                                     cancel-button-text='不用了'><el-button slot="reference" type="text"
@@ -281,7 +291,7 @@
                                     {{ reply_item.user_name }}
                                   </span>
                                   <span style="align-items: center!important;"><el-tag
-                                      v-if="reply_item.user_id = video.author_id" type="info" effect="plain"
+                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
                                       size="mini">作者</el-tag>
                                   </span>
                                 </div>
@@ -290,7 +300,7 @@
                                 <div style="align-items: center;">
                                   <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
                                     reply_item.created_at.split('T')[0]
-                                  }}
+                                  }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
                                   </span>
                                   <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
                                       cancel-button-text='不用了'><el-button slot="reference" type="text"
@@ -324,7 +334,7 @@
                                     {{ reply_item.user_name }}
                                   </span>
                                   <span style="align-items: center!important;"><el-tag
-                                      v-if="reply_item.user_id = video.author_id" type="info" effect="plain"
+                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
                                       size="mini">作者</el-tag>
                                   </span>
                                 </div>
@@ -333,7 +343,7 @@
                                 <div style="align-items: center;">
                                   <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
                                     reply_item.created_at.split('T')[0]
-                                  }}
+                                  }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
                                   </span>
                                   <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
                                       cancel-button-text='不用了'><el-button slot="reference" type="text"
@@ -396,7 +406,7 @@
                       <!--当前用户头像-->
                       <v-col cols="12" md="1" class="d-flex" align="center">
                         <v-avatar>
-                          <img :src="video.author_image_url" />
+                          <img :src="user.user_avatar" />
                         </v-avatar>
                       </v-col>
                       <!--二级评论输入框-->
@@ -483,12 +493,14 @@
                     <v-row>
                       <v-col cols="12" md="6">
                         <div style="padding-left: 15px;">
-                          <img :src="recommend_item.cover_url" width="100%" @click="jumpTo(recommend_item.id)" />
+                          <img :src="recommend_item.cover_url" width="100%" height="120px"
+                            @click="jumpTo(recommend_item.id)" />
                         </div>
                       </v-col>
 
                       <v-col class="rec_introdction" cols="12" md="6">
-                        <div class="rec_video_title" @click="jumpTo(recommend_item.id)">
+                        <div class="rec_video_title" v-bind:title="recommend_item.title"
+                          @click="jumpTo(recommend_item.id)">
                           {{ recommend_item.title }}
                         </div>
 
@@ -534,6 +546,7 @@ import axios from 'axios';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import Header from '@/components/HomePage/Header.vue'
+//import { resolvePtr } from 'dns';
 //import { response } from 'express';
 
 // import SvgIcon from '@jamescoyle/vue-icon';
@@ -563,10 +576,16 @@ export default {
       newStarInput: false,/*是否显示新建收藏夹输入名字的输入框*/
       starCreateNewInput: '',/*新建收藏夹输入名字的输入框中的内容，有限制最多20个字*/
 
+      /*当前登录用户相关信息*/
+      user: {
+        user_id: '',
+        user_name: '',
+        user_avatar: '',
+      },
       /*视频相关信息*/
       // videoWidth: 0,
       // videoHeight: 0,
-      videoURL:'../assets/hz.mp4',/*debug用*/
+      //videoURL: '../assets/hz.mp4',/*debug用*/
       video: {
         // path: mdiAccount,
         /*视频*/
@@ -642,12 +661,38 @@ export default {
       /*输出登录信息*/
       console.log(this.$store.state.isLogin);
       console.log(this.$store.state.isAdmin);
-      let Headers={'Authorization': this.$store.getters.getStorage};
-      console.log(Headers);
+      /*获取当前登录用户的信息（如果已经登录的话）*/
+      if (this.$store.state.isLogin) /*不要用true来判断，不灵敏*/ {
+        /*如果已经登录，就打印Token值*/
+        let Headers = { 'Authorization': this.$store.getters.getStorage };
+        console.log(Headers);
+
+        axios.get('/account/display_myprofile', { headers: Headers })
+          .then((response) => {
+            console.log(response);
+            console.log(Headers);
+            if (response.data.errno == 0) {  //获取成功“我”的身份信息
+              this.user.user_id = response.data.context.uid;
+              this.user.user_name = response.data.context.username;
+              this.user.user_avatar = response.data.context.avatar_url;   //这是头像
+            }
+            else {
+              this.$message.warning(response.data.msg);
+            }
+          }).catch(error => {
+            console.log(error);
+          })
+      }
+      else {
+        /*没有登录的话，把自己的头像显示为未登录*/
+        this.user.user_avatar = "@/assets/my_avatar.png";
+      }
+
+      /*获取视频信息*/
       axios.get('/videos/view_video', { params: { video_id: this.$route.params.id } })
         .then(response => {
           console.log(response);
-          console.log(this.$route.params.id)
+          console.log('fetchId' + this.$route.params.id);
           // if(response.errno == 0) {
           //   alert(response.data.msg);
           // }else {
@@ -745,30 +790,42 @@ export default {
         console.log('Comments_amount=0');
       }
     },
-    /*处理用户是否已点赞该视频*/
+    /*处理用户点赞和取消点赞该视频*/
     likeHandle() {
-      var self = this;//
-      axios.post('/videos/like_video', { params: { video_id: this.$route.params.id } }) //往后端传数据有问题
-        .then(function (response) {
+      /*post方法要发formData格式*/
+      let formData = new FormData();
+      formData.append("video_id", this.$route.params.id);
+      axios.post('/videos/like_video', formData) //往后端传数据有问题
+        .then((response) => {
           console.log(response);
-          if (response.data.errno == 2) /*用户未登录*/ {
-            self.$message.warning("请先登录！");
-            self.$router.push('/login');
+          console.log('like_id:' + this.$route.params.id);
+          console.log(formData);
+          if (response.data.errno == 401) /*用户未登录，就跳转到用户登录界面去登录*/ {
+            this.$message.warning(response.data.msg);/*先去登录*/
+            this.$router.push('/login');
+            return;
+          }
+          else if (response.data.errno != 0)/*点赞失败的其它错误【待完善】*/ {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
             return;
           }
 
+          /*到这里说明，已经成功点赞*/
+          /*改变相应样式*/
           /*如果是实时更新（async？），就不需要这一段；如果是手动刷新才更新，就需要以下这段*/
-          if (self.$data.video.liked) {
-            self.$data.video.liked = false;
-            self.$data.video.like_amount -= 1;
+          if (this.$data.video.liked) {
+            this.$data.video.liked = false;
+            this.$data.video.like_amount -= 1;
           }
           else {
-            self.$data.video.liked = true;
-            self.$data.video.like_amount += 1;
-          }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
+            this.$data.video.liked = true;
+            this.$data.video.like_amount += 1;
+          }
         })
         .catch(function (error) {
           console.log('Error: ' + error);
+          /*如果有其它错误，弹窗报错*/
+          this.$message.warning('Error: ' + error);
         });
     },
     /*收藏相关方法*/
@@ -790,6 +847,7 @@ export default {
       this.isActive = !this.isActive;
     },
     /*好像失败了*/
+    /*创建新的收藏夹*/
     createFav(content) {
       if (!content)//content为空
       {
@@ -889,9 +947,10 @@ export default {
       /*标记投诉状态？？*/
     },
     /*评论相关方法*/
-    /*发布一级评论的接口*/
+    /*登录状态下，发布一级评论的接口*/
     PostComment() {
-      /*判断当前是否登录【待完善】*/
+      /*判断当前是否登录，在渲染代码中判断，不需要点击发布键*/
+      /*能在这个接口，一定是已经登录了*/
 
       /*判断评论输入框内容是否为空*/
       if (!this.textarea_comment)//content为空
@@ -902,16 +961,25 @@ export default {
         });
         return;
       }
-
-      var request = {
-        video_id: this.$route.params.id,
-        content: this.textarea_comment,
-      };
-      axios.post('/videos/comment_video', { params: request }) //往后端传数据有问题
+      let formData = new FormData();
+      formData.append("video_id", this.$route.params.id);
+      formData.append("content", this.textarea_comment);
+      axios.post('/videos/comment_video', formData) //往后端传数据有问题
         .then(response => {
-          console.log(request);
+          console.log(formData);
           console.log(response);
-          this.textarea_comment = ''; /*清空评论输入框*/
+
+          /*评论成功*/
+          if (response.data.errno == 0) {
+            this.$message.info('发送评论成功');
+            this.textarea_comment = ''; /*清空评论输入框*/
+
+            /*重新get新的所有评论【待完善】*/
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            return;
+          }
         })
         .catch(error => {
           console.log('Error: ' + error);
@@ -920,6 +988,12 @@ export default {
             type: 'info'
           });
         });
+    },
+    /*在未登录状态下，点击输入框或发布，跳转到这里*/
+    clickSend() {
+      this.$message.warning('还未登录，请先登录');/*先去登录*/
+      this.$router.push('/login');
+      return;
     },
     /*删除评论*/
     deleteComment(comment_id) {
@@ -936,26 +1010,35 @@ export default {
     /*点击回复键，弹出reply的输入框*/
     /*点击1下是弹出，点击2下是*/
     PopInput(index) {
-      /*先遍历，使其它所有的输入框都为false*/
-      for (let i = 0; i < this.show_comment_input.length; i++) {
-        //this.set(this.show_comment_input,i,false);
-        this.show_comment_input[i] = false;
-      }
-      if (this.clickReplyCnt[index] == 0) /*此时要弹出输入框*/ {
-        /*只有所选的一级评论才弹出输入框*/
-        //this.set(this.show_comment_input,index,true);
-        this.show_comment_input[index] = true;
+      /*如果已经登录，点击“回复”弹出输入框*/
+      if (this.$store.state.isLogin) {
+        /*先遍历，使其它所有的输入框都为false*/
+        for (let i = 0; i < this.show_comment_input.length; i++) {
+          //this.set(this.show_comment_input,i,false);
+          this.show_comment_input[i] = false;
+        }
+        if (this.clickReplyCnt[index] == 0) /*此时要弹出输入框*/ {
+          /*只有所选的一级评论才弹出输入框*/
+          //this.set(this.show_comment_input,index,true);
+          this.show_comment_input[index] = true;
 
-        for (let i = 0; i < this.clickReplyCnt.length; i++) {
-          this.clickReplyCnt[i] = 0;
+          for (let i = 0; i < this.clickReplyCnt.length; i++) {
+            this.clickReplyCnt[i] = 0;
+          }
+          this.clickReplyCnt[index] = 1;
         }
-        this.clickReplyCnt[index] = 1;
+        else  /*此时点击回复，是要输入框消失*/ {
+          for (let i = 0; i < this.clickReplyCnt.length; i++) {
+            this.clickReplyCnt[i] = 0;
+          }
+          //this.clickReplyCnt[index] = 0;
+        }
       }
-      else  /*此时点击回复，是要输入框消失*/ {
-        for (let i = 0; i < this.clickReplyCnt.length; i++) {
-          this.clickReplyCnt[i] = 0;
-        }
-        //this.clickReplyCnt[index] = 0;
+      else {
+        /*没有登录，点击“回复”，显示“未登录”*/
+        this.$message.warning('当前未登录，请先去登录');/*先去登录*/
+        this.$router.push('/login');
+        return;
       }
     },
     /*回复一级评论，发布二级评论即Reply*/
@@ -1170,6 +1253,7 @@ export default {
 .starCreateNewDiv.active {
   border: 2px solid blue;
 }
+
 /* 
 .comment {
   display: flex;
@@ -1204,5 +1288,9 @@ export default {
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.rec_video_title:hover {
+  color: rgb(37, 113, 234);
 }
 </style>
