@@ -136,12 +136,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/PersonView.vue')
   },
   {
-    path: '/myVideo',
+    path: '/person/myVideo',
     name: 'myVideo',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myVideoView.vue')
   },
   {
-    path: '/myChange',
+    path: '/person/myChange',
     name: 'myChange',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myChangeView.vue')
   },
@@ -151,9 +151,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collectView.vue')
   },
   {
-    path: '/collVideo/:collect_id/:collect_name',
+    path: '/collect/:collect_id/:collect_name',
     name: 'collectVideo',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/collVideoView.vue')
+  },
+  {
+    path: '/following',
+    name: 'myFollow',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFollow.vue')
+  },
+  {
+    path: '/followers',
+    name: 'myFans',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFans.vue')
   },
 ]
 

@@ -5,9 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {  //全局管理的数据存储
-    isLogin: localStorage.getItem('isLogin') ,
-    isAdmin: localStorage.getItem('isAdmin') , 
+    isLogin: localStorage.getItem('isLogin') ? localStorage.getItem('isLogin'): false, 
+    isAdmin: localStorage.getItem('isAdmin') ? localStorage.getItem('isAdmin'): false, 
     token: localStorage.getItem('token') ? localStorage.getItem('token'):'', //token
+
   },
   getters: {  //监听数据变化
     getStorage(state){  //获取本地存储的登录信息
@@ -15,21 +16,40 @@ export default new Vuex.Store({
         state.token = JSON.parse(localStorage.getItem(key))
       }
       return state.token
+    },
+    getIsLogin(state) {
+      if(!state.isLogin) {
+        state.isLogin = true
+      } else{
+        state.isLogin = false
+      }
+      return state.isLogin
+    },
+    getIsAdmin(state) {
+      if(!state.isAdmin) {
+        state.isAdmin = true
+      } else {
+        state.isAdmin = false
+      }
+      return state.isAdmin
     }
   },
   mutations: {  //全局方法
-    login(state) {
+    $_login(state) {
+      state.isLogin = true;
       localStorage.setItem('isLogin', true);
     },
-    logout(state) {
+    $_logout(state) {
       localStorage.removeItem('isLogin');
       localStorage.removeItem('isAdmin');
       localStorage.removeItem('token');
     },
-    logAdmin(state, value) {
+    $_logAdmin(state, value) {
       if(value == 1)  { //登录的是管理员
+        state.isAdmin = true;
         localStorage.setItem('isAdmin', true);
       } else {  //是普通用户
+        state.isAdmin = false;
         localStorage.setItem('isAdmin', false);
       }
     },

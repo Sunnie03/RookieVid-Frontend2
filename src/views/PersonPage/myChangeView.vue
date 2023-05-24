@@ -7,7 +7,7 @@
         <el-col :span="4" style="height:100%">
           <el-menu
             default-active="1-4-1"
-            class="el-menu-vertical-demo" style="height:100%;type:flex;justify:center" >
+            class="el-menu-vertical-demo" style="height:90%;type:flex;justify:center" >
             <el-menu-item index="1" class="verti-menu" v-on:click="openPerson">
               <i class="el-icon-s-order"></i>
               <span slot="title">基本信息</span>
@@ -26,9 +26,9 @@
         <el-main>
           <div class="title-container" >
             <img class="photo" :src="avatar">
-          <button class="changephoto" @click="changephoto">更换头像</button>
+            <button class="changephoto" @click="changephoto">更换头像</button>
             
-        </div>
+          </div>
         
         
 
@@ -265,13 +265,12 @@ export default {
     background-color: antiquewhite;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow:hidden;
 }
 .photo {
-    border-style: double;
     width: 80px;
     height: 80px;
     border-radius: 50% ;
@@ -301,6 +300,10 @@ export default {
 }
 .v-application ul, .v-application ol {
   padding-left: 0px
+}
+.el-main {
+  overflow: auto;
+  height: 100%;
 }
 .el-input {
   width:400%

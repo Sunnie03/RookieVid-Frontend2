@@ -50,7 +50,8 @@
                 <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
               <div class="author">
                 <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
-                <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button>
+                <!-- 修改视频的功能暂时不用了 -->
+                <!-- <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button> -->
                 <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
 
               </div>
@@ -101,9 +102,9 @@ methods: {
   playVideo(id){
     this.$router.push({ name: 'video', params: { id }})
   },
-  changeVideo(id){
-    this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数
-  },
+  // changeVideo(id){
+  //   this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数
+  // },
   getData() {
     let Headers={'Authorization': this.$store.getters.getStorage}
     axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
@@ -153,7 +154,6 @@ methods: {
   height: 100%;
 }
 .photo {
-  border-style: double;
   width: 80px;
   height: 80px;
   border-radius: 50% ;
@@ -176,7 +176,7 @@ text-align:justify;
 font-size: 15px;
 height:100%;
 padding-left: 30px;
-margin-top: 20px;
+padding-top: 20px;
 }
 .titles-container {
   display:flex; 

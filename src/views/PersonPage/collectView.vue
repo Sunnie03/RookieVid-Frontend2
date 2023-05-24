@@ -118,15 +118,16 @@ export default {
     },
     getCollects() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/videos/get_favorite',{ headers: Headers })
+      axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: 3}})
       .then((res) => {
+        
         console.log(res);
         if(res.data.errno == 0){  //获取成功
             if (Array.isArray(res.data.favorite)) {
               this.partition = res.data.favorite; 
               console.log(this.partition)
             } else {    //我估计传回来的是空
-              alert("获取数据出错")
+              alert("收藏夹列表为空")
               console.log("收藏夹列表为空")
             }
         } else {
@@ -169,7 +170,7 @@ export default {
     },
     openCollect(collect_id, collect_name) {
       
-      let collect_url='/collVideo/'+collect_id+'/'+collect_name;
+      let collect_url='/collect/'+collect_id+'/'+collect_name;
       window.open(collect_url,'_blank');
     },
     publicColl() {
@@ -178,8 +179,30 @@ export default {
     privateColl () {
       this.radio = 0;
     },
-    removeCollect() {
-
+    removeCollect(collect_id) {
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      
+      if(confirm("确认要删除此收藏夹吗？")) {
+        axios.post('account/delete_favorite',{headers: Headers, body:collect_id})
+      .then((res) =>  {
+          //处理成功响应
+          if(res.errno == 0){
+            alert("删除收藏夹成功！");
+            //还得刷新页面记得
+            location.reload()
+          } else {
+            alert(res.msg)
+          }
+          console.log(res)
+         
+        })
+        .catch(
+          //处理失败响应
+          console.error())
+      } else {
+        return 
+      }
+      
     },
     handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -206,7 +229,6 @@ export default {
     overflow: auto;
   }
   .photo {
-    border-style: double;
     width: 80px;
     height: 80px;
     border-radius: 50% ;
@@ -249,13 +271,13 @@ export default {
   }
   .recommend-item {
       width: 85%;
-      height: 250px;
+      height: 300px;
       position: relative;
       margin-bottom: 20px;
   }
   .recommend-img{
     width:100%;
-    height:100%;
+    height:80%;
     object-fit:cover;
     border-radius: 6px;
   }

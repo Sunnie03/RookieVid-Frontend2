@@ -10,9 +10,12 @@
             <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
           </a>
           <div class="titles-container" >
-            <a class="titles" v-on:click="goBack" style="float:left">回到上一级</a>
-            <img class="photo" :src="collectCov">
-            <div class="text-title" > 收藏夹：{{ collect_name }}</div>
+            <a class="titles" v-on:click="goBack" style="float:left;width:35%;height:auto">回到上一级</a>
+            
+            <div class="text-title" > 
+              <img class="photo" :src="collectCov"/>
+              收藏夹：{{ collect_name }}
+            </div>
           </div>
   
           
@@ -33,7 +36,8 @@
                   <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
                 <div class="author">
                   <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
-                  <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button>
+                  <span class="author-tag">作者</span>
+                  <span class="author-name">{{ video.user_name }}</span>
                   <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
   
                 </div>
@@ -62,49 +66,20 @@
     },
   data () {
     return {
-      collect_name: '',
-      collect_id: '',
-      partition:[''],
-
+        collect_name: '',
+        collect_id: '',
+        partition:[''],
+        collectCov: ''
     }
   },
   created() {
-    this.getData();
     this.getVideo();
     this.collect_id = this.$route.params.collect_id;
     this.collect_name = this.$route.params.collect_name;
   },
   methods: {
-    getData(){
-        let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/videos/get_favorite',{ headers: Headers })
-      .then((res) => {
-        console.log(res);
-        if(res.data.errno == 0){  //获取成功
-            if (Array.isArray(res.data.favorite)) {
-              this.partition = res.data.favorite; 
-              console.log(this.partition)
-            } else {    //我估计传回来的是空
-              alert("获取数据出错")
-              console.log("收藏夹列表为空")
-            }
-        } else {
-            alert(res.data.msg)
-            // if(res.data.errno == )
-        }
-        console.log(res);
-        }).catch(
-            console.error()
-        )
-    },
     openVideo(){
       return 
-    },
-    openPerson(){
-      this.$router.push({name:'person'})
-    },
-    openChange(){
-      this.$router.push({name:'myChange'})
     },
     playVideo(id){
       this.$router.push({ name: 'video', params: { id }})
@@ -119,8 +94,9 @@
       .then((res) => {
         console.log(res);
         if(res.data.errno == 0){  //获取成功
-          if (Array.isArray(res.data.video)) {
-              this.partition = res.data.video; 
+          this.collectCov = res.data.cover_url;
+          if (Array.isArray(res.data.data)) {
+              this.partition = res.data.data; 
               console.log(this.partition)
           } else {    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!只展示一条数据
               alert("获取数据出错")
@@ -148,9 +124,8 @@
     height: 100%;
   }
   .photo {
-    border-style: double;
-    width: 80px;
-    height: 80px;
+    width: 180px;
+    height: 150px;
     vertical-align: middle;
   }
   .text-title {
@@ -171,14 +146,11 @@
   }
   .titles-container {
     display:flex; 
-    justify-content: center;
-    align-items: center;
+    /*justify-content: center;
+    align-items: center;*/
     border:#09553d 1px;
-    height: 100px;
+    height: 200px;
     opacity: 0.9;
-  }
-  el-main {
-    overflow: auto;
   }
   
   
@@ -198,27 +170,27 @@
   }
   .recommend-img{
     width:100%;
-    height:60%;
+    height:80%;
     object-fit:cover;
     border-radius: 6px;
   }
   
   .overlay {
     position: absolute;
-    bottom: 40%;
+    bottom: 20%;
     left: 0;
     width: 100%;
     height: 10%;
-    background-color:rgba(255, 255, 255,0.5); 
+    /*background-color:rgba(255, 255, 255,0.5); */
     display: flex;
     justify-content: space-between;
-    /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)); 
   }
     
   .play-info, .like-info {
     display: flex;
     align-items: center;
-    color: rgb(78, 77, 77);
+    color: #fff;/*rgb(78, 77, 77);*/
     font-weight:bold;
     margin-left: 8px;
     margin-right:8px;
@@ -226,6 +198,7 @@
   .play-icon, .like-icon{
     margin:5px;
   }
+  
   a{
     text-decoration: none;
   }
@@ -234,7 +207,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 20%;
       /* background-color: rgba(0, 0, 0, 0.5); */
       color: black;
       display: flex;
@@ -276,6 +249,7 @@
     border-radius: 4px;
     padding: 2px 8px;
     margin-right: 8px;
+    width:55px;
   }
   
   .author-name {

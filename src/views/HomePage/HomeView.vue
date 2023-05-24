@@ -43,7 +43,7 @@
             <div class="author">
               <span class="author-tag">作者</span>
               <span class="author-name">{{ video.user_name }}</span>
-              <span class="time">{{ video.created_at.split('T')[0] }}</span>
+              <span class="time">{{ video.created_at?video.created_at.split('T')[0]:'' }}</span>
             </div>
 
           </div>
@@ -393,7 +393,7 @@ export default {
     }
   },
   created(){
-    this.getData(),
+    this.getHotData(),
     this.getData('娱乐')
     this.getData('影视')
     this.getData('游戏')
@@ -430,38 +430,44 @@ export default {
         const video_play_url='/video/'+id;
         window.open(video_play_url,'_blank');
       },
-    getData(text){
-      Promise.all([
-        axios.get('/videos/get_video_by_hotness',{params:{num:10}}),
-        axios.get('/videos/get_video_by_label',{params:{label:text,num:5}})
-      ])
-      .then(([response1,response2])=>{
-        console.log(response1.data);
-        console.log(response2.data);
-        if (Array.isArray(response1.data.video)) {
-          response1.data.video.forEach((video, index) => {
-            if(index<6){ 
-              this.$set(this.hot_videos,index,video)
-              //  console.log('hot'+this.hot_videos[index]);
-            }
-            // this.images[index] = video.cover_url;
-            // this.titles[index] = video.title;
-            // console.log(this.images[index]);
-            // this.videos[index] = video.video_url;
-            // this.hot_videos[index]=video;
-           
-            else {
-              this.$set(this.top_videos,index-6,video);
-
-            }
-            
-          });
-          
-        } else {
-          console.log(`Error in getData(${text}): response.data is not an array`);
+    getHotData(){
+      axios.get('/videos/get_video_by_hotness',{params:{num:10}})
+      .then((response)=>{
+        console.log(response);
+        if(response.data.errno!=0){
+            console.log(response.data.msg);
+            alert(response.data.msg);
+          }
+        else{
+          if (Array.isArray(response.data.video)) {
+            response.data.video.forEach((video, index) => {
+              if(index<6){ 
+                this.$set(this.hot_videos,index,video)
+              }
+              else {
+                this.$set(this.top_videos,index-6,video);
+              }
+            });
+          }
+          else {
+            console.log(`Error in getData(${text}): response.data is not an array`);
+          }
         }
-        // console.log(response.data);
-        response2.data.video.forEach((video,index)=>{
+      })
+      .catch(error => {
+         console.log(error);
+       });
+    },
+    getData(text){
+      axios.get('/videos/get_video_by_label',{params:{label:text,num:5}})
+      .then((response)=>{
+        console.log(response.data);
+        if(response.data.errno!=0){
+            console.log(response.data.msg);
+            alert(response.data.msg);
+          }
+        else{
+          response.data.video.forEach((video,index)=>{
           // console.log(text);
           if(text==='娱乐'){this.$set(this.partition1,index,video)}  
           if(text==='影视'){this.$set(this.partition2,index,video)}
@@ -475,6 +481,8 @@ export default {
           if(text==='生活'){this.$set(this.partition10,index,video)}
           // console.log(this.partition2[index]);
         })
+        }
+       
       })
       .catch(error => {
         console.log(error);
