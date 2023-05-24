@@ -10,7 +10,9 @@
                 <el-tabs class="videoClass">
                     <el-tab-pane label="已通过" name="VideoPassed">
                         <div class="video-container">
-                            <div v-if="videoPassed.length===0">这里什么都没有吖</div>
+                            <div v-if="videoPassed.length===0" class="blank-container">
+                                <div class="blank-msg">这里什么都没有吖</div>
+                             </div>
                             <div v-else>
                                 <VideoContent :partition="videoPassed"></VideoContent>
                             </div>
@@ -21,9 +23,9 @@
                         <div v-if="videoOnAudit.length===0" class="blank-container">
                             <div class="blank-msg">这里什么都没有吖</div>
                         </div>
-                            <div v-else>
-                                <VideoContent :partition="videoOnAudit"></VideoContent>
-                            </div>
+                        <div v-else>
+                            <VideoContent :partition="videoOnAudit"></VideoContent>
+                        </div>
                             <!-- <VideoContent :partition="videoOnAudit"></VideoContent> -->
                     </el-tab-pane>
                 </el-tabs>
@@ -44,8 +46,8 @@ export default {
   },
     data(){
        return {
-        videoPassed:[""],
-        videoOnAudit:[""],
+        videoPassed:[],
+        videoOnAudit:[],
        } 
     },
     created(){

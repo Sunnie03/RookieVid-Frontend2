@@ -27,7 +27,7 @@
         </ul>
       </el-tabs > -->
       <el-tabs v-model="selectedTab" class="search-navigation" type="card">
-        <el-badge :value="search_videos.length" class="item">
+        <!-- <el-badge :value="search_videos.length" class="item"> -->
           <el-tab-pane label="视频" name="video" >
             <div class="video-result">
               <div v-if="search_videos.length===0" class="blank-container">
@@ -38,7 +38,7 @@
               </div>
             </div>
           </el-tab-pane>
-        </el-badge>
+        <!-- </el-badge> -->
         <el-tab-pane label="用户" name="user" >
           <div class="users-result">
             <div v-if="search_users.length===0" class="blank-container">
@@ -48,7 +48,8 @@
               <div v-for="(user, index) in search_users" :key="index" class="user-row">
                 <img :src="user.avatar_url" class="user-avatar">
                 <div class="user-name">{{ user.username }}</div>
-                <button class="follow-button">+关注</button>
+                <button v-if="user.followed===0" class="follow-button">+关注</button>
+                <button v-if="user.followed===1" class="cancel-follow-button">取消关注</button>
               </div>
             </div>
           </div>
@@ -408,6 +409,16 @@ margin-left:30px;
 .follow-button {
   margin-left:6%;
   background-color: #22b8cf;
+
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.cancel-follow-button{
+  margin-left:6%;
+  background-color: #9b9b9b;
 
   color: white;
   border-radius: 4px;
