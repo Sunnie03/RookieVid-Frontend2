@@ -2,7 +2,12 @@
     <div class="CreationManagement">
         <Header/>
         <div class="creation-display">
+            
             <div class="aside-wrapper">
+                <el-button class="upload-button" @click="upload_video">
+                    <i class="el-icon-upload" ></i>
+                    投稿
+                </el-button>
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item index="1">稿件管理</el-menu-item>
                 </el-menu>
@@ -18,7 +23,7 @@
                             <div v-else>
                               <ul class="video-list-container">
                                
-                                <li  v-for="(video,index) in this.videoPassed" :key="index">
+                                <li  v-for="(video,index) in this.displayedVideosPassed" :key="index">
                                     <div class="video-list-item">
                                     <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
                                     <div class="video-info">
@@ -39,12 +44,12 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="审核中" name="VideoOnAudit">
-                        <div v-if="videoOnAudit.length===0 &&currentPage === 1"  class="blank-container">
+                        <div v-if="videoOnAudit.length===0"  class="blank-container">
                             <div class="blank-msg">这里什么都没有吖</div>
                         </div>
                         <div v-else>
                             <ul class="video-list-container">
-                               <li  v-for="(video,index) in this.displayedVideos" :key="index">
+                               <li  v-for="(video,index) in this.displayedVideosOnAudi" :key="index">
                                    <div class="video-list-item">
                                    <img class="video-img" :src="video.cover_url" >
                                    <div class="video-info">
@@ -65,15 +70,23 @@
                         </div>
                             <!-- <VideoContent :partition="videoOnAudit"></VideoContent> -->
                     </el-tab-pane>
-                    <el-pagination
-                                v-if="totalPages > 1"
-                                class="pagination"
-                                :page-size="pageSize"
-                                :current-page="currentPage"
-                                :total="videoPassed.length"
-                                @current-change="handlePageChange"
-                            ></el-pagination>
                 </el-tabs>
+                <el-pagination
+                v-if="totalPagesPassed > 1 && selectTab === 'VideoPassed'"
+                class="pagination"
+                :page-size="pageSize"
+                :current-page="currentPagePassed"
+                :total="videoPassed.length"
+                @current-change="handlePageChangePassed"
+                ></el-pagination>
+                <el-pagination
+                v-if="totalPagesOnAudit > 1 && selectTab === 'VideoOnAudit'"
+                class="pagination"
+                :page-size="pageSize"
+                :current-page="currentPageOnAudit"
+                :total="videoOnAudit.length"
+                @current-change="handlePageChangeOnAudit"
+                ></el-pagination>
             </div>
          </div>
     </div>
@@ -97,26 +110,38 @@ export default {
         selectTab:"VideoPassed",
         activeIndex: '1',
         currentPage: 1,
-        pageSize: 10,
-        // activeIndex2: '1'
+        currentPagePassed: 1,
+        currentPageOnAudit: 1,
+        pageSize: 8,
        } 
     },
     computed:{
-        totalPages() {
+        totalPagesPassed() {
             return Math.ceil(this.videoPassed.length / this.pageSize);
         },
-        displayedVideos() {
-            const startIndex = (this.currentPage - 1) * this.pageSize;
+        totalPagesOnAudit() {
+            return Math.ceil(this.videoOnAudit.length / this.pageSize);
+        },
+        displayedVideosPassed() {
+            const startIndex = (this.currentPagePassed - 1) * this.pageSize;
             const endIndex = startIndex + this.pageSize;
             return this.videoPassed.slice(startIndex, endIndex);
+        },
+        displayedVideosOnAudit() {
+            const startIndex = (this.currentPageOnAudit - 1) * this.pageSize;
+            const endIndex = startIndex + this.pageSize;
+            return this.videoOnAudit.slice(startIndex, endIndex);
         },
     },
     created(){
         this.getData();
     },
     methods:{
-        handlePageChange(newPage) {
-            this.currentPage = newPage;
+        handlePageChangePassed(newPage) {
+            this.currentPagePassed = newPage;
+        },
+        handlePageChangeOnAudit(newPage) {
+            this.currentPageOnAudit = newPage;
         },
         videoPlay(id){
             const video_play_url='/video/'+id
@@ -129,6 +154,10 @@ export default {
       },
         handleSelect(key, keyPath) {
         console.log(key, keyPath);
+      },
+      upload_video(){
+            const uploadUrl='/creation';
+            this.$router.push(uploadUrl);
       },
         getData(){
             let Headers={'Authorization': this.$store.getters.getStorage}
@@ -173,6 +202,12 @@ export default {
 .aside-wrapper{
     width:10%;
     
+}
+.upload-button{
+    width:100%;
+    background-color: rgb(0, 166, 255);
+    color:white;
+    font-size:16px;
 }
 .content-display{
     margin-left:50px;

@@ -5,79 +5,105 @@
        <!--导航栏-->
       <Header />
       <!-- <navMenu /> -->
-      <el-form :model="form" status-icon:rules="rules" ref="form" label-width="100px" class="upload-form">
-
-        <!-- <div style="display:flex"> -->
-          <!-- <div style="flex:1"></div> -->
-          <!-- <el-upload v-model="form.video" 
-          :auto-upload="false"
-          action=""
-          class="upload-demo" 
-          drag 
-          :file-list="fileList"
-          :on-change="saveVideo"
-          accept=".mp4"
-          :limit="1"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传mp4文件</div>
-          </el-upload>
-          <div style="flex:1"></div>
-        </div> -->
-        <el-form-item label="视频文件" prop="video"></el-form-item>
-        <div class="video_info">
-          <el-form-item label="视频标题" prop="title" style="margin-top:20px;width:100%">
-                <el-input v-model="form.title"></el-input>
-          </el-form-item>
-          <el-form-item label="视频封面" prop="cover" style="margin-top:20px">
-            <img :src="this.form.cover" style="height:20%;width:40%">
-                
-           </el-form-item>
-          
-          <el-form-item label="分区" prop="label" style="margin-top: 20px;display:inline;">
-            <el-select v-model="form.label">
-              <el-option label="娱乐" value="娱乐"></el-option>
-              <el-option label="生活" value="生活"></el-option>
-              <el-option label="学习" value="学习"></el-option>
-              <el-option label="游戏" value="游戏"></el-option>
-              <el-option label="运动" value="运动"></el-option>
-              <el-option label="美食" value="美食"></el-option>
-              <el-option label="音乐" value="音乐"></el-option>
-              <el-option label="影视" value="影视"></el-option>
-              <el-option label="科技" value="科技"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="简介" prop="description" style="margin-top: 20px;width:100%">
-              <el-input v-model="form.description"></el-input>
-          </el-form-item>
-        </div>
-        
-        <!-- <div class="upload_video" prop="video">
-          <el-input v-model="form.video" id="upload_video" type="file" ref="fileInput" accept=".mp4"  style="display:none"/>
-          <label for="upload_video">
-            <img src="../assets/upload/cloud_upload.svg" style="opacity:0.6">
-          </label>
-          <div>请在此处选择视频</div>
-        </div> -->
-        <div style="display:flex">
-          <div style="flex:1"></div>
-          <el-button @click="uploadVideo" style="margin-top:20px;">上传</el-button>
-          <div style="flex:1"></div>
-        </div>
-     
-      <div v-if="uploading">
-        <p>正在上传...</p>
-        <el-progress :percentage="uploadProgress" :show-text="false" class="progress-bar"></el-progress>
+      <div class="creation-display">
+        <div class="aside-wrapper">
+                <el-button class="upload-button" @click="upload_video">
+                    <i class="el-icon-upload" ></i>
+                    投稿
+                </el-button>
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1" @click="goCreationManage">稿件管理</el-menu-item>
+                </el-menu>
       </div>
-    </el-form>
+      <div class="upload-form-display">
+        <el-form :model="form" status-icon:rules="rules" ref="form" label-width="100px" class="upload-form">
+
+            <!-- <div style="display:flex"> -->
+            <!-- <div style="flex:1"></div> -->
+            <!-- <el-upload v-model="form.video" 
+            :auto-upload="false"
+            action=""
+            class="upload-demo" 
+            drag 
+            :file-list="fileList"
+            :on-change="saveVideo"
+            accept=".mp4"
+            :limit="1"
+            >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传mp4文件</div>
+            </el-upload>
+            <div style="flex:1"></div>
+            </div> -->
+            <!-- <el-form-item label="视频文件" prop="video"></el-form-item> -->
+            <i class="el-icon-success" style="color:rgb(90, 177, 90)">视频文件已上传</i>
+            <div class="video_info">
+            <el-form-item label="视频标题" prop="title" style="margin-top:20px;width:100%">
+                    <el-input v-model="form.title"></el-input>
+            </el-form-item>
+            <el-form-item label="视频封面" prop="cover" style="margin-top:20px">
+                <img :src="this.form.cover" style="height:20%;width:40%">
+                    
+            </el-form-item>
+            
+            <el-form-item label="分区" prop="label" style="margin-top: 20px;display:inline;">
+                <el-select v-model="form.label">
+                <el-option label="娱乐" value="娱乐"></el-option>
+                <el-option label="生活" value="生活"></el-option>
+                <el-option label="学习" value="学习"></el-option>
+                <el-option label="游戏" value="游戏"></el-option>
+                <el-option label="运动" value="运动"></el-option>
+                <el-option label="美食" value="美食"></el-option>
+                <el-option label="音乐" value="音乐"></el-option>
+                <el-option label="影视" value="影视"></el-option>
+                <el-option label="科技" value="科技"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="简介" prop="description" style="margin-top: 20px;width:100%">
+                <el-input v-model="form.description"></el-input>
+            </el-form-item>
+            </div>
+            
+            <!-- <div class="upload_video" prop="video">
+            <el-input v-model="form.video" id="upload_video" type="file" ref="fileInput" accept=".mp4"  style="display:none"/>
+            <label for="upload_video">
+                <img src="../assets/upload/cloud_upload.svg" style="opacity:0.6">
+            </label>
+            <div>请在此处选择视频</div>
+            </div> -->
+            <div style="display:flex">
+            <div style="flex:1"></div>
+            <el-button @click="uploadVideo" style="margin-top:20px;">上传</el-button>
+            <div style="flex:1"></div>
+            </div>
+        
+        <div v-if="uploading">
+            <p>正在上传...</p>
+            <el-progress :percentage="uploadProgress" :show-text="false" class="progress-bar"></el-progress>
+        </div>
+        </el-form>
+        <el-dialog
+      title="确认离开"
+      :visible="uploadConfirmationVisible"
+      @close="cancelUpload"
+      :close-on-click-modal="false"
+    >
+      <span>当前内容未保存，要离开吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpload">取消</el-button>
+        <el-button type="primary" @click="confirmUpload">确定</el-button>
+      </span>
+    </el-dialog>
+    </div>
+  </div>
   </div>
 </template>
 
 <script>
 
 // @ is an alias to /src
-import Header from '@/components/HomePage/Header.vue'
+import Header from '@/components/HomePage/Header_del_search.vue'
 import navMenu from '@/components/PersonPage/navMenu.vue'
 import axios from 'axios'
 export default {
@@ -95,6 +121,7 @@ export default {
       uploadProgress: 0,  // 上传进度，0-100
       dialogImageUrl: '',
       dialogVisible: false,
+      uploadConfirmationVisible:false,
       
       form:{
         video:'',
@@ -117,6 +144,38 @@ export default {
   },
    
   methods: {
+    confirmUpload() {
+      // 用户点击确认按钮，执行上传逻辑
+      this.$router.push('/myCreation');
+      // 关闭确认弹窗
+      this.uploadConfirmationVisible = false;
+    },
+    cancelUpload() {
+      // 用户点击取消按钮，关闭确认弹窗
+      this.uploadConfirmationVisible = false;
+    },
+    goCreationManage(){
+      // this.text=text;
+      if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+        this.uploadConfirmationVisible = true;
+        console.log(this.form.cover);
+        // console.log("未保存");
+        // alert("上传视频未保存");
+        return;
+      }
+      this.$router.push('/myCreation');
+    },
+    upload_video(){
+      // this.text=text;
+      // if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+        console.log(this.form.cover);
+        // this.uploadConfirmationVisible = true;
+        console.log("未保存");
+        alert("当前内容未上传");
+        return;
+      // }
+      // this.$router.push('/'+text);
+    },
     getCreationInfo(){
         let Headers = { 'Authorization': this.$store.getters.getStorage };
         axios.get('/videos/get_one_video',{params:{video_id:this.$route.params.id}},{headers:Headers})
@@ -214,14 +273,49 @@ export default {
 }
 </script>
 <style >
+.upload-body{
+  /* position: absolute; */
+  /* margin-bottom:50px; */
+  /* width: 100%; */
+  /* height: 100%; */
+  /* overflow: hidden; */
+  /* background-image:url('../../assets/upload/upload_background.jpeg'); */
+  /* background-size: 100% 100%; */
+}
 .upload-form{
-  width: 700px;
-  margin: 50px auto;
-  background-color: rgba(198, 231, 244, 0.5);
+  width: 80%;
+  margin-left: 10%;
+  background-color:white;
+  border-color: #333;
   padding: 30px;
   border-radius: 10px;
-  opacity: 0.7;
+  border: 1px solid #8a8a8a;
+  border-style:dashed;
+  
 }
+.creation-display{
+    margin:30px;
+    display:flex;
+}
+.aside-wrapper{
+    width:14%;
+    background-color: white;
+    
+}
+.upload-button{
+    width:80%;
+    margin-left:20px;
+    background-color: rgb(0, 166, 255);
+    color:white;
+    font-size:16px;
+}
+.upload-form-display{
+  width:80%;
+}
+.upload-display{
+    margin:50px;
+}
+
 .video_info{
   display: flex; 
   flex-direction: column; 
@@ -238,17 +332,8 @@ export default {
 .el-form-item{
   opacity: 1;
 }
-.upload-demo{
 
-}
-.upload-body{
-  position: absolute;
-  width: 100%;
-  height: 150%;
-  overflow: hidden;
-  background-image:url('../../assets/upload/upload_background.jpeg');
-  background-size: 100% 100%;
-}
+
 .progress-bar {
   -webkit-animation: progress-bar-animation 2s ease-out forwards;
   animation: progress-bar-animation 2s ease-out forwards;
