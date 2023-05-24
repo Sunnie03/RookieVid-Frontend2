@@ -77,7 +77,7 @@ export default {
     },
     getData() {
       let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
+      axios.get('/account/display_myprofile',{ headers: Headers })
       .then((res) => {
         console.log(res);
         console.log(Headers);
@@ -87,6 +87,8 @@ export default {
           this.email = res.data.context.email
           this.signature = res.data.context.signature  //这是个性签名
           this.avatar = res.data.context.avatar_url   //这是头像
+
+          this.$store.commit('$_setNowUser', res.data.context.id) //保存当前用户的id
         }else {
             alert(res.data.msg)
             // if(res.data.errno == )
@@ -126,6 +128,8 @@ export default {
 .verti-menu{
   height: 150px;
   text-align: center;
+  vertical-align: middle;
+  line-height: 150px;
   }
 .el-main {
   color: #4a5045;

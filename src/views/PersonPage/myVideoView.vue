@@ -33,7 +33,7 @@
         </div>
 
         
-          <div class="recommend-container">
+          <div class="recommend-container" v-if="!this.null_flag">
             <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
               <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
                <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
@@ -57,6 +57,7 @@
               </div>
             </div>
           </div>
+          <div v-else><h2>你还没有投稿哦~</h2></div>
         </div>
       <!-- </el-main> -->
         
@@ -82,6 +83,8 @@ data () {
   return {
     username: '',
     avatar: '',
+    user_id: 0,
+    null_flag: false,
     partition:[''],
   }
 },
@@ -106,8 +109,9 @@ methods: {
   //   this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数
   // },
   getData() {
-    let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
+    let Headers={'Authorization': this.$store.getters.getStorage} 
+    this.user_id = this.$store.getters.getNowUser
+    axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.user_id} })
     .then((res) => {
       console.log(res);
       console.log(Headers);
@@ -124,15 +128,16 @@ methods: {
   },
   getVideo() {
     let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/account/get_videos',{ headers: Headers, params:{user_id: 1} })
+    axios.get('/account/get_videos',{ headers: Headers, params:{user_id: this.user_id} })
     .then((res) => {
       console.log(res);
       if(res.data.errno == 0){  //获取成功
-        if (Array.isArray(res.data.data)) {
+        if (Array.isArray(res.data.data) && res.data.data.length>0) {
             this.partition = res.data.data; 
+            this.null_flag = false
             console.log(this.partition)
         } else {    //我估计传回来的是空
-            alert("获取数据出错")
+          this.null_flag = true
         }
       }
     }).catch(
@@ -166,9 +171,11 @@ methods: {
   margin-left: 40px;
 }
 .verti-menu{
-height: 150px;
-text-align: center;
-}
+  height: 150px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 150px;
+  }
 .info-container{
 background-color: antiquewhite;
 color: #4a5045;

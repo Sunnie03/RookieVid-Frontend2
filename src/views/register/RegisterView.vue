@@ -117,7 +117,7 @@ export default {
         .then(response => {
           //处理成功响应
           if(response.data.errno == 1000){
-            alert("已发送验证码");
+            alert("已发送验证码，注意5分钟内有效");
           } else {
             alert(response.data.msg)
             // prompt("okkl")

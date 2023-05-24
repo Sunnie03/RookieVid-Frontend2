@@ -165,6 +165,17 @@ const routes = [
     name: 'myFans',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFans.vue')
   },
+  /*别人的主页 */
+  {
+    path: '/lookPerson/:user_id',
+    name: 'lookPerson',
+    component: () => import(/* webpackChunkName: "about" */ '../views/OthersPage/lookPersonView.vue')
+  },
+  {
+    path: '/othersCollect/:user_id',
+    name: 'lookOthersCollect',
+    component: () => import(/* webpackChunkName: "about" */ '../views/OthersPage/othersCollectView.vue')
+  },
 ]
 
 const router = new VueRouter({

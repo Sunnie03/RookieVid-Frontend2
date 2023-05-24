@@ -13,9 +13,10 @@
             
             
               <li v-for="(user, index) in followList" :key="index" class="follow-item">
-                <img :src="user.avatar_url" class="photo">
-                <div class="user-name">{{ user.username }}</div>
-                <div class="user-sign">{{ user.signature}}</div>
+                <img :src="user.avatar_url" class="photo" @click="openLook(user.id)">
+                <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
+                <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
+                <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
                 <button class="follow-button">+关注</button>
               </li>
             
@@ -68,6 +69,10 @@ methods: {
     }).catch(
       console.error()
     )
+  },
+  openLook(look_user) {
+    let look_url='/lookPerson/'+look_user;
+    window.open(look_url,'_blank');
   }
 }
 }
@@ -89,7 +94,7 @@ methods: {
   height: 80px;
   border-radius: 50% ;
   vertical-align: middle;
-  margin-right: 10%;
+  margin-right: 5%;
 }
 
 .follow-container {
@@ -131,17 +136,12 @@ methods: {
   width: 200px;
   flex:1;
 }
-.user-info {
-  display: flex;
-  align-items: left;
-  justify-content: space-between;
-  flex-grow: 1;
-}
+
 
 .user-name {
   font-weight: bold;
-  font-size: 16px;
-  margin-right: 10px;
+  font-size: 20px;
+  margin-right: 20px;
 }
 
 .follow-button {
