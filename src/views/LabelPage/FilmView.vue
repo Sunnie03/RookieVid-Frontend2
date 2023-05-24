@@ -1,22 +1,22 @@
 <template>
-  <div class="film">
-    <!--导航栏-->
-    <Header />
-    <!--分区-->
-    <Partition></Partition>
-
-    <!--【下面补全该页面代码】-->
-    <h1>This is a film page</h1>
+  <div class="partition-page">
+    <Header/>
+    <Partition/>
+    <PartitionPage :partition_label="'影视'"></PartitionPage>
   </div>
 </template>
+
 <script>
 import Header from '@/components/HomePage/Header.vue'
 import Partition from '@/components/HomePage/Partition.vue'
-export default {
-  name: 'FilmView',//当前引入页面
+import PartitionPage from '@/components/PartitionPage.vue'
+
+export default({
+  name:'FileView',
   components: {
     Header,
     Partition,
+    PartitionPage
   },
-}
+})
 </script>

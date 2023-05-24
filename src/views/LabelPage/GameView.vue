@@ -1,22 +1,21 @@
 <template>
-  <div class="game">
-    <!--导航栏-->
-    <Header />
-    <!--分区-->
-    <Partition></Partition>
-
-    <!--【下面补全该页面代码】-->
-    <h1>This is a game page</h1>
+  <div class="partition-page">
+    <Header/>
+    <Partition/>
+    <PartitionPage :partition_label="'游戏'"></PartitionPage>
   </div>
 </template>
+
 <script>
 import Header from '@/components/HomePage/Header.vue'
 import Partition from '@/components/HomePage/Partition.vue'
-export default {
-  name: 'GameView',//当前引入页面
+import PartitionPage from '@/components/PartitionPage.vue'
+export default({
+  name:'GameView',
   components: {
     Header,
     Partition,
+    PartitionPage
   },
-}
+})
 </script>

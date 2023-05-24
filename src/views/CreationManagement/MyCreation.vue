@@ -109,7 +109,7 @@ export default {
         videoOnAudit:[],
         selectTab:"VideoPassed",
         activeIndex: '1',
-        currentPage: 1,
+        // currentPage: 1,
         currentPagePassed: 1,
         currentPageOnAudit: 1,
         pageSize: 8,

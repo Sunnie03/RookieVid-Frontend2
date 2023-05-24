@@ -46,8 +46,8 @@
             </div>
             <div v-else>
               <div v-for="(user, index) in search_users" :key="index" class="user-row">
-                <img :src="user.avatar_url" class="user-avatar">
-                <div class="user-name">{{ user.username }}</div>
+                <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
+                <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div>
                 <button v-if="user.followed===0" class="follow-button">+关注</button>
                 <button v-if="user.followed===1" class="cancel-follow-button">取消关注</button>
               </div>
@@ -121,6 +121,10 @@ export default {
   },
   methods: {
     // searchVideo(){ 
+      goPersonPage(id){
+        const user_page_url='/lookPerson/'+id;
+        window.open(user_page_url,'_blank');
+      },
       handleClick(tab) {
         console.log(tab, event);
       },
@@ -405,7 +409,9 @@ margin-left:30px;
   font-size: 16px;
   margin-right: 10px;
 }
-
+.user-name:hover{
+  color:orange;
+}
 .follow-button {
   margin-left:6%;
   background-color: #22b8cf;
