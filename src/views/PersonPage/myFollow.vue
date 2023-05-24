@@ -15,6 +15,7 @@
                 <li v-for="(user, index) in followList" :key="index" class="follow-item">
                   <img :src="user.avatar_url" class="photo">
                   <div class="user-name">{{ user.username }}</div>
+                  <div class="user-sign">{{ user.signature}}</div>
                   <button class="follow-button">+关注</button>
                 </li>
               
@@ -88,7 +89,7 @@ export default {
     height: 80px;
     border-radius: 50% ;
     vertical-align: middle;
-    margin-right: 10%;
+    margin-right: 5%;
   }
  
   .follow-container {
@@ -134,12 +135,17 @@ export default {
   
   .user-name {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 20px;
     margin-right: 10px;
+  }
+  .user-sign {
+    font-size: 15px;
+    margin-right: 10px;
+    width: 200px
   }
   
   .follow-button {
-    margin-left: 70%;
+    margin-left: 50%;
     background-color: #22b8cf;
   
     color: white;

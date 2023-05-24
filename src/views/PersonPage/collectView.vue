@@ -118,20 +118,20 @@ export default {
     },
     getCollects() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/account/get_favorite',{ headers: Headers, user_id: 3})
+      axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: 3}})
       .then((res) => {
         
         console.log(res);
-        if(res.errno == 0){  //获取成功
-            if (Array.isArray(res.favorite)) {
-              this.partition = res.favorite; 
+        if(res.data.errno == 0){  //获取成功
+            if (Array.isArray(res.data.favorite)) {
+              this.partition = res.data.favorite; 
               console.log(this.partition)
             } else {    //我估计传回来的是空
-              alert("获取数据出错")
+              alert("收藏夹列表为空")
               console.log("收藏夹列表为空")
             }
         } else {
-            alert(res.msg)
+            alert(res.data.msg)
             // if(res.data.errno == )
         }
         console.log(res);
@@ -271,13 +271,13 @@ export default {
   }
   .recommend-item {
       width: 85%;
-      height: 250px;
+      height: 300px;
       position: relative;
       margin-bottom: 20px;
   }
   .recommend-img{
     width:100%;
-    height:100%;
+    height:80%;
     object-fit:cover;
     border-radius: 6px;
   }
