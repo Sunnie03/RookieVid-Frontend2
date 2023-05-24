@@ -39,12 +39,12 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="审核中" name="VideoOnAudit">
-                        <div v-if="videoOnAudit.length===0" class="blank-container">
+                        <div v-if="videoOnAudit.length===0 &&currentPage === 1"  class="blank-container">
                             <div class="blank-msg">这里什么都没有吖</div>
                         </div>
                         <div v-else>
                             <ul class="video-list-container">
-                               <li  v-for="(video,index) in this.videoPassed" :key="index">
+                               <li  v-for="(video,index) in this.displayedVideos" :key="index">
                                    <div class="video-list-item">
                                    <img class="video-img" :src="video.cover_url" >
                                    <div class="video-info">
@@ -61,9 +61,18 @@
                                    <el-divider></el-divider>
                                </li>
                              </ul>
+                             
                         </div>
                             <!-- <VideoContent :partition="videoOnAudit"></VideoContent> -->
                     </el-tab-pane>
+                    <el-pagination
+                                v-if="totalPages > 1"
+                                class="pagination"
+                                :page-size="pageSize"
+                                :current-page="currentPage"
+                                :total="videoPassed.length"
+                                @current-change="handlePageChange"
+                            ></el-pagination>
                 </el-tabs>
             </div>
          </div>
@@ -87,19 +96,36 @@ export default {
         videoOnAudit:[],
         selectTab:"VideoPassed",
         activeIndex: '1',
+        currentPage: 1,
+        pageSize: 10,
         // activeIndex2: '1'
        } 
+    },
+    computed:{
+        totalPages() {
+            return Math.ceil(this.videoPassed.length / this.pageSize);
+        },
+        displayedVideos() {
+            const startIndex = (this.currentPage - 1) * this.pageSize;
+            const endIndex = startIndex + this.pageSize;
+            return this.videoPassed.slice(startIndex, endIndex);
+        },
     },
     created(){
         this.getData();
     },
     methods:{
+        handlePageChange(newPage) {
+            this.currentPage = newPage;
+        },
         videoPlay(id){
-        const video_play_url='/video/'+id
-        window.open(video_play_url,'_blank');
-      },
+            const video_play_url='/video/'+id
+            window.open(video_play_url,'_blank');
+        },
       amendVideo(id){
-        window.open
+        const amend_creation_url='/amendCreation/'+id;
+        // window.open(amend_creation_url,)
+        this.$router.push(amend_creation_url);
       },
         handleSelect(key, keyPath) {
         console.log(key, keyPath);

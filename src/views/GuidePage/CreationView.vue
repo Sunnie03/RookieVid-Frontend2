@@ -14,6 +14,7 @@
           class="upload-demo" 
           drag 
           :file-list="fileList"
+          :on-remove="handleVideoRemove"
           :on-change="saveVideo"
           accept=".mp4"
           :limit="1"
@@ -167,7 +168,12 @@ export default {
     // }
       
     },
+    handleVideoRemove(){
+      this.form.video='';
+      
+    },
     handleRemove(file, fileList) {
+        this.form.cover='';
         console.log(file, fileList);
       },
     handlePictureCardPreview(file) {
@@ -250,6 +256,8 @@ export default {
         console.log(res);
         if(res.errno==0){ 
           alert("上传成功");
+          const keyURL='/myCreation';
+          this.$router.push(keyURL);
          
         }else {
             alert(res.data.msg)

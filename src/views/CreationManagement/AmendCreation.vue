@@ -6,6 +6,7 @@
       <Header />
       <!-- <navMenu /> -->
       <el-form :model="form" status-icon:rules="rules" ref="form" label-width="100px" class="upload-form">
+
         <!-- <div style="display:flex"> -->
           <!-- <div style="flex:1"></div> -->
           <!-- <el-upload v-model="form.video" 
@@ -27,36 +28,15 @@
         <el-form-item label="视频文件" prop="video"></el-form-item>
         <div class="video_info">
           <el-form-item label="视频标题" prop="title" style="margin-top:20px;width:100%">
-                <el-input v-model="form.title" ></el-input>
+                <el-input v-model="form.title"></el-input>
           </el-form-item>
           <el-form-item label="视频封面" prop="cover" style="margin-top:20px">
-                <!-- <el-input v-model="form.cover" id="upload_cover" type="file" accept=".jpg,.png,.jpeg" style="display:none;" ></el-input>
-                <label for="upload_cover">
-                  <img src="../assets/upload/upload_cover.png" style="height: 100px; width:100px;opacity: 0.6;">
-                </label> -->
+            <img :src="this.form.cover" style="height:20%;width:40%">
                 
-                <!-- <el-upload 
-                  action=""
-                  v-model="form.cover"
-                  list-type="picture-card"
-                  
-                  :on-remove="handleRemove"
-                  :auto-upload="false"
-
-                  :on-change="savePicture"
-                  :on-preview="handlePictureCardPreview"
-                  accpet=".png,.jpeg"
-                  :limit="1"
-                  >
-                  <i  class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog> -->
-          </el-form-item>
+           </el-form-item>
           
           <el-form-item label="分区" prop="label" style="margin-top: 20px;display:inline;">
-            <el-select v-model="form.label" placeholder="游戏">
+            <el-select v-model="form.label">
               <el-option label="娱乐" value="娱乐"></el-option>
               <el-option label="生活" value="生活"></el-option>
               <el-option label="学习" value="学习"></el-option>
@@ -132,91 +112,54 @@ export default {
     // },
   },
   created(){
-   
+    const self=this;
+    this.getCreationInfo();
   },
    
   methods: {
-    saveVideo(file){
-      
-      this.fileList=[file];
-      this.form.video=this.fileList[0].raw;
-      console.log(this.fileList);
-      console.log(this.form.video);
-     
+    getCreationInfo(){
+        let Headers = { 'Authorization': this.$store.getters.getStorage };
+        axios.get('/videos/get_one_video',{params:{video_id:this.$route.params.id}},{headers:Headers})
+        .then((response)=>{
+            console.log(response);
+            if(response.data.errno!=0){
+                console.log(response.data.msg);
+                alert(response.data.msg);
+            }
+            else{
+                this.form.cover=response.data.video.cover_url;
+                this.form.video=response.data.video.video_url;
+                this.form.label=response.data.video.label;
+                this.form.title=response.data.video.title;
+                this.form.description=response.data.video.description;
+            }
+            
+        })
     },
-    // beforeSavePicture(file){
-    //   const isIMAGE = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'|| file.raw.type === 'image/jpg');
-    //   const isLt1M = file.size / 1024 / 1024 < 1;
-    //   if (!isIMAGE) {
-    //     this.$message.error('上传文件只能是图片格式!');
-    //     return isIMAGE;
-    //   }
-
-    // },
-    savePicture(file){
-      // const isIMAGE = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'|| file.raw.type === 'image/jpg');
-      // const isLt1M = file.size / 1024 / 1024 < 1;
-      // if (!isIMAGE) {
-      //   this.$message.error('上传文件只能是图片格式!');
-      //   return false;
-      // }
-      // else{
-        // this.fileList=[file];
-      this.form.cover=file.raw;
-      console.log(this.fileList);
-      console.log(this.form.cover);
-    // }
-      
-    },
-    handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-    handlePictureCardPreview(file) {
-      
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-        this.hasCover=true;
-        console.log(this.dialogImageUrl)
-      },
-    // onUploadVideo(file){
-    //   this.form.video=file;
-    // },
-    // onUploadChange(file)
-    // {
-    //   const isLt1M = file.size / 1024 / 1024 < 1;
-    //   if (!isLt1M) {
-    //     this.$message.error('上传文件大小不能超过 1MB!');
-    //     return false;
-    //   }
-      // var reader = new FileReader();
-      // reader.readAsDataURL(file.raw);
-      // reader.onload = () => {
-        // console.log(reader.result); // 图片的 base64 数据
-        // this.form.cover = file; // 将 base64 数据保存到 form.cover
-      // };
-    // },
+ 
     uploadVideo(){
       // console.log(this.form);
-      console.log(this.form.video);
-      console.log(this.form.cover);
-      if (!this.form.video) {
-         this.$message.error('请先选择视频文件!');
-          return;
-        }
+    //   console.log(this.form.video);
+    //   console.log(this.form.cover);
+    //   if (!this.form.video) {
+    //      this.$message.error('请先选择视频文件!');
+    //       return;
+    //     }
       
       if(!this.form.title){
         this.$message.error('视频标题不能为空!');
         return;
       }
-      if(!this.form.cover){
-        this.$message.error('请先选择视频封面!');
-        return;
-      }
-      const isIMAGE = (this.form.cover.type === 'image/jpeg' ||this.form.cover.type === 'image/png'|| this.form.cover.type === 'image/jpg');
-      if (!isIMAGE) {
-        this.$message.error('视频封面只能是jpeg/jpg/png格式!');
-        return ;
-      }
+    //   if(!this.form.cover){
+    //     this.$message.error('请先选择视频封面!');
+    //     return;
+    //   }
+      console.log(this.form.cover);
+    //   const isIMAGE = (this.form.cover.type === 'image/jpeg' ||this.form.cover.type === 'image/png'|| this.form.cover.type === 'image/jpg');
+    //   if (!isIMAGE) {
+    //     this.$message.error('视频封面只能是jpeg/jpg/png格式!');
+    //     return ;
+    //   }
       if(!this.form.label){
         this.$message.error('请选择视频分区!');
         return;
@@ -227,15 +170,18 @@ export default {
       }
       this.uploading = true;
       let formData=new FormData();
+      formData.append("video_id",this.$route.params.id);
+      console.log("id"+this.$route.params.id);
       formData.append("video_file",this.form.video);
       formData.append("cover_file",this.form.cover);
       formData.append("label",this.form.label);
       formData.append("title",this.form.title);
       formData.append("description",this.form.description);
-      // console.log(formData);
+    //   console.log(formData);
+    console.log(this.form.label);
       let Headers={'Authorization': this.$store.getters.getStorage}
       // axios.get('/videos/get_video',{ headers: Headers, params:{favorite_id: 1} })
-      axios.post('/videos/upload_video',formData, {headers:Headers,
+      axios.post('/videos/update_video',formData, {headers:Headers,
           onUploadProgress: progressEvent => {
             this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             console.log(this.uploadProgress);
@@ -249,8 +195,10 @@ export default {
         })
       .then((res)=>{
         console.log(res);
-        if(res.errno==0){ 
-          alert("上传成功");
+        if(res.data.errno==0){ 
+          alert("更新成功");
+          const keyURL='/myCreation';
+          this.$router.push(keyURL);
          
         }else {
             alert(res.data.msg)

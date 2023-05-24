@@ -171,7 +171,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue')
   },
   {
-    path: '/amendCreation',
+    path: '/amendCreation/:id',
     name: 'amendCreation',
     component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/AmendCreation.vue')
   },
