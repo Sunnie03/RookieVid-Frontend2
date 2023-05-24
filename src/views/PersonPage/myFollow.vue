@@ -89,7 +89,7 @@ export default {
     height: 80px;
     border-radius: 50% ;
     vertical-align: middle;
-    margin-right: 5%;
+    margin-right: 3%;
   }
  
   .follow-container {
@@ -126,12 +126,7 @@ export default {
    /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
   }
 
-  .user-info {
-    display: flex;
-    align-items: left;
-    justify-content: space-between;
-    flex-grow: 1;
-  }
+ 
   
   .user-name {
     font-weight: bold;
