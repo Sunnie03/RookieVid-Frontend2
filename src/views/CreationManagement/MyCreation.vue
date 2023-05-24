@@ -3,20 +3,39 @@
         <Header/>
         <div class="creation-display">
             <div class="aside-wrapper">
-                
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1">稿件管理</el-menu-item>
+                </el-menu>
             </div>
         
             <div class="content-display">
-                <el-tabs class="videoClass">
+                <el-tabs class="videoClass" v-model="selectTab">
                     <el-tab-pane label="已通过" name="VideoPassed">
                         <div class="video-container">
                             <div v-if="videoPassed.length===0" class="blank-container">
                                 <div class="blank-msg">这里什么都没有吖</div>
                              </div>
                             <div v-else>
-                                <VideoContent :partition="videoPassed"></VideoContent>
+                              <ul class="video-list-container">
+                               
+                                <li  v-for="(video,index) in this.videoPassed" :key="index">
+                                    <div class="video-list-item">
+                                    <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
+                                    <div class="video-info">
+                                        <div class="video-title">{{ video.title }}</div>
+                                        <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
+                                        <i class="el-icon-video-play">{{ video.view_amount }}</i>
+                                        <i class="el-icon-thumb">{{ video.like_amount }}</i>
+                                        <i class="el-icon-star-off">{{ video.fav_amount }}</i>
+                                    </div>
+                                    <el-button class="amend-button" @click="amendVideo(video.id)">
+                                        <i class="el-icon-edit"></i>修改
+                                    </el-button>
+                                     </div>
+                                    <el-divider></el-divider>
+                                </li>
+                              </ul>
                             </div>
-                            
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="审核中" name="VideoOnAudit">
@@ -24,7 +43,24 @@
                             <div class="blank-msg">这里什么都没有吖</div>
                         </div>
                         <div v-else>
-                            <VideoContent :partition="videoOnAudit"></VideoContent>
+                            <ul class="video-list-container">
+                               <li  v-for="(video,index) in this.videoPassed" :key="index">
+                                   <div class="video-list-item">
+                                   <img class="video-img" :src="video.cover_url" >
+                                   <div class="video-info">
+                                       <div class="video-title">{{ video.title }}</div>
+                                       <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
+                                       <i class="el-icon-video-play">{{ video.view_amount }}</i>
+                                       <i class="el-icon-thumb">{{ video.like_amount }}</i>
+                                       <i class="el-icon-star-off">{{ video.fav_amount }}</i>
+                                   </div>
+                                   <el-button class="amend-button" @click="amendVideo(video.id)">
+                                       <i class="el-icon-edit"></i>修改
+                                   </el-button>
+                                    </div>
+                                   <el-divider></el-divider>
+                               </li>
+                             </ul>
                         </div>
                             <!-- <VideoContent :partition="videoOnAudit"></VideoContent> -->
                     </el-tab-pane>
@@ -33,6 +69,7 @@
          </div>
     </div>
 </template>
+
 <script>
 import Header from '@/components/HomePage/Header_del_search.vue'
 import VideoContent from '@/components/HomePage/PartitionVideoShow.vue'
@@ -48,12 +85,25 @@ export default {
        return {
         videoPassed:[],
         videoOnAudit:[],
+        selectTab:"VideoPassed",
+        activeIndex: '1',
+        // activeIndex2: '1'
        } 
     },
     created(){
         this.getData();
     },
     methods:{
+        videoPlay(id){
+        const video_play_url='/video/'+id
+        window.open(video_play_url,'_blank');
+      },
+      amendVideo(id){
+        window.open
+      },
+        handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+      },
         getData(){
             let Headers={'Authorization': this.$store.getters.getStorage}
             axios.get('/videos/get_video',{headers:Headers})
@@ -88,9 +138,20 @@ export default {
     }
 }
 </script>
-<style scoped>
+
+<style>
 .creation-display{
-    margin:50px;
+    margin:30px;
+    display:flex;
+}
+.aside-wrapper{
+    width:10%;
+    
+}
+.content-display{
+    margin-left:50px;
+    width:75%;
+ 
 }
 .blank-container {
   display: flex;
@@ -102,5 +163,71 @@ export default {
   font-size: 24px;
   font-weight: bold;
   color:rgb(163, 154, 154)
+}
+.video-list-container{
+    width:100%;
+    list-style-type: none;
+    /* border:1px; */
+}
+.video-list-item{
+    width:100%;
+    display:flex;
+    margin:20px;
+    /* border-bottom: 1px solid #ccc; */
+
+}
+.video-img{
+    width:20%;
+    height:100%;
+    border-radius:10px;
+}
+.video-info{
+    margin-top:1%;
+    margin-left:3%;
+    width:80%;
+}
+.video-title{
+    height:32%;
+    padding-bottom:4%;
+    font-weight:bold;
+    font-size:19px;
+    color:rgb(74, 74, 74);
+   
+  box-sizing: border-box;
+  word-break:break-all;
+  text-overflow:ellipsis;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:1;
+  overflow:hidden;
+}
+.video-time{
+    height:33.3%;
+    font-weight:bold;
+    font-size:16px;
+    color:grey;
+}
+.el-icon-video-play{
+    height:33.3%;
+    font-size:16px;
+    color:grey;
+    margin-right:20px;
+}
+.el-icon-thumb{
+    height:33.3%;
+    font-size:16px;
+    color:grey;
+    margin-right:20px;
+}
+.el-icon-star-off{
+    height:33.3%;
+    font-size:16px;
+    color:grey;
+}
+.amend-button{
+    margin-top:3%;
+    margin-right:3%;
+    height:70%;
 }
 </style>

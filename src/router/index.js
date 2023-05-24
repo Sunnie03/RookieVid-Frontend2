@@ -170,6 +170,11 @@ const routes = [
     name: 'myCreation',
     component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue')
   },
+  {
+    path: '/amendCreation',
+    name: 'amendCreation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/AmendCreation.vue')
+  },
 ]
 
 const router = new VueRouter({
