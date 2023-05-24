@@ -10,11 +10,12 @@
             <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
           </a>
           <div class="titles-container" >
-            <a class="titles" v-on:click="goBack" style="float:left;width:35%">回到上一级</a>
+            <a class="titles" v-on:click="goBack" style="float:left;width:35%;height:auto">回到上一级</a>
             
             <div class="text-title" > 
               <img class="photo" :src="collectCov"/>
-              收藏夹：{{ collect_name }}</div>
+              收藏夹：{{ collect_name }}
+            </div>
           </div>
   
           
@@ -123,9 +124,8 @@
     height: 100%;
   }
   .photo {
-    border-style: double;
-    width: 80px;
-    height: 80px;
+    width: 180px;
+    height: 150px;
     vertical-align: middle;
   }
   .text-title {
@@ -149,11 +149,8 @@
     /*justify-content: center;
     align-items: center;*/
     border:#09553d 1px;
-    height: 100px;
+    height: 200px;
     opacity: 0.9;
-  }
-  el-main {
-    overflow: auto;
   }
   
   
@@ -173,14 +170,14 @@
   }
   .recommend-img{
     width:100%;
-    height:60%;
+    height:80%;
     object-fit:cover;
     border-radius: 6px;
   }
   
   .overlay {
     position: absolute;
-    bottom: 40%;
+    bottom: 20%;
     left: 0;
     width: 100%;
     height: 10%;

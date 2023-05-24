@@ -154,7 +154,6 @@ methods: {
   height: 100%;
 }
 .photo {
-  border-style: double;
   width: 80px;
   height: 80px;
   border-radius: 50% ;
@@ -177,7 +176,7 @@ text-align:justify;
 font-size: 15px;
 height:100%;
 padding-left: 30px;
-margin-top: 20px;
+padding-top: 20px;
 }
 .titles-container {
   display:flex; 

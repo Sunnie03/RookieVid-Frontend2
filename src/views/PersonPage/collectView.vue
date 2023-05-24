@@ -170,7 +170,7 @@ export default {
     },
     openCollect(collect_id, collect_name) {
       
-      let collect_url='/collVideo/'+collect_id+'/'+collect_name;
+      let collect_url='/collect/'+collect_id+'/'+collect_name;
       window.open(collect_url,'_blank');
     },
     publicColl() {
@@ -179,8 +179,30 @@ export default {
     privateColl () {
       this.radio = 0;
     },
-    removeCollect() {
-
+    removeCollect(collect_id) {
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      
+      if(confirm("确认要删除此收藏夹吗？")) {
+        axios.post('account/delete_favorite',{headers: Headers, body:collect_id})
+      .then((res) =>  {
+          //处理成功响应
+          if(res.errno == 0){
+            alert("删除收藏夹成功！");
+            //还得刷新页面记得
+            location.reload()
+          } else {
+            alert(res.msg)
+          }
+          console.log(res)
+         
+        })
+        .catch(
+          //处理失败响应
+          console.error())
+      } else {
+        return 
+      }
+      
     },
     handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -207,7 +229,6 @@ export default {
     overflow: auto;
   }
   .photo {
-    border-style: double;
     width: 80px;
     height: 80px;
     border-radius: 50% ;

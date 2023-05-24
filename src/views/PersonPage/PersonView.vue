@@ -111,7 +111,7 @@ export default {
     overflow: hidden;
 }
 .photo {
-    border-style: double;
+    /*border-style: double;*/
     width: 80px;
     height: 80px;
     border-radius: 50% ;

@@ -1,23 +1,29 @@
 <template>
-    <div class="person-container">
-        <!-- 根标签 -->
-        <top-header></top-header>
-        <my-component></my-component>
+  <div class="person-container">
+      <!-- 根标签 -->
+      <top-header></top-header>
+      <my-component></my-component>
 
-        
-        
-        <el-main>
-          <!-- <div class="title-container" >
-              <img class="photo" :src="avatar">
-            <div class="text-title" > 昵称：{{ username }}</div>
+      
+      
+      <el-main>
+        <div class="follow-container">
+          <div class="follow-header">我的粉丝</div>
+          <ul class="follow-list">
             
-          </div>
-          <div class="text">用户ID:  {{ userid }}</div>
-          <div class="text">邮箱:  {{ email }}</div>
-          <div class="text">个性签名:  {{ signature }}</div> -->
-        </el-main>
-          
-    </div>
+            
+              <li v-for="(user, index) in followList" :key="index" class="follow-item">
+                <img :src="user.avatar_url" class="photo">
+                <div class="user-name">{{ user.username }}</div>
+                <button class="follow-button">+关注</button>
+              </li>
+            
+            <!-- <li class="follow-item">关注用户2 </li> -->
+          </ul>
+        </div>
+      </el-main>
+        
+  </div>
 </template>
 
 <script>
@@ -29,98 +35,118 @@ import Header from '../../components/HomePage/Header.vue'
 
 // Vue.component('my-component', NavComponent);
 export default {
-  components: {
-    'my-component': NavComponent,
-    'top-header':Header,
-  
-  },
-  data () {
-    return {
-      username: '',
-      avatar: '',
-      userid: '',
-      email: '',
-      signature: ''
-    }
-  },
-  created() {
-    this.getData();
-    console.log(this.$store.state)
-  },
-  methods: {
-    openVideo(){
-      this.$router.push({name:'myVideo'})
-    },
-    openPerson(){
-      return
-    },
-    openChange(){
-      this.$router.push({name:'myChange'})
-    },
-    getData() {
-      let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
-      .then((res) => {
-        console.log(res);
-        console.log(Headers);
-        if(res.data.errno == 0){  //获取成功
-          this.userid = res.data.context.uid,
-          this.username = res.data.context.username,
-          this.email = res.data.context.email
-          this.signature = res.data.context.signature  //这是个性签名
-          this.avatar = res.data.context.avatar_url   //这是头像
-        }else {
-            alert(res.data.msg)
-            // if(res.data.errno == )
+components: {
+  'my-component': NavComponent,
+  'top-header':Header,
+
+},
+data () {
+  return {
+    followList:['']
+  }
+},
+created() {
+  this.getData();
+  console.log(this.$store.state)
+},
+methods: {
+  getData() {
+    let Headers={'Authorization': this.$store.state.token}
+    axios.get('/account/get_followers',{ headers: Headers})
+    .then((res) => {
+      console.log(res);
+      console.log(Headers);
+      if(res.data.errno == 0){  //获取成功
+        if(Array.isArray(res.data.data)) {
+          this.followList = res.data.data
         }
-      }).catch(
-        console.error()
-      )
-    }
+      }else {
+          alert("获取数据出错")
+          alert(res.data.msg)
+      }
+    }).catch(
+      console.error()
+    )
   }
-  }
+}
+}
 </script>
 
 <style scoped>
 .person-container {
-    border: 1px;
-    background-color: antiquewhite;
-    background-size: 100% 100% ;
-    background-repeat: no-repeat;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-  }
-  .photo {
-    border-style: double;
-    width: 80px;
-    height: 80px;
-    border-radius: 50% ;
-    vertical-align: middle;
-  }
-  .text-title {
-    display:inline;
-    font-size: 30px;
-    background-repeat: repeat;
-    margin-left: 40px;
-  }
+  border: 1px;
+  background-color: antiquewhite;
+  background-size: 100% 100% ;
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50% ;
+  vertical-align: middle;
+  margin-right: 10%;
+}
+
+.follow-container {
+  width: 100%;
+  align-content: center;
   
-  .info-container{
-  color: #4a5045;
-  text-align:justify;
-  font-size: 15px;
-  height:100%;
-  margin: 20px 30px 20px 30px;
-  padding-left: 30px;
-  }
-  .titles-container {
-    display:flex; 
-    justify-content: center;
-    align-items: center;
-    border:#09553d 1px;
-    height: 100px;
-    opacity: 0.9;
-  }
+}
+.follow-header {
+
+  padding-left: 5%;
+  font-size: 25px;
+  height: 80px;
+  margin-left: 5%;
+  width: 90%;
+  vertical-align: middle;
+  line-height: 70px;
+  border-bottom:3px solid #BBBBBB;
+}
+.follow-list {
+  width: 90%;
   
+  border-radius: 2px;
+  margin-left: 5%;
+  margin-top: 10px;
+}
+.follow-item {
+  display:flex; 
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom:#3e93e2 1px solid;
+  height: 90px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+ /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
+}
+
+.user-info {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.follow-button {
+  margin-left: 70%;
+  background-color: #22b8cf;
+
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>

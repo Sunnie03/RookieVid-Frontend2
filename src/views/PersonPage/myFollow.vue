@@ -7,14 +7,20 @@
         
         
         <el-main>
-          <div class="title-container" >
-              <img class="photo" :src="avatar">
-            <div class="text-title" > 昵称：{{ username }}</div>
-            
+          <div class="follow-container">
+            <div class="follow-header">全部关注</div>
+            <ul class="follow-list">
+              
+              
+                <li v-for="(user, index) in followList" :key="index" class="follow-item">
+                  <img :src="user.avatar_url" class="photo">
+                  <div class="user-name">{{ user.username }}</div>
+                  <button class="follow-button">+关注</button>
+                </li>
+              
+              <!-- <li class="follow-item">关注用户2 </li> -->
+            </ul>
           </div>
-          <div class="text">用户ID:  {{ userid }}</div>
-          <div class="text">邮箱:  {{ email }}</div>
-          <div class="text">个性签名:  {{ signature }}</div>
         </el-main>
           
     </div>
@@ -36,11 +42,7 @@ export default {
   },
   data () {
     return {
-      username: '',
-      avatar: '',
-      userid: '',
-      email: '',
-      signature: ''
+      followList:['']
     }
   },
   created() {
@@ -48,30 +50,19 @@ export default {
     console.log(this.$store.state)
   },
   methods: {
-    openVideo(){
-      this.$router.push({name:'myVideo'})
-    },
-    openPerson(){
-      return
-    },
-    openChange(){
-      this.$router.push({name:'myChange'})
-    },
     getData() {
       let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
+      axios.get('/account/get_followings',{ headers: Headers})
       .then((res) => {
         console.log(res);
         console.log(Headers);
         if(res.data.errno == 0){  //获取成功
-          this.userid = res.data.context.uid,
-          this.username = res.data.context.username,
-          this.email = res.data.context.email
-          this.signature = res.data.context.signature  //这是个性签名
-          this.avatar = res.data.context.avatar_url   //这是头像
+          if(Array.isArray(res.data.data)) {
+            this.followList = res.data.data
+          }
         }else {
+            alert("获取数据出错")
             alert(res.data.msg)
-            // if(res.data.errno == )
         }
       }).catch(
         console.error()
@@ -93,34 +84,69 @@ export default {
     overflow: auto;
   }
   .photo {
-    border-style: double;
     width: 80px;
     height: 80px;
     border-radius: 50% ;
     vertical-align: middle;
+    margin-right: 10%;
   }
-  .text-title {
-    display:inline;
-    font-size: 30px;
-    background-repeat: repeat;
-    margin-left: 40px;
+ 
+  .follow-container {
+    width: 100%;
+    align-content: center;
+    
+  }
+  .follow-header {
+ 
+    padding-left: 5%;
+    font-size: 25px;
+    height: 80px;
+    margin-left: 5%;
+    width: 90%;
+    vertical-align: middle;
+    line-height: 70px;
+    border-bottom:3px solid #BBBBBB;
+  }
+  .follow-list {
+    width: 90%;
+    
+    border-radius: 2px;
+    margin-left: 5%;
+    margin-top: 10px;
+  }
+  .follow-item {
+    display:flex; 
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom:#3e93e2 1px solid;
+    height: 90px;
+    opacity: 0.9;
+    margin-bottom: 10px;
+   /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
+  }
+
+  .user-info {
+    display: flex;
+    align-items: left;
+    justify-content: space-between;
+    flex-grow: 1;
   }
   
-  .info-container{
-  color: #4a5045;
-  text-align:justify;
-  font-size: 15px;
-  height:100%;
-  margin: 20px 30px 20px 30px;
-  padding-left: 30px;
+  .user-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px;
   }
-  .titles-container {
-    display:flex; 
-    justify-content: center;
-    align-items: center;
-    border:#09553d 1px;
-    height: 100px;
-    opacity: 0.9;
+  
+  .follow-button {
+    margin-left: 70%;
+    background-color: #22b8cf;
+  
+    color: white;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-weight: bold;
+    cursor: pointer;
   }
   
 </style>

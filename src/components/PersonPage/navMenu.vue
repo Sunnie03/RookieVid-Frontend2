@@ -2,7 +2,6 @@
     <el-menu 
     class="el-menu-demo"
     mode="horizontal"
-    background-color="rgb(157, 223, 100)"
     text-color="#fff"
     hover="#24d24c"
     active-text-color="#09553d" >
@@ -41,6 +40,7 @@ methods: {
 <style scoped>
 .el-menu-demo{
     overflow: hidden;
+    background-color:rgb(139, 199, 196);
 }
 /*设置点击前的样式 */
 a{
@@ -51,6 +51,6 @@ a{
   .router-link-active {
       text-decoration: none;
       
-      color: rgb(90, 20, 137);
+      color: rgb(135, 80, 16);
     }
 </style>
