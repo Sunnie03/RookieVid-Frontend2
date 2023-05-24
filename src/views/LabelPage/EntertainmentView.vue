@@ -7,7 +7,7 @@
     <Partition></Partition>
 
     <div class="top-carousel">
-      <el-carousel :interval="4000" type="card" height="400px">
+      <el-carousel :interval="4000" type="card" height="300px">
         <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
             <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
@@ -46,12 +46,20 @@
           </div>
         </div>
       </div>
-      <div class="ranking-container">
-          <div class="ranking-item" v-for="(video,index) in this.ranking_list" :key="index">
+      <div class="ranking-display">
+        <div style="font-weight:bold;font-size:23px;margin-bottom:10px;margin-left:20px;">热播</div>
+        <ul class="ranking-container">
+          
+          <li class="ranking-item" v-for="(video,index) in this.ranking_list" :key="index">
             <span class="ranking-number">{{ index+1 }}</span>
-            <span class="video-title">{{ video.title }}</span>
-          </div>
+              <img v-if="index===0" :src="video.cover_url" class="top-cover" @click="videoPlay(video.id)">
+
+            <span class="ranking-video-title" @click="videoPlay(video.id)">{{ video.title }}</span>
+          </li>
+        </ul>
+       
       </div>
+      
     </div>
     
   </div>
@@ -100,6 +108,9 @@ export default {
             })
           }
         })
+        .catch(error=>{
+          console.log(error);
+        })
       },
       getData(text,id){
           axios.get('/videos/get_video_by_label',{params:{label:text,num:id}})
@@ -145,7 +156,7 @@ width:100%;
 }
 
 .top-carousel{
-  margin-top:30px;
+  margin:50px;
 }
 .el-carousel__item h3 {
   color: #475669;
@@ -163,37 +174,107 @@ width:100%;
   background-color: #d3dce6;
 }
 .recommend-display{
-  margin-top:50px;
+  margin:50px;
   display: flex;
   padding: 10px;
   flex-direction:row;
 }
 .recommend-container {
-  width:70%;
+  width:80%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 50px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
   justify-items: center;
 }
+.ranking-display{
+  width:20%;
+  /* display:flex; */
+  
+  margin-left:20px;
+  /* border: 1px solid var(--line_light);
+  border-radius: 6px;
+  background-color: var(--bg2);
+  overflow: hidden; */
+}
 .ranking-container{
-  width:30%;
-  margin-left:50px;
+  width:100%;
+  /* height:80%; */
+  /* border: 1px solid var(--line_light);
+  border-radius: 6px;
+  background-color: var(--bg2);
+  overflow: hidden; */
+  
 }
 .ranking-item {
+  
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  justify-content: flex-start;
+  height:48px;
+  width:100%;
+  /* margin-bottom: 10px; */
+  /* background-color: rgba(230, 230, 230,0.5); */
+}
+.ranking-item:first-child{
+  height:118px;
+}
+
+.ranking-item:nth-child(odd){
+  background-color: white;
+}
+.ranking-item:nth-child(even){
+  background-color: rgba(208, 208, 208, 0.3);
+}
+.top-cover{
+  height:50%;
+  width:35%;
+  border-radius:15%;
 }
 
 .ranking-number {
   font-weight: bold;
+  margin-top:3%;
   margin-right: 10px;
+  margin-left:10px;
+  color:grey;
 }
-
-.video-title {
+.ranking-item:first-child .ranking-number{
+  color:red;
+}
+.ranking-item:nth-child(2) .ranking-number{
+  color:rgb(255, 111, 0);
+}
+.ranking-item:nth-child(3) .ranking-number{
+  color:rgb(255, 157, 0);
+}
+.ranking-video-title {
+  
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  /* color: black;
+  
+  
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowrap; */
+  height:65%;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  text-overflow: -o-ellipsis-lastline;
+  text-overflow: ellipsis;
+  word-break: break-word!important;
+  word-break: break-all;
+  line-break: anywhere;
+  -webkit-line-clamp: 1;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+}
+.ranking-video-title:hover{
+  color:rgb(0, 191, 255);
+}
+.ranking-item:first-child .ranking-video-title{
+  -webkit-line-clamp: var(--rank-title-line, 3);
 }
 .recommend-item {
   width: 100%;
@@ -237,10 +318,10 @@ justify-content: space-between;
 }
 .top-title{
   position: relative;
-  bottom: -60%;
+  bottom: -50%;
   left: 0;
   width: 100%;
-  height: 30%;
+  height: 50%;
   /* background-color: rgba(0, 0, 0, 0.5); */
   color: white;
   display: flex;
