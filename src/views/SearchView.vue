@@ -26,17 +26,19 @@
            <li class="nav-item" @click="selectedTab = 'user'">用户</li>
         </ul>
       </el-tabs > -->
-      <el-tabs v-model="selectedTab" class="search-navigation" type="border-card">
-        <el-tab-pane label="视频" name="video" >
-          <div class="video-result">
-            <div v-if="search_videos.length===0" class="blank-container">
-              <div class="blank-msg">这里什么都没有吖</div>
+      <el-tabs v-model="selectedTab" class="search-navigation" type="card">
+        <el-badge :value="search_videos.length" class="item">
+          <el-tab-pane label="视频" name="video" >
+            <div class="video-result">
+              <div v-if="search_videos.length===0" class="blank-container">
+                <div class="blank-msg">这里什么都没有吖</div>
+              </div>
+              <div v-else>
+                <SearchVideo :partition="search_videos"></SearchVideo>
+              </div>
             </div>
-            <div v-else>
-              <SearchVideo :partition="search_videos"></SearchVideo>
-             </div>
-          </div>
-        </el-tab-pane>
+          </el-tab-pane>
+        </el-badge>
         <el-tab-pane label="用户" name="user" >
           <div class="users-result">
             <div v-if="search_users.length===0" class="blank-container">

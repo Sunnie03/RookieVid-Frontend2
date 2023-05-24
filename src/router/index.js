@@ -165,6 +165,11 @@ const routes = [
     name: 'myFans',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFans.vue')
   },
+  {
+    path: '/myCreation',
+    name: 'myCreation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue')
+  },
 ]
 
 const router = new VueRouter({

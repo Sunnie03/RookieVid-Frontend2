@@ -30,7 +30,7 @@
             <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
             <el-menu-item index="2"><router-link to="/person" class="no_underline"
                 target="_blank">用户主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/creation" class="no_underline"
+            <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
                 target="_blank">创作中心</router-link></el-menu-item>
             <el-menu-item index="4"><router-link to="/message" class="no_underline"
                 target="_blank">消息</router-link></el-menu-item>
