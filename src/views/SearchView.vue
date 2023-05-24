@@ -26,7 +26,7 @@
            <li class="nav-item" @click="selectedTab = 'user'">用户</li>
         </ul>
       </el-tabs > -->
-      <el-tabs v-model="selectedTab" class="search-navigation">
+      <el-tabs v-model="selectedTab" class="search-navigation" type="border-card">
         <el-tab-pane label="视频" name="video" >
           <div class="video-result">
             <div v-if="search_videos.length===0" class="blank-container">
