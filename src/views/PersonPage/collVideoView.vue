@@ -19,30 +19,34 @@
           </div>
   
           
-            <div class="recommend-container">
-              <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
-                <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
-                 <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
-                <!-- </router-link> -->
-                <div class="overlay">
-                  <span class="play-info">
-                    <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
-                    {{video.view_amount }}</span>
-                  <span class="like-info">
-                    <img class="like-icon" src="../../assets/display/thumb-up.svg">
-                    {{ video.like_amount }}
-                  </span>
+            <div class="recommend-container" v-if="!this.null_flag">
+              <!-- <div id="collect-video-container" v-if="!this.null_flag"> -->
+                <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
+                  <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
+                  <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
+                  <!-- </router-link> -->
+                  <div class="overlay">
+                    <span class="play-info">
+                      <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
+                      {{video.view_amount }}</span>
+                    <span class="like-info">
+                      <img class="like-icon" src="../../assets/display/thumb-up.svg">
+                      {{ video.like_amount }}
+                    </span>
+                  </div>
+                    <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
+                  <div class="author">
+                    <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
+                    <span class="author-tag">作者</span>
+                    <span class="author-name">{{ video.user_name }}</span>
+                    <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+    
+                  </div>
                 </div>
-                  <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
-                <div class="author">
-                  <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
-                  <span class="author-tag">作者</span>
-                  <span class="author-name">{{ video.user_name }}</span>
-                  <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
-  
-                </div>
-              </div>
+              
             </div>
+          
+            <div v-else><h2>这是一个空收藏夹吖</h2></div>
           </div>
         <!-- </el-main> -->
           
@@ -69,7 +73,8 @@
         collect_name: '',
         collect_id: '',
         partition:[''],
-        collectCov: ''
+        collectCov: '',
+        null_flag: true
     }
   },
   created() {
@@ -90,17 +95,24 @@
     
     getVideo() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/account/get_favlist',{ headers: Headers, params:{favorite_id: 1} })
+      let collect_id = this.$route.params.collect_id
+      axios.get('/account/get_favlist',{ headers: Headers, params:{favorite_id: collect_id} })
       .then((res) => {
         console.log(res);
         if(res.data.errno == 0){  //获取成功
           this.collectCov = res.data.cover_url;
-          if (Array.isArray(res.data.data)) {
+          if (Array.isArray(res.data.data) && res.data.data.length>0) {
               this.partition = res.data.data; 
+              this.null_flag = false;
               console.log(this.partition)
-          } else {    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!只展示一条数据
-              alert("获取数据出错")
+          } else {    
+              //空收藏夹
+              this.null_flag = true
           }
+        }
+        else{
+          alert(res.data.msg)
+          window.close()
         }
       }).catch(
         console.error()

@@ -10,7 +10,7 @@
               <el-input v-model="form.username"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+              <el-input type="password" v-model="form.password"  placeholder="8~16位，数字和字母" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
               <el-input type="password" v-model="form.checkPass" autocomplete="off"></el-input>
@@ -117,7 +117,7 @@ export default {
         .then(response => {
           //处理成功响应
           if(response.data.errno == 1000){
-            alert("已发送验证码");
+            alert("已发送验证码，注意5分钟内有效");
           } else {
             alert(response.data.msg)
             // prompt("okkl")

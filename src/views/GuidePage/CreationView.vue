@@ -4,7 +4,18 @@
     <div class="upload-body">
        <!--导航栏-->
       <Header />
-      <navMenu />
+      <!-- <navMenu /> -->
+      <div class="creation-display">
+      <div class="aside-wrapper">
+                <el-button class="upload-button" @click="upload_video">
+                    <i class="el-icon-upload" ></i>
+                    投稿
+                </el-button>
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1" @click="goCreationManage">稿件管理</el-menu-item>
+                </el-menu>
+      </div>
+      <div class="upload-form-display">
       <el-form :model="form" status-icon:rules="rules" ref="form" label-width="100px" class="upload-form">
         <div style="display:flex">
           <div style="flex:1"></div>
@@ -14,6 +25,7 @@
           class="upload-demo" 
           drag 
           :file-list="fileList"
+          :on-remove="handleVideoRemove"
           :on-change="saveVideo"
           accept=".mp4"
           :limit="1"
@@ -90,13 +102,28 @@
         <el-progress :percentage="uploadProgress" :show-text="false" class="progress-bar"></el-progress>
       </div>
     </el-form>
+    <el-dialog
+      title="确认离开"
+      :visible="uploadConfirmationVisible"
+      @close="cancelUpload"
+      :close-on-click-modal="false"
+    >
+      <span>当前内容未保存，要离开吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpload">取消</el-button>
+        <el-button type="primary" @click="confirmUpload">确定</el-button>
+      </span>
+    </el-dialog>
+    
+  </div>
+  </div>
   </div>
 </template>
 
 <script>
 
 // @ is an alias to /src
-import Header from '@/components/HomePage/Header.vue'
+import Header from '@/components/HomePage/Header_del_search.vue'
 import navMenu from '@/components/PersonPage/navMenu.vue'
 import axios from 'axios'
 export default {
@@ -113,7 +140,9 @@ export default {
       uploading: false,    // 是否正在上传
       uploadProgress: 0,  // 上传进度，0-100
       dialogImageUrl: '',
-      dialogVisible: false,
+      // dialogVisible: false,
+      uploadConfirmationVisible:false,
+      
       
       form:{
         video:'',
@@ -135,6 +164,38 @@ export default {
   },
    
   methods: {
+    confirmUpload() {
+      // 用户点击确认按钮，执行上传逻辑
+      this.$router.push('/myCreation');
+      // 关闭确认弹窗
+      this.uploadConfirmationVisible = false;
+    },
+    cancelUpload() {
+      // 用户点击取消按钮，关闭确认弹窗
+      this.uploadConfirmationVisible = false;
+    },
+    goCreationManage(){
+      // this.text=text;
+      if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+        this.uploadConfirmationVisible = true;
+        console.log(this.form.cover);
+        // console.log("未保存");
+        // alert("上传视频未保存");
+        return;
+      }
+      this.$router.push('/myCreation');
+    },
+    upload_video(){
+      // this.text=text;
+      if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+        console.log(this.form.cover);
+        // this.uploadConfirmationVisible = true;
+        console.log("未保存");
+        alert("当前内容未上传");
+        return;
+      }
+      // this.$router.push('/'+text);
+    },
     saveVideo(file){
       
       this.fileList=[file];
@@ -167,7 +228,12 @@ export default {
     // }
       
     },
+    handleVideoRemove(){
+      this.form.video='';
+      
+    },
     handleRemove(file, fileList) {
+        this.form.cover='';
         console.log(file, fileList);
       },
     handlePictureCardPreview(file) {
@@ -250,6 +316,8 @@ export default {
         console.log(res);
         if(res.errno==0){ 
           alert("上传成功");
+          const keyURL='/myCreation';
+          this.$router.push(keyURL);
          
         }else {
             alert(res.data.msg)
@@ -265,13 +333,38 @@ export default {
 }
 </script>
 <style >
+.upload-body{
+  /* background-color: rgb(247, 247, 247); */
+}
 .upload-form{
-  width: 700px;
-  margin: 50px auto;
-  background-color: rgba(198, 231, 244, 0.5);
+  width: 80%;
+  margin-left: 10%;
+  background-color:white;
+  border-color: #333;
   padding: 30px;
   border-radius: 10px;
-  opacity: 0.7;
+  border: 1px solid #8a8a8a;
+  border-style:dashed;
+  
+}
+.creation-display{
+    margin:30px;
+    display:flex;
+}
+.aside-wrapper{
+    width:14%;
+    background-color: white;
+    
+}
+.upload-button{
+    width:80%;
+    margin-left:20px;
+    background-color: rgb(0, 166, 255);
+    color:white;
+    font-size:16px;
+}
+.upload-form-display{
+  width:80%;
 }
 .video_info{
   display: flex; 
@@ -289,17 +382,8 @@ export default {
 .el-form-item{
   opacity: 1;
 }
-.upload-demo{
 
-}
-.upload-body{
-  position: absolute;
-  width: 100%;
-  height: 150%;
-  overflow: hidden;
-  background-image:url('../../assets/upload/upload_background.jpeg');
-  background-size: 100% 100%;
-}
+
 .progress-bar {
   -webkit-animation: progress-bar-animation 2s ease-out forwards;
   animation: progress-bar-animation 2s ease-out forwards;

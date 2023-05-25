@@ -4,8 +4,6 @@
         <top-header></top-header>
         <my-component></my-component>
 
-        
-        
         <el-main>
           <div class="follow-container">
             <div class="follow-header">全部关注</div>
@@ -13,10 +11,12 @@
               
               
                 <li v-for="(user, index) in followList" :key="index" class="follow-item">
-                  <img :src="user.avatar_url" class="photo">
-                  <div class="user-name">{{ user.username }}</div>
-                  <div class="user-sign">{{ user.signature}}</div>
-                  <button class="follow-button">+关注</button>
+                  <img :src="user.avatar_url" class="photo" @click="openLook(user.id)">
+                  <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
+                  <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
+                  <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
+                  <button class="remove-button" @click="removeFollow(user.id)" >已关注</button>
+                  <!-- <button class="follow-button" @click="addFollow(user.id)" v-else>+关注</button> -->
                 </li>
               
               <!-- <li class="follow-item">关注用户2 </li> -->
@@ -43,7 +43,7 @@ export default {
   },
   data () {
     return {
-      followList:['']
+      followList:[''],
     }
   },
   created() {
@@ -68,91 +68,122 @@ export default {
       }).catch(
         console.error()
       )
-    }
+    },
+    openLook(look_user) {
+      let look_url='/lookPerson/'+look_user;
+      window.open(look_url,'_blank');
+    },
+    removeFollow(user_id){
+      console.log('following_id: '+ user_id)
+      let Headers={'Authorization': this.$store.state.token}
+      let formData = new FormData()
+      formData.append('following_id', user_id)
+      axios.post('/account/remove_follow',formData, { headers: Headers})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno === 0){
+          alert('取关成功')
+          // this.following_flag = false
+          this.$router.replace(location)
+        } else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    },
+    
   }
   }
 </script>
 
 <style scoped>
 .person-container {
-    border: 1px;
-    background-color: antiquewhite;
-    background-size: 100% 100% ;
-    background-repeat: no-repeat;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-  }
-  .photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50% ;
-    vertical-align: middle;
-    margin-right: 5%;
-  }
- 
-  .follow-container {
-    width: 100%;
-    align-content: center;
-    
-  }
-  .follow-header {
- 
-    padding-left: 5%;
-    font-size: 25px;
-    height: 80px;
-    margin-left: 5%;
-    width: 90%;
-    vertical-align: middle;
-    line-height: 70px;
-    border-bottom:3px solid #BBBBBB;
-  }
-  .follow-list {
-    width: 90%;
-    
-    border-radius: 2px;
-    margin-left: 5%;
-    margin-top: 10px;
-  }
-  .follow-item {
-    display:flex; 
-    justify-content: flex-start;
-    align-items: center;
-    border-bottom:#3e93e2 1px solid;
-    height: 90px;
-    opacity: 0.9;
-    margin-bottom: 10px;
-   /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
-  }
+  border: 1px;
+  background-color: antiquewhite;
+  background-size: 100% 100% ;
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50% ;
+  vertical-align: middle;
+  margin-right: 5%;
+}
 
-  .user-info {
-    display: flex;
-    align-items: left;
-    justify-content: space-between;
-    flex-grow: 1;
-  }
+.follow-container {
+  width: 100%;
+  align-content: center;
   
-  .user-name {
-    font-weight: bold;
-    font-size: 20px;
-    margin-right: 10px;
-  }
-  .user-sign {
-    font-size: 15px;
-    margin-right: 10px;
-    width: 200px
-  }
+}
+.follow-header {
+
+  padding-left: 5%;
+  font-size: 25px;
+  height: 80px;
+  margin-left: 5%;
+  width: 90%;
+  vertical-align: middle;
+  line-height: 70px;
+  border-bottom:3px solid #BBBBBB;
+}
+.follow-list {
+  width: 90%;
   
-  .follow-button {
-    margin-left: 50%;
-    background-color: #22b8cf;
-  
-    color: white;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
+  border-radius: 2px;
+  margin-left: 5%;
+  margin-top: 10px;
+}
+.follow-item {
+  display:flex; 
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom:#3e93e2 1px solid;
+  height: 90px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+ /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
+}
+.user-sign {
+  font-size: 15px;
+  margin-right: 10px;
+  width: 200px;
+  flex:1;
+}
+
+
+.user-name {
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 10px;
+  width: 150px;
+}
+
+.follow-button {
+  margin-right: 5%;
+  background-color: #22b8cf;
+
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.remove-button {
+  margin-right: 5%;
+  background-color: #e5e9ef;
+
+  color: #606266;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>

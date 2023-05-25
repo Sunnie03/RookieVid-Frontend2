@@ -41,7 +41,7 @@
           <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
-            <span class="author-name">{{ video.user_name }}</span>
+            <span class="author-name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
             <span class="time">{{ video.created_at?video.created_at.split('T')[0]:''}}</span>
           </div>
         </div>
@@ -94,6 +94,10 @@ export default {
         const video_play_url='/video/'+id
         window.open(video_play_url,'_blank');
       },
+      goPersonPage(uid){
+          const user_page_url='/lookPerson/'+uid;
+          window.open(user_page_url,'_blank');
+        },
       getAll(text,id){
         axios.get('/videos/get_video_by_label',{params:{label:text,num:id}})
         .then((response)=>{

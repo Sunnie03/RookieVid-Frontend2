@@ -8,6 +8,7 @@ export default new Vuex.Store({
     isLogin: localStorage.getItem('isLogin') ? localStorage.getItem('isLogin'): false, 
     isAdmin: localStorage.getItem('isAdmin') ? localStorage.getItem('isAdmin'): false, 
     token: localStorage.getItem('token') ? localStorage.getItem('token'):'', //token
+    nowUser: localStorage.getItem('nowUser') ? localStorage.getItem('nowUser'):'',
 
   },
   getters: {  //监听数据变化
@@ -32,6 +33,12 @@ export default new Vuex.Store({
         state.isAdmin = false
       }
       return state.isAdmin
+    },
+    getNowUser(state) {
+      if(!state.nowUser) {
+        state.nowUser = JSON.parse(localStorage.getItem(key))
+      } 
+      return state.nowUser
     }
   },
   mutations: {  //全局方法
@@ -57,6 +64,10 @@ export default new Vuex.Store({
       state.token = value;
       localStorage.setItem('token', value);
     },
+    $_setNowUser(state,user_id) {
+      state.nowUser = user_id;
+      localStorage.setItem('nowUser', user_id)
+    }
   },
   actions: {
   },

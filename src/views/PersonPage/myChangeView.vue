@@ -105,6 +105,7 @@ export default {
       }
     }
     return {
+      user_id: 0,
       username: '',
       avatar: '',
       userid: '',
@@ -139,7 +140,8 @@ export default {
     },
     getData() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 1} })
+      this.user_id = this.$store.getters.getNowUser
+      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.user_id} })
       .then((res) => {
         console.log(res);
         console.log(Headers);
@@ -171,8 +173,8 @@ export default {
       
       if(this.email != this.oldEmail) {
           Promise.all([   //昵称+个性签名，邮箱
-          axios.post('/account/edit_profile',{params:{formData1}, headers: Headers}),
-          axios.post('/account/change_email',{params:{formData2}, headers: Headers})
+          axios.post('/account/edit_profile', formData1, { headers: Headers}),
+          axios.post('/account/change_email', formData2, {headers: Headers})
         ])
         .then(([res1,res2]) =>  {
           //处理成功响应
@@ -196,7 +198,7 @@ export default {
         )
       }
       else{ //不用修改邮箱，不要判断验证码
-          axios.post('/account/edit_profile',{params:formData1, headers: Headers})
+          axios.post('/account/edit_profile',formData1, {headers: Headers})
           .then(res => {
             console.log("修改用户名+个性签名 "+res)
             if(res.errno == 0){
@@ -219,7 +221,7 @@ export default {
       formData.append("old_password", this.oldPassword);
       formData.append("password_1",this.password);
       formData.append("password_2",this.checkPass);
-      axios.post('/account/change_password', {headers: Headers, params:{formData} })
+      axios.post('/account/change_password', formData, {headers: Headers})
       .then(res => {
         console.log(res)
         if(res.errno == 0) {
@@ -285,6 +287,8 @@ export default {
 .verti-menu{
   height: 150px;
   text-align: center;
+  vertical-align: middle;
+  line-height: 150px;
   }
 
 .title-container {

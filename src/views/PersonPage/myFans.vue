@@ -13,9 +13,11 @@
             
             
               <li v-for="(user, index) in followList" :key="index" class="follow-item">
-                <img :src="user.avatar_url" class="photo">
-                <div class="user-name">{{ user.username }}</div>
-                <button class="follow-button">+关注</button>
+                <img :src="user.avatar_url" class="photo" @click="openLook(user.id)">
+                <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
+                <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
+                <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
+                <button class="follow-button">+ 回粉</button>
               </li>
             
             <!-- <li class="follow-item">关注用户2 </li> -->
@@ -67,7 +69,28 @@ methods: {
     }).catch(
       console.error()
     )
-  }
+  },
+  openLook(look_user) {
+    let look_url='/lookPerson/'+look_user;
+    window.open(look_url,'_blank');
+  },
+  addFollow(user_id){
+      
+      let Headers={'Authorization': this.$store.state.token}
+      axios.post('/account/create_follow', { headers: Headers, body:{following_id: user_id}})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno ===  0){
+          alert('关注成功')
+          this.following_flag = true
+        }else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    }
 }
 }
 </script>
@@ -88,7 +111,7 @@ methods: {
   height: 80px;
   border-radius: 50% ;
   vertical-align: middle;
-  margin-right: 10%;
+  margin-right: 5%;
 }
 
 .follow-container {
@@ -124,25 +147,36 @@ methods: {
   margin-bottom: 10px;
  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
 }
-
-.user-info {
-  display: flex;
-  align-items: left;
-  justify-content: space-between;
-  flex-grow: 1;
+.user-sign {
+  font-size: 15px;
+  margin-right: 10px;
+  width: 200px;
+  flex:1;
 }
+
 
 .user-name {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 20px;
   margin-right: 10px;
+  width: 150px;
 }
 
 .follow-button {
-  margin-left: 70%;
+  margin-right: 5%;
   background-color: #22b8cf;
 
   color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.remove-button {
+  margin-right: 5%;
+  background-color: #e5e9ef;
+
+  color: #606266;
   border-radius: 4px;
   padding: 4px 8px;
   font-weight: bold;

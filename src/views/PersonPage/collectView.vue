@@ -23,9 +23,9 @@
                     {{ video.like_amount }}
                   </span>
                 </div> -->
-                  <a class="titles" @click="openCollect(favorite.id,favorite.title)">这是标题： {{ favorite.title }}</a> 
+                  <a class="titles" @click="openCollect(favorite.id,favorite.title)">{{ favorite.title }}</a> 
                   <div class="author"> 
-                    <span class="time" style="float:left">这是description{{ favorite.description }}</span>
+                    <span class="time" style="float:left">简介： {{ favorite.description }}</span>
                     <el-button v-on:click="removeCollect(favorite.id)" size="small" style="align-self:flex-end;float:left ">删除  </el-button>
                     <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
                      
@@ -83,17 +83,18 @@ export default {
   },
   data () {
     return {
-        username: '',
-        avatar: '',
-        favorite:[''],
-        partition:[''],
-        form:{
-          collectName: '',
-          collectDes: '',
-          radio: 0,
-        },
-        dialogFormVisible: Boolean,
-        formLabelWidth: '120px',
+      user_id: 0,
+      username: '',
+      avatar: '',
+      favorite:[''],
+      partition:[''],
+      form:{
+        collectName: '',
+        collectDes: '',
+        radio: 0,
+      },
+      dialogFormVisible: Boolean,
+      formLabelWidth: '120px',
     }
   },
   created() {
@@ -104,7 +105,9 @@ export default {
   methods: {
     getData() {
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: 3} })
+      this.user_id = this.$store.getters.getNowUser
+      console.log(this.user_id)
+      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.user_id} })
       .then((res) => {
         console.log(res);
         console.log(Headers);
@@ -116,9 +119,9 @@ export default {
         console.error()
       )
     },
-    getCollects() {
+    getCollects() { //展开收藏夹列表
       let Headers={'Authorization': this.$store.getters.getStorage}
-      axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: 3}})
+      axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: this.user_id}})
       .then((res) => {
         
         console.log(res);
@@ -181,17 +184,18 @@ export default {
     },
     removeCollect(collect_id) {
       let Headers={'Authorization': this.$store.getters.getStorage}
+      console.log('collect_id/favorite_id: '+collect_id)
       
       if(confirm("确认要删除此收藏夹吗？")) {
-        axios.post('account/delete_favorite',{headers: Headers, body:collect_id})
+        axios.post('account/delete_favorite',{headers: Headers, body:{favorite_id :collect_id}})
       .then((res) =>  {
           //处理成功响应
-          if(res.errno == 0){
+          if(res.data.errno == 0){
             alert("删除收藏夹成功！");
             //还得刷新页面记得
             location.reload()
           } else {
-            alert(res.msg)
+            alert(res.data.msg)
           }
           console.log(res)
          
@@ -223,10 +227,10 @@ export default {
     background-color: antiquewhite;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
   }
   .photo {
     width: 80px;
@@ -260,6 +264,9 @@ export default {
     height: 100px;
     opacity: 0.9;
   }
+  .el-main {
+    height: 100%;
+  }
   
   
   /*首页抄的视频代码*/
@@ -268,6 +275,7 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     margin-top: 30px;
+    padding-bottom: 50px;
   }
   .recommend-item {
       width: 85%;

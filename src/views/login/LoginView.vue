@@ -77,8 +77,6 @@ export default {
         }
         console.log(res.data);
 
-        console.log(this.$store.state.isLogin);
-        console.log(this.$store.state.isAdmin);
 
       }).catch(
         console.error()
