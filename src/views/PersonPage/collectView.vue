@@ -187,7 +187,7 @@ export default {
       console.log('collect_id/favorite_id: '+collect_id)
       
       if(confirm("确认要删除此收藏夹吗？")) {
-        axios.post('account/delete_favorite',{headers: Headers, body:{collect_id}})
+        axios.post('account/delete_favorite',{headers: Headers, body:{favorite_id :collect_id}})
       .then((res) =>  {
           //处理成功响应
           if(res.data.errno == 0){
@@ -227,10 +227,10 @@ export default {
     background-color: antiquewhite;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
   }
   .photo {
     width: 80px;
@@ -264,6 +264,9 @@ export default {
     height: 100px;
     opacity: 0.9;
   }
+  .el-main {
+    height: 100%;
+  }
   
   
   /*首页抄的视频代码*/
@@ -272,6 +275,7 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     margin-top: 30px;
+    padding-bottom: 50px;
   }
   .recommend-item {
       width: 85%;

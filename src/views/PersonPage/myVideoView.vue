@@ -103,7 +103,7 @@ methods: {
     this.$router.push({name:'myChange'})
   },
   playVideo(id){
-    this.$router.push({ name: 'video', params: { id }})
+    this.$router.push({ name: 'video/', params: { id }})
   },
   // changeVideo(id){
   //   this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数

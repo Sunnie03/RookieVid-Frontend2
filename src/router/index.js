@@ -165,6 +165,11 @@ const routes = [
     name: 'myFans',
     component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myFans.vue')
   },
+  {
+    path: '/notification',
+    name: 'myNotify',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myNotify.vue')
+  },
   /*别人的主页 */
   {
     path: '/lookPerson/:user_id',
@@ -176,6 +181,12 @@ const routes = [
     name: 'lookOthersCollect',
     component: () => import(/* webpackChunkName: "about" */ '../views/OthersPage/othersCollectView.vue')
   },
+  {
+    path: '/othersCollect/collectVideos/:user_id/:collect_id/:collect_name',
+    name: 'lookOthersCollectVideo',
+    component: () => import(/* webpackChunkName: "about" */ '../views/OthersPage/otherCollVideo.vue')
+  },
+  
   {
     path: '/myCreation',
     name: 'myCreation',

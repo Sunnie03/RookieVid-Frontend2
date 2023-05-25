@@ -35,20 +35,45 @@
             </el-menu>
           </el-col>
 
+          <div class="titles-container" style="margin-top:40px">
+                <a class="titles" v-on:click="goBack" style="float:left;width:10%;height:auto">回到上一级</a>
+                
+                <div class="text-title" > 
+                  <img class="photo" :src="collectCov" style="border-radius:3%;height:120px;width:180px"/>
+                  收藏夹：{{ collect_name }}
+                </div>
+              </div>
+
           <div class="recommend-container" v-if="!this.null_flag">
-            <div v-for="(favorite,index) in this.partition" :key="index" class="recommend-item" >
-                <img class="recommend-img" src="../../../image/logo.png" @click="openCollVideo(favorite.id,favorite.title)">
-               
-                 <a class="titles" @click="openCollVideo(favorite.id,favorite.title)">{{ favorite.title }}</a> 
-                 <div class="author"> 
-                   <span class="time" style="float:left">简介： {{ favorite.description }}</span>
-                   
-                   <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
-                    
-                 </div>
-            </div>
+            <!-- 这里要改，v-if的逻辑不对，title-container应该是始终显示的 -->
+            
+            <!-- <div id="collect-video-container" v-if="!this.null_flag"> -->
+              <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
+                <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
+                <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
+                <!-- </router-link> -->
+                <div class="overlay">
+                  <span class="play-info">
+                    <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
+                    {{video.view_amount }}</span>
+                  <span class="like-info">
+                    <img class="like-icon" src="../../assets/display/thumb-up.svg">
+                    {{ video.like_amount }}
+                  </span>
+                </div>
+                  <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
+                <div class="author">
+                  <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
+                  <span class="author-tag">作者</span>
+                  <span class="author-name">{{ video.user_name }}</span>
+                  <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+  
+                </div>
+              </div>
+            
           </div>
-          <div v-else><h2 style="margin:50px 0 0 500px">TA没有公开的收藏夹哦~</h2></div>
+        
+          <div v-else><h2 style="margin:50px 0 0 500px">这是一个空收藏夹吖</h2></div>
           
         </el-main>
       </div>
@@ -78,11 +103,16 @@ export default {
       signature: '',
       null_flag: false,
       partition:[''],
+      collect_name: '',
+      collect_id: '',
+      collectCov:''
     }
   },
   created() {
     this.getData();
     this.getVideo();
+    this.collect_id = this.$route.params.collect_id;
+    this.collect_name = this.$route.params.collect_name;
     console.log(this.$store.state)
   },
   methods: {
@@ -117,37 +147,32 @@ export default {
       )
     },
     getVideo() {
-    let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: this.look_user}})
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      let collect_id = this.$route.params.collect_id
+      axios.get('/account/get_favlist',{ headers: Headers, params:{favorite_id: collect_id} })
       .then((res) => {
-        
         console.log(res);
         if(res.data.errno == 0){  //获取成功
-            if (Array.isArray(res.data.favorite) && res.data.favorite.length>0) {
-              this.partition = res.data.favorite;
-              this.null_flag = false 
+          this.collectCov = res.data.cover_url;
+          if (Array.isArray(res.data.data) && res.data.data.length>0) {
+              this.partition = res.data.data; 
+              this.null_flag = false;
               console.log(this.partition)
-            } else {    //我估计传回来的是空
-              console.log("该用户收藏夹列表为空")
+          } else {    
+              //空收藏夹
               this.null_flag = true
-            }
-        } else {
-            alert(res.data.msg)
-            // if(res.data.errno == )
+          }
         }
-        console.log(res);
+        else{
+          alert(res.data.msg)
+          window.close()
+        }
       }).catch(
         console.error()
       )
     },
-    openCollVideo(collect_id, collect_name) {
-        this.$router.push({name:'lookOthersCollectVideo',
-        params:{
-            user_id: this.look_user,
-            collect_id: collect_id,
-            collect_name: collect_name
-        }})
-     
+    goBack(){
+        this.$router.push({name:'lookOthersCollect',params:this.look_user})
     }
   }
 }
@@ -180,6 +205,15 @@ export default {
     margin-left: 40px;
     margin-bottom: 100px;
 }
+.titles-container {
+    display:flex; 
+    /*justify-content: center;
+    align-items: center;*/
+    border-bottom:#81928c 1px solid;
+    height: 150px;
+    opacity: 0.9;
+  }
+  
 .user-sign {
   font-size: 16px;
   margin-right: 10px;
@@ -255,6 +289,29 @@ export default {
     border-radius: 6px;
   }
   
+  .overlay {
+    position: absolute;
+    bottom: 40%;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    /*background-color:rgba(255, 255, 255,0.5); */
+    display: flex;
+    justify-content: space-between;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)); 
+  }
+    
+  .play-info, .like-info {
+    display: flex;
+    align-items: center;
+    color: #fff;/*rgb(78, 77, 77);*/
+    font-weight:bold;
+    margin-left: 8px;
+    margin-right:8px;
+  }
+  .play-icon, .like-icon{
+    margin:5px;
+  }
   a{
     text-decoration: none;
   }
@@ -294,8 +351,8 @@ export default {
   }
   
   .author-tag {
-    /* width:50px;
-    height:30px; */
+    width:50px;
+    /*height:30px; */
     border: 1px solid #20bcf0;
     font-weight:bold;
     color: #20bcf0;

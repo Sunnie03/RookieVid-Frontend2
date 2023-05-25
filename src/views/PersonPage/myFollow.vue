@@ -4,8 +4,6 @@
         <top-header></top-header>
         <my-component></my-component>
 
-        
-        
         <el-main>
           <div class="follow-container">
             <div class="follow-header">全部关注</div>
@@ -17,7 +15,8 @@
                   <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
                   <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
                   <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
-                  <button class="follow-button">+关注</button>
+                  <button class="remove-button" @click="removeFollow(user.id)" >已关注</button>
+                  <!-- <button class="follow-button" @click="addFollow(user.id)" v-else>+关注</button> -->
                 </li>
               
               <!-- <li class="follow-item">关注用户2 </li> -->
@@ -44,7 +43,7 @@ export default {
   },
   data () {
     return {
-      followList:['']
+      followList:[''],
     }
   },
   created() {
@@ -73,7 +72,28 @@ export default {
     openLook(look_user) {
       let look_url='/lookPerson/'+look_user;
       window.open(look_url,'_blank');
-    }
+    },
+    removeFollow(user_id){
+      console.log('following_id: '+ user_id)
+      let Headers={'Authorization': this.$store.state.token}
+      let formData = new FormData()
+      formData.append('following_id', user_id)
+      axios.post('/account/remove_follow',formData, { headers: Headers})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno === 0){
+          alert('取关成功')
+          // this.following_flag = false
+          this.$router.replace(location)
+        } else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    },
+    
   }
   }
 </script>
@@ -141,7 +161,8 @@ export default {
 .user-name {
   font-weight: bold;
   font-size: 20px;
-  margin-right: 20px;
+  margin-right: 10px;
+  width: 150px;
 }
 
 .follow-button {
@@ -149,6 +170,16 @@ export default {
   background-color: #22b8cf;
 
   color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.remove-button {
+  margin-right: 5%;
+  background-color: #e5e9ef;
+
+  color: #606266;
   border-radius: 4px;
   padding: 4px 8px;
   font-weight: bold;

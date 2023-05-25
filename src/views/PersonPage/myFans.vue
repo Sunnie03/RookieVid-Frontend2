@@ -17,7 +17,7 @@
                 <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
                 <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
                 <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
-                <button class="follow-button">+关注</button>
+                <button class="follow-button">+ 回粉</button>
               </li>
             
             <!-- <li class="follow-item">关注用户2 </li> -->
@@ -73,7 +73,24 @@ methods: {
   openLook(look_user) {
     let look_url='/lookPerson/'+look_user;
     window.open(look_url,'_blank');
-  }
+  },
+  addFollow(user_id){
+      
+      let Headers={'Authorization': this.$store.state.token}
+      axios.post('/account/create_follow', { headers: Headers, body:{following_id: user_id}})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno ===  0){
+          alert('关注成功')
+          this.following_flag = true
+        }else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    }
 }
 }
 </script>
@@ -141,7 +158,8 @@ methods: {
 .user-name {
   font-weight: bold;
   font-size: 20px;
-  margin-right: 20px;
+  margin-right: 10px;
+  width: 150px;
 }
 
 .follow-button {
@@ -149,6 +167,16 @@ methods: {
   background-color: #22b8cf;
 
   color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.remove-button {
+  margin-right: 5%;
+  background-color: #e5e9ef;
+
+  color: #606266;
   border-radius: 4px;
   padding: 4px 8px;
   font-weight: bold;

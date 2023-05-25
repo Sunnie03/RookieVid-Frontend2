@@ -59,7 +59,7 @@
               </div>
             </div>
           </div>
-          <div v-else><h2>TA还没有投稿哦~</h2></div>
+          <div v-else><h2 style="margin:50px 0 0 500px">TA还没有投稿哦~</h2></div>
           
         </el-main>
       </div>
@@ -142,7 +142,10 @@ export default {
     }).catch(
       console.error()
     )
-  }
+  },
+  playVideo(id){
+    this.$router.push({ name: 'video/', params: { id }})
+  },
   }
 }
 </script>
