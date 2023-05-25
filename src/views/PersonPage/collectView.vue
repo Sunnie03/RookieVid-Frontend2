@@ -34,7 +34,7 @@
               <div  class="recommend-item" >
                 
                 <img class="recommend-img" src="../../../image/newCollect.png" @click="openForm">
-               
+                
                  <a class="titles" style="text-align:center" @click="openForm" >新建收藏夹 {{ favorite.title }}</a> 
                  
                 <el-dialog title="新收藏夹" :visible.sync="dialogFormVisible">
