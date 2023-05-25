@@ -95,6 +95,18 @@
         <el-button type="primary" @click="confirmUpload">确定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="确认离开"
+      :visible="uploadConfirmationVisible2"
+      @close="cancelUpload2"
+      :close-on-click-modal="false"
+    >
+      <span>当前内容未保存，要离开吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpload2">取消</el-button>
+        <el-button type="primary" @click="confirmUpload2">确定</el-button>
+      </span>
+    </el-dialog>
     </div>
   </div>
   </div>
@@ -122,7 +134,7 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       uploadConfirmationVisible:false,
-      
+      uploadConfirmationVisible2:false,
       form:{
         video:'',
         cover:'',
@@ -154,6 +166,16 @@ export default {
       // 用户点击取消按钮，关闭确认弹窗
       this.uploadConfirmationVisible = false;
     },
+    confirmUpload2() {
+      // 用户点击确认按钮，执行上传逻辑
+      this.$router.push('/creation');
+      // 关闭确认弹窗
+      this.uploadConfirmationVisible2 = false;
+    },
+    cancelUpload2() {
+      // 用户点击取消按钮，关闭确认弹窗
+      this.uploadConfirmationVisible2 = false;
+    },
     goCreationManage(){
       // this.text=text;
       if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
@@ -167,14 +189,14 @@ export default {
     },
     upload_video(){
       // this.text=text;
-      // if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+      if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
         console.log(this.form.cover);
-        // this.uploadConfirmationVisible = true;
-        console.log("未保存");
-        alert("当前内容未上传");
+        this.uploadConfirmationVisible2 = true;
+        // console.log("未保存");
+        // alert("当前内容未上传");
         return;
-      // }
-      // this.$router.push('/'+text);
+      }
+      this.$router.push('/creation');
     },
     getCreationInfo(){
         let Headers = { 'Authorization': this.$store.getters.getStorage };
@@ -255,7 +277,8 @@ export default {
       .then((res)=>{
         console.log(res);
         if(res.data.errno==0){ 
-          alert("更新成功");
+          // alert("更新成功");
+          alert(res.data.msg);
           const keyURL='/myCreation';
           this.$router.push(keyURL);
          

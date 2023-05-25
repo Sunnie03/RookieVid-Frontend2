@@ -77,6 +77,7 @@ export default ({
     margin-bottom: 10px;
 }
 .recommend-img{
+  cursor:pointer;
   width:100%;
   height:60%;
   object-fit:cover;
@@ -137,6 +138,7 @@ a{
     -webkit-box-orient:vertical;
     -webkit-line-clamp:2;
     overflow:hidden;
+    cursor:pointer;
   }
  
 .recommend-title:hover{
@@ -168,6 +170,9 @@ a{
   font-weight: bold;
   color: grey;
   padding: 2px 8px;
+  cursor:pointer;
+  
+  
   /* margin-right:0; */
 }
 .author-name:hover{

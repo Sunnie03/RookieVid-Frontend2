@@ -42,7 +42,7 @@
             <!-- </router-link> -->
             <div class="author">
               <span class="author-tag">作者</span>
-              <span class="author-name">{{ video.user_name }} @click="goPersonPage(user.id)"</span>
+              <span class="author-name"  @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
               <span class="time">{{ video.created_at?video.created_at.split('T')[0]:'' }}</span>
             </div>
 
@@ -581,6 +581,7 @@ export default {
 .hot-carousel-img{
   height:100%;
   width:100%;
+  cursor:pointer;
   /* border-radius:10px; */
 }
 .hot-carousel-overlay{
@@ -595,6 +596,7 @@ export default {
   justify-content: space-between;
 }
 .hot-carousel-title{
+  cursor:pointer;
   position: relative;
   bottom: -70%;
   /* top:0; */

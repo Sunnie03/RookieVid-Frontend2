@@ -50,7 +50,7 @@
                     <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
                     <div class="user-details">
                       <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div> 
-                      <div class="user-signature" >{{ user.signature }}</div>
+                      <div class="user-signature" >{{ user.signature ?user.signature:"Ta什么都没写"}}</div>
                    
                     <button v-if="user.followed===0" class="follow-button" @click="follow(user.id)">+关注</button>
                     <button v-if="user.followed===1" class="cancel-follow-button" @click="defollow(user.id)">取消关注</button>
