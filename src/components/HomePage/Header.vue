@@ -23,7 +23,7 @@
       </div>
 
       <!--导航栏菜单-->
-      <div class="guide_menu" v-if="this.$store.state.isAdmin"><!--是管理员，就显示有“管理中心”-->
+      <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
@@ -55,9 +55,28 @@
         </el-row>
       </div>
 
-      <div class="userPhoto">
-        <el-button icon="el-icon-user" circle @click="open_login"></el-button>
-        登录
+      <!--没有登录，显示默认样式-->
+      <!--当前用户还没登录，为游客-->
+      <div v-if="this.$store.state.isLogin === false" class="userPhoto">
+        <el-dropdown @command="handleCommandLogin">
+          <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
+          <span class="el-dropdown-link" @click="open_login"> 登录</span>
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <!--用户已经登录-->
+      <div v-else class="userPhoto">
+        <el-dropdown @command="handleCommandPerson">
+          <v-avatar class="el-dropdown-link" @click="open_login">
+            <img :src="avatar" />
+          </v-avatar>
+          {{ username }}
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
 
     </div>
@@ -66,17 +85,62 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'Header',
   data() {
     return {
+      /*登录用户相关信息*/
+      username: '',
+      avatar: '',
+      userid: '',
+      email: '',
+      signature: '',
+      /*导航栏组件*/
       activeIndex: "1",
-      input: ""
-    };
+      input: "",
+    }
+  },
+  created() {
+    this.getUserData();
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    /*处理未登录时的下拉菜单*/
+    handleCommandLogin(command) {
+      //this.$message('click on item ' + command);
+      this.open_login();
+    },
+    /*处理已经登录时的下拉菜单*/
+    handleCommandPerson(command) {
+      //this.$message('click on item ' + command);
+      if (command === 'logout') { 
+        /*执行登出*/
+        this.open_login(); }
+    },
+    /*如果已经登录，获取登录者的导航栏相关信息*/
+    getUserData() {
+      /*如果已经登录*/
+      if (this.$store.state.isLogin === "true") {
+        axios.get('account/display_myprofile', { headers: { Authorization: this.$store.getters.getStorage } })
+          .then(response => {
+            console.log(response);
+
+            this.userid = response.data.context.id;
+            this.username = response.data.context.username;
+            this.avatar = response.data.context.avatar_url;
+            console.log('isl111');
+            this.signature = response.data.context.signature;
+          })
+          .catch(error => {
+            console.log('Error: ' + error);
+          });
+      }
+      else {
+        console.log('login-no');
+      }
     },
     search_by_key() {
       // console.log(this.input);
