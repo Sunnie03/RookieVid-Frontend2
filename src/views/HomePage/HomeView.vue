@@ -42,7 +42,7 @@
             <!-- </router-link> -->
             <div class="author">
               <span class="author-tag">作者</span>
-              <span class="author-name">{{ video.user_name }}</span>
+              <span class="author-name">{{ video.user_name }} @click="goPersonPage(user.id)"</span>
               <span class="time">{{ video.created_at?video.created_at.split('T')[0]:'' }}</span>
             </div>
 
@@ -421,6 +421,10 @@ export default {
     //     (this.currentIndex + this.images.length + offset) % this.images.length
     //   );
     // },
+    goPersonPage(id){
+        const user_page_url='/lookPerson/'+id;
+        window.open(user_page_url,'_blank');
+      },
     goPartition(partition){
         const partition_url='/'+partition;
         console.log(partition_url);

@@ -45,11 +45,17 @@
               <div class="blank-msg">这里什么都没有吖</div>
             </div>
             <div v-else>
-              <div v-for="(user, index) in search_users" :key="index" class="user-row">
-                <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
-                <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div>
-                <button v-if="user.followed===0" class="follow-button">+关注</button>
-                <button v-if="user.followed===1" class="cancel-follow-button">取消关注</button>
+              <div class="user-result-display">
+                <div v-for="(user, index) in search_users" :key="index"  class="user-row">
+                    <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
+                    <div class="user-details">
+                      <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div> 
+                      <div class="user-signature" >{{ user.signature }}</div>
+                   
+                    <button v-if="user.followed===0" class="follow-button" @click="follow(user.id)">+关注</button>
+                    <button v-if="user.followed===1" class="cancel-follow-button" @click="defollow(user.id)">取消关注</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -146,6 +152,36 @@ export default {
            }
 
           this.$router.push({ path: '/search', query: { keyword: this.input } })
+      },
+      follow(id){
+        let formData=new FormData();
+        formData.append("following_id",id);
+        formData.forEach(function(value, key) {
+         console.log(key, value);
+        });
+        let Headers={'Authorization': this.$store.getters.getStorage}
+        console.log(Headers);
+        axios.post('/account/create_follow',formData,{headers:Headers})
+        .then((response)=>{
+          console.log(response);
+          console.log(response.data.msg);
+          alert(response.data.msg);
+        })
+      },
+      defollow(id){
+        let formData=new FormData();
+        formData.append("following_id",id);
+        formData.forEach(function(value, key) {
+         console.log(key, value);
+        });
+        let Headers={'Authorization': this.$store.getters.getStorage}
+        console.log(Headers);
+        axios.post('/account/remove_follow',formData,{headers:Headers})
+        .then((response)=>{
+          console.log(response);
+          console.log(response.data.msg);
+          alert(response.data.msg);
+        })
       },
       getData(text){
       console.log(text);
@@ -266,9 +302,7 @@ background-color: #ccc;
 .video-result{
   margin:50px;
 }
-.users-result{
-  margin:50px;
-}
+
 .blank-msg {
   font-size: 24px;
   font-weight: bold;
@@ -382,40 +416,67 @@ margin-top:5px;
 margin-left:30px;
 
 }
-
+.user-result-display{
+  width:100%;
+  list-style-type: none;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap:50px;
+}
+.users-result{
+  margin:50px;
+}
 .user-row {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 20px; */
+  width:100%;
+  display:flex;
+    margin:20px;
 }
 
 .user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 50%;
   margin-right: 10px;
+  cursor:pointer;
 }
 
-.user-info {
+/* .user-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-grow: 1;
+} */
+.user-detail{
+  display:flex;
+  width:100%;
+  height:100%;
 }
-
 .user-name {
+  /* margin-top:10px; */
+  /* height:33.3%; */
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   margin-right: 10px;
+  cursor:pointer;
 }
 .user-name:hover{
   color:orange;
+
+}
+
+.user-signature{
+  /* height:33.3%; */
 }
 .follow-button {
-  margin-left:6%;
+  /* margin-left:6%; */
+  height:30px;
+  width:100px;
   background-color: #22b8cf;
-
+  /* margin-left:50px; */
   color: white;
   border-radius: 4px;
   padding: 4px 8px;
@@ -423,7 +484,9 @@ margin-left:30px;
   cursor: pointer;
 }
 .cancel-follow-button{
-  margin-left:6%;
+  /* margin-left:6%; */
+  height:30px;
+  width:100px;
   background-color: #9b9b9b;
 
   color: white;
