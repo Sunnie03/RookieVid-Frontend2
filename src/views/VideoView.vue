@@ -259,7 +259,7 @@
                           </span>
                           <!--作者的tag-->
                           <span style="align-items: center!important;"><el-tag
-                              v-if="comment_item.user_id == video.author_id" type="info" effect="plain"
+                              v-if="comment_item.user_id == video.author_id" type="danger" effect="plain"
                               size="mini">作者</el-tag></span>
                         </div>
 

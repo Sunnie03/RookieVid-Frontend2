@@ -8,6 +8,7 @@
 
     <!--【下面补全该页面代码】-->
     <el-container>
+      <!--侧边导航栏-->
       <!-- <el-aside width="200px" style="background-color: antiquewhite;">
         <v-navigation-drawer dark src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg" width="100%" height="100%"
           permanent>
@@ -26,62 +27,76 @@
       </el-aside> -->
 
       <el-main>
-        <div :style="{ 'width': '50vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
-          <div style="margin-bottom: 15px;">
-            <h1>全部视频</h1>
+        <div :style="{ 'width': '45vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
+          <div style="margin-bottom: 10px;font-weight: 500;font-size: 22px;">
+            <p>全部视频 &nbsp;&nbsp;共{{ amount }}条</p>
           </div>
           <!--for循环-->
-          <v-card height="200px" v-for="(video_item, index) in videos" :key="index">
-            <div class="show_video_block" style="padding-top: 20px;padding-bottom: 10px;padding-left: 20px;">
+          <v-card v-for="(video_item, index) in videos" :key="index" flat>
+            <div class="show_video_block"
+              style="padding-top: 20px;padding-left: 20px;margin-bottom: 14px;padding-right: 9px;">
               <v-row>
-                <v-col cols="12" md="5">
-                  <!-- <img :src="recommend_item.cover_url" width="100%" /> -->
-                  <img :src="video_item.cover_url" height="160px" />
+                <v-col cols="12" md="4">
+                  <img class="video_cover" :src="video_item.cover_url" width="100%" height="128px"
+                    @click="jumpTo(video_item.id)" />
                 </v-col>
 
-                <v-col class="video_introdction" cols="12" md="7">
-                  <div class="video_title">
-                    <h3>视频标题{{ video_item.title}}</h3>
+                <v-col class="video_introdction" cols="12" md="8">
+                  <div class="video_title" v-bind:title="video_item.title" @click="jumpTo(video_item.id)"
+                    style="font-weight: 400;font-size: 18px;">
+                    <span>{{ video_item.title }}</span>
                   </div>
 
-                  <div style="margin-top: 10px;margin-bottom: 10px;">
-                    <el-tag type="info" effect="plain" size="mini">作者 </el-tag> 作者{{video_item.user_name }}
+                  <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
+                    <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"> <el-tag 
+                        effect="plain" size="mini">作者 </el-tag>
+                      {{
+                        video_item.user_name }}</span>
                   </div>
 
-                  <div style="margin-bottom: 10px;">
-                    {{ video_item.created_at }}
+                  <div style="margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
+                    <v-icon size="20"
+                          style="width: 8px;height: 8px;margin-left: 8px;margin-right: 8px;">mdi-clock-time-nine-outline</v-icon>&nbsp;{{ video_item.created_at }}
                   </div>
 
-                  <div class="video_playData">
+                  <div class="video_playData" style="color:rgb(109, 106, 106);font-size: 14px;">
                     <span style="margin-right: 25px;">
                       <v-icon
                         style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
-                      {{video_item.view_amount }}
+                      {{ video_item.view_amount }}
                     </span>
                     <span style="margin-right: 25px;">
                       <v-icon
                         style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-thumb-up-outline</v-icon>
-                      {{video_item.like_amount }}
+                      {{ video_item.like_amount }}
                     </span>
                     <span style="margin-right: 25px;">
-                      <v-icon
-                        style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-star-outline</v-icon>
-                      {{video_item.fav_amount }}
+                      <v-icon style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-star-outline</v-icon>
+                      {{ video_item.fav_amount }}
                     </span>
-                    <span>
+                    <!--评论数量-->
+                    <!-- <span>
                       <v-icon
                         style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-text-box-outline</v-icon>
                       {{video_item.fav_amount }}
-                    </span>
+                    </span> -->
                   </div>
                 </v-col>
               </v-row>
+
             </div>
+            <v-divider />
           </v-card>
         </div>
+
       </el-main>
     </el-container>
+    <!-- <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop> -->
+    <!--底部-->
+    <el-footer height="80px"></el-footer>
+    
   </div>
+  
 </template>
 
 <script>
@@ -102,6 +117,7 @@ export default {
       //   ['mdi-account-supervisor-circle', 'Supervisors'],
       //   ['mdi-clock-start', 'Clock-in'],
       // ],
+      amount:'',
     }
   },
   created() {
@@ -118,6 +134,7 @@ export default {
             response.data.video.forEach((video, index) => {
               this.videos.push(video);/*【这样写】*/
             })
+            this.amount=this.videos.length;
             console.dir(this.videos);
           }
           else {
@@ -127,7 +144,13 @@ export default {
         .catch(error => {
           console.log(error);
         })
-    }
+    },
+    /*跳转到推荐视频对应的播放页*/
+    jumpTo(video_id) {
+      //this.$router.push('/video/'+video_id);
+      const video_play_url = '/video/' + video_id;
+      window.open(video_play_url, '_blank');
+    },
   }
 }
 
@@ -140,4 +163,40 @@ export default {
   text-align: center;
   line-height: 200px;
 } */
-</style>
+
+/* .show_video_block {
+  border: 2px solid #d0dcdc9a;
+  border-radius: 10px;
+  padding: 10px 0 10px 0;
+  box-shadow: 0 .5px 0 .5px#e7f6f69a;
+} */
+
+.video_cover {
+  border-radius: 10px;
+}
+
+.video_title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.video_author {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*以下样式设置鼠标悬停显示颜色*/
+.video_title:hover {
+  color: rgb(11, 168, 235);
+}
+
+.textBtn:hover {
+  color: rgb(0, 179, 255);
+  /*这个颜色比较接近链接的颜色*/
+}</style>
