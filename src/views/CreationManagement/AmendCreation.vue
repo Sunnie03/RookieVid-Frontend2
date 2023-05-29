@@ -74,6 +74,7 @@
             </div> -->
             <div style="display:flex">
             <div style="flex:1"></div>
+            <el-button @click="goCreationManage" style="margin-top:20px;">放弃修改</el-button>
             <el-button @click="uploadVideo" style="margin-top:20px;">上传</el-button>
             <div style="flex:1"></div>
             </div>
@@ -187,6 +188,7 @@ export default {
       }
       this.$router.push('/myCreation');
     },
+  
     upload_video(){
       // this.text=text;
       if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
