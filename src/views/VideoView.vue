@@ -52,7 +52,7 @@
               <v-card-text>
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:15px;width=100%">
-                  <video controls :src="video.url" muted style="width:100%;min-height:550px">
+                  <video controls :src="video.url" muted style="min-width:100%;max-width:100%;min-height:550px">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
                     <!-- <source src="../assets/hz.mp4" /> -->
@@ -119,13 +119,31 @@
                     </el-dialog>
 
                     <!--投诉-->
-                    <span class="complaint" style="margin-right:30px">
-                      <v-btn icon :color="video.complained ? 'blue' : undefined" @click="Complain()" size="large"
+                    <span class="complaint videoFuncClick" style="margin-right:30px">
+                      <v-btn icon :color="canComplain ? undefined : 'blue'" @click="clickComplain()" size="large"
                         style="width: 50px;height: 50px;">
-                        <v-icon>mdi-alert-outline</v-icon>
+                        <v-icon class="videoFuncClick">mdi-alert-outline</v-icon>
                       </v-btn>
-                      <p class="d-flex align-center my-auto">稿件投诉</p>
+                      <p class="d-flex align-center my-auto" @click="clickComplain()">稿件投诉</p>
                     </span>
+
+                    <!--投诉的对话框-->
+                    <el-dialog title="稿件投诉" :visible.sync="complainDialog" @close="CancelComplain()" width="29%"
+                      >
+                      <h3 style="margin-bottom: 20px;">请填写投诉原因</h3>
+                      <el-input type="textarea" :rows="5" placeholder="请输入投诉原因，限制200字" v-model="complain_textarea"
+                        maxlength="200" show-word-limit>
+                      </el-input>
+                      <!-- <span slot="header">
+                        <el-button class="dialog-close-button" icon="el-icon-close""></el-button>
+                      </span> -->
+                      <!--投诉对话框底部-->
+                      <span slot="footer" class="dialog-footer">
+                        <el-button @click="complainDialog = false; CancelComplain()">取 消</el-button>
+                        <el-button type="primary" @click=" PostComplain()">确 定</el-button>
+                      </span>
+
+                    </el-dialog>
 
                     <!--转载声明-->
                     <span title="转载声明">
@@ -151,7 +169,7 @@
 
             <!--分隔美化-->
             <v-divider height="6" class="mt-4"></v-divider>
-            <img src="@/assets/video/picture4.jpeg" style="margin-top: 27px;" width="100%" height="200px"></img>
+            <img src="@/assets/video/picture4.jpeg" style="margin-top: 27px;" width="100%" height="200px"/>
 
             <!--评论区-->
             <v-card class="mt-10 mb-10" flat>
@@ -160,36 +178,36 @@
               </v-row>
 
               <!--评论区头-->
-              <v-row align-content="stretch" :style="{ width: '100%', 'margin-bottom': '15px' }" align="center">
+              <v-row align-content="stretch" :style="{ width: '100%', 'margin-bottom': '30px' }" align="center">
                 <!--justify="center"-->
                 <!--当前用户头像-->
                 <v-col cols="12" md="1" class="d-flex" align="center">
                   <v-avatar>
-                    <img :src="user.user_avatar" />
+                    <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                   </v-avatar>
                 </v-col>
                 <!--一级评论输入框-->
                 <!--登录后，可以输入，发布评论-->
-                  <v-col v-if="this.$store.state.isLogin" cols="12" md="11" align="center" class="d-flex">
-                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
-                      suffix-icon="el-icon-s-promotion">
-                    </el-input>
-                    <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
-                  </v-col>
-                  <!--没有登录，输入不了-->
-                  <v-col v-else cols="12" md="11" align="center" class="d-flex">
-                    <el-input type="textarea" :rows="2" placeholder="登录后才可以发布评论" v-model="textarea_comment"
-                      suffix-icon="el-icon-s-promotion" @click="clickSend" :disabled="true" >
-                    </el-input>
-                    <el-button class="comment-btn" type="primary" disabled @click="clickSend">发布</el-button>
-                  </v-col>
+                <v-col v-if="this.$store.state.isLogin" cols="12" md="11" align="center" class="d-flex">
+                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
+                    suffix-icon="el-icon-s-promotion">
+                  </el-input>
+                  <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
+                </v-col>
+                <!--没有登录，输入不了-->
+                <v-col v-else cols="12" md="11" align="center" class="d-flex" @click="clickSend">
+                  <el-input type="textarea" :rows="2" placeholder="登录后才可以发布评论" v-model="textarea_comment"
+                    suffix-icon="el-icon-s-promotion" @click="clickSend" :disabled="true">
+                  </el-input>
+                  <el-button class="comment-btn" type="primary" disabled @click="clickSend">发布</el-button>
+                </v-col>
               </v-row>
 
               <v-divider /><!--为了调整样式，之后可以删-->
 
               <!--评论样式-->
-              <v-card v-if="video.total_comment_amount" flat class="mb-3" @mouseenter="showDelete = true"
-                @mouseleave="showDelete = false" v-for="(comment_item, index) in this.comments" :key="index">
+              <v-card v-if="video.total_comment_amount" flat class="mb-3" v-for="(comment_item, index) in this.comments"
+                :key="index">
                 <v-row>
                   <v-col cols="12" md="1">
                     <v-avatar>
@@ -198,36 +216,58 @@
                   </v-col>
 
                   <v-col cols="12" md="11">
-                    <!--评论者用户名-->
-                    <div style="align-items: center;margin-bottom: 14px;">
-                      <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                        {{ comment_item.user_name }}
-                      </span>
-                      <!--作者的tag-->
-                      <span style="align-items: center!important;"><el-tag v-if="comment_item.user_id == video.author_id"
-                          type="info" effect="plain" size="mini">作者</el-tag></span>
-                    </div>
+                    <!--一级评论部分（不包括二级的）-->
+                    <div @mouseover="judgeShowDelete(comment_item.id, comment_item.user_id)"
+                      @mouseleave="hideDelete(comment_item.id)">
+                      <!--评论者用户名-->
+                      <div style="align-items: center;margin-bottom: 12px;">
+                        <span style="font-weight:bolder;font-size: 20px;margin-right: 15px;">
+                          {{ comment_item.user_name }}
+                        </span>
+                        <!--作者的tag-->
+                        <span style="align-items: center!important;"><el-tag
+                            v-if="comment_item.user_id == video.author_id" type="info" effect="plain"
+                            size="mini">作者</el-tag></span>
+                      </div>
 
-                    <!--一级评论内容-->
-                    <div style="">{{ comment_item.content }}</div>
-                    <!--一级评论时间【需要精确到什么程度？】-->
-                    <div style="align-items: center;">
-                      <span style="font-size: 14px;color: grey;margin-right: 40px;">
-                        {{ comment_item.created_at.split('T')[0] }} {{ comment_item.created_at.split('T')[1].split('.')[0]
-                        }}
-                      </span>
+                      <!--一级评论内容-->
+                      <div>
+                        {{ comment_item.content }}</div>
+                      <!--一级评论时间，精确到秒-->
+                      <div style="align-items: center;margin-top: 5px;">
+                        <span style="font-size: 14px;color: grey;margin-right: 40px;">
+                          {{ comment_item.created_at.split('T')[0] }} {{
+                            comment_item.created_at.split('T')[1].split('.')[0]
+                          }}
+                        </span>
 
-                      <!--回复键，点击弹出reply的输入框-->
-                      <span style="margin-right: 40px;">
-                        <el-button type="text" @click="PopInput(index)">回复</el-button>
-                      </span>
+                        <!--回复键，点击弹出reply的输入框-->
+                        <span style="margin-right: 40px;color:grey">
+                          <span style="font-size: 14px;" @click="PopInput(index)" class="replyBtn">回复</span>
+                          <!-- <el-button type="text" @click="PopInput(index)">回复</el-button> -->
+                        </span>
 
-                      <!--删除一级评论-->
-                      <span v-if="showDelete"><!--如果删除键可以看到-->
-                        <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'>
-                          <el-button slot="reference" type="text" @click="deleteComment()">删除</el-button>
-                        </el-popconfirm>
-                      </span>
+                        <!--删除一级评论-->
+                        <span v-if="showDelete[comment_item.id]"><!--如果删除键可以看到-->
+                          <!-- <el-button type="text" v-if="showDelete[comment_item.id]"
+                            @click="delDialogVisible = true; clickDel(comment_item.id)">删除</el-button> -->
+
+                          <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
+                            icon="el-icon-info" icon-color="red" @confirm="deleteComment(comment_item.id)"
+                            @cancel="delCancel(comment_item.id)">
+                            <el-button slot="reference" type="text" @click="clickDel(comment_item.id)">删除</el-button>
+                          </el-popconfirm>
+                        </span>
+                      </div>
+
+                      <!--点击删除键，弹出“确认删除”的对话框-->
+                      <!-- <el-dialog title="提示" :visible.sync="delDialogVisible" width="20%" center>
+                        <span>确认是否删除</span>
+                        <span slot="footer" class="dialog-footer">
+                          <el-button @click="delDialogVisible = false; isClickDel = false">取 消</el-button>
+                          <el-button type="primary" @click="delDialogVisible = false; deleteComment()">确 定</el-button>
+                        </span>
+                      </el-dialog> -->
                     </div>
 
                     <!--二级评论内容-->
@@ -243,26 +283,34 @@
                             </v-col>
 
                             <v-col cols="12" md="11">
-                              <!--二级评论者用户名-->
-                              <div style="align-items: center;margin-bottom: 14px;">
-                                <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                                  {{ reply_item.user_name }}
-                                </span>
-                                <span style="align-items: center!important;"><el-tag
-                                    v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
-                                    size="mini">作者</el-tag>
-                                </span>
-                              </div>
-                              <!--二级评论内容-->
-                              <div>{{ reply_item.content }}</div>
-                              <div style="align-items: center;">
-                                <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                  reply_item.created_at.split('T')[0] }} {{
+                              <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
+                                @mouseleave="hideDelete(reply_item.id)">
+                                <!--二级评论者用户名-->
+                                <div style="align-items: center;margin-bottom: 14px;">
+                                  <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
+                                    {{ reply_item.user_name }}
+                                  </span>
+                                  <span style="align-items: center!important;"><el-tag
+                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
+                                      size="mini">作者</el-tag>
+                                  </span>
+                                </div>
+                                <!--二级评论内容-->
+                                <div>{{ reply_item.content }}</div>
+                                <!--二级评论时间信息和删除-->
+                                <div style="align-items: center;">
+                                  <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
+                                    reply_item.created_at.split('T')[0] }} {{
     reply_item.created_at.split('T')[1].split('.')[0] }}
-                                </span>
-                                <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
-                                    cancel-button-text='不用了'><el-button slot="reference" type="text"
-                                      @click="deleteComment(comment_id)">删除</el-button></el-popconfirm></span>
+                                  </span>
+                                  <span v-if="showDelete[reply_item.id]">
+                                    <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
+                                      icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
+                                      @cancel="delCancel(reply_item.id)">
+                                      <el-button slot="reference" type="text"
+                                        @click="clickDel(reply_item.id)">删除</el-button></el-popconfirm>
+                                  </span>
+                                </div>
                               </div>
                             </v-col>
                           </v-row>
@@ -285,26 +333,34 @@
                               </v-col>
 
                               <v-col cols="12" md="11">
-                                <!--二级评论者用户名-->
-                                <div style="align-items: center;margin-bottom: 14px;">
-                                  <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                                    {{ reply_item.user_name }}
-                                  </span>
-                                  <span style="align-items: center!important;"><el-tag
-                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
-                                      size="mini">作者</el-tag>
-                                  </span>
-                                </div>
-                                <!--二级评论内容-->
-                                <div>{{ reply_item.content }}</div>
-                                <div style="align-items: center;">
-                                  <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                    reply_item.created_at.split('T')[0]
-                                  }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
-                                  </span>
-                                  <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
-                                      cancel-button-text='不用了'><el-button slot="reference" type="text"
-                                        @click="deleteComment(comment_id)">删除</el-button></el-popconfirm></span>
+                                <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
+                                  @mouseleave="hideDelete(reply_item.id)">
+                                  <!--二级评论者用户名-->
+                                  <div style="align-items: center;margin-bottom: 14px;">
+                                    <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
+                                      {{ reply_item.user_name }}
+                                    </span>
+                                    <span style="align-items: center!important;"><el-tag
+                                        v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
+                                        size="mini">作者</el-tag>
+                                    </span>
+                                  </div>
+                                  <!--二级评论内容-->
+                                  <div>{{ reply_item.content }}</div>
+                                  <div style="align-items: center;">
+                                    <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
+                                      reply_item.created_at.split('T')[0]
+                                    }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
+                                    </span>
+                                    <span v-if="showDelete[reply_item.id]">
+                                      <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
+                                        icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
+                                        @cancel="delCancel(reply_item.id)">
+                                        <el-button slot="reference" type="text"
+                                          @click="clickDel(reply_item.id)">删除</el-button>
+                                      </el-popconfirm>
+                                    </span>
+                                  </div>
                                 </div>
                               </v-col>
                             </v-row>
@@ -328,34 +384,42 @@
                               </v-col>
 
                               <v-col cols="12" md="11">
-                                <!--二级评论者用户名-->
-                                <div style="align-items: center;margin-bottom: 14px;">
-                                  <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
-                                    {{ reply_item.user_name }}
-                                  </span>
-                                  <span style="align-items: center!important;"><el-tag
-                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
-                                      size="mini">作者</el-tag>
-                                  </span>
-                                </div>
-                                <!--二级评论内容-->
-                                <div>{{ reply_item.content }}</div>
-                                <div style="align-items: center;">
-                                  <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                    reply_item.created_at.split('T')[0]
-                                  }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
-                                  </span>
-                                  <span v-if="showDelete"><el-popconfirm title="确定是否删除这条评论？" confirm-button-text='好的'
-                                      cancel-button-text='不用了'><el-button slot="reference" type="text"
-                                        @click="deleteComment(comment_id)">删除</el-button></el-popconfirm></span>
+                                <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
+                                  @mouseleave="hideDelete(reply_item.id)">
+                                  <!--二级评论者用户名-->
+                                  <div style="align-items: center;margin-bottom: 14px;">
+                                    <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
+                                      {{ reply_item.user_name }}
+                                    </span>
+                                    <span style="align-items: center!important;"><el-tag
+                                        v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
+                                        size="mini">作者</el-tag>
+                                    </span>
+                                  </div>
+                                  <!--二级评论内容-->
+                                  <div>{{ reply_item.content }}</div>
+                                  <div style="align-items: center;">
+                                    <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
+                                      reply_item.created_at.split('T')[0]
+                                    }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
+                                    </span>
+                                    <span v-if="showDelete[reply_item.id]">
+                                      <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
+                                        icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
+                                        @cancel="delCancel(reply_item.id)">
+                                        <el-button slot="reference" type="text"
+                                          @click="clickDel(reply_item.id)">删除</el-button>
+                                      </el-popconfirm>
+                                    </span>
+                                  </div>
                                 </div>
                               </v-col>
                             </v-row>
                           </v-card>
                           <!--“查看”-->
-                          <div>
-                            <p>共{{ comment_item.reply_amount }}条回复，<el-button type="text"
-                                @click="display_comment[index] = true">点击查看</el-button></p>
+                          <div style="margin-top: 20px;">
+                            <p style="color:grey;font-size:15px">共{{ comment_item.reply_amount }}条回复，<span
+                                @click="display_comment[index] = true" class="textBtn">点击查看</span></p>
                           </div>
                         </div>
                       </div>
@@ -373,7 +437,7 @@
                           <v-col cols="12" md="11"> -->
                       <!--二级评论者用户名-->
                       <!-- <div style="align-items: center;margin-bottom: 14px;">
-                              <span style="font-weight:bolder;font-size: 22px;margin-right: 15px;">
+                              <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
                                 {{ reply_item.user_name }}
                               </span>
                               <span style="align-items: center!important;"><el-tag
@@ -402,7 +466,7 @@
                     </div>
 
                     <!--点击回复，弹出的输入框；点击发布后，要收起-->
-                    <v-row v-if="show_comment_input[index]">
+                    <v-row v-if="show_comment_input[index]" style="margin-top: 10px;">
                       <!--当前用户头像-->
                       <v-col cols="12" md="1" class="d-flex" align="center">
                         <v-avatar>
@@ -415,7 +479,7 @@
                           v-model="textarea_comment_l2" suffix-icon="el-icon-s-promotion">
                         </el-input>
                         <el-button class="comment-btn" type="primary"
-                          @click="PostReply(comment_item.id, index, textarea_comment_l2)">发布</el-button>
+                          @click="PostReply(comment_item.id, index)">发布</el-button>
                       </v-col>
                     </v-row>
 
@@ -479,7 +543,7 @@
               </v-card>
 
               <!--图片2-->
-              <img src="@/assets/video/picture2.jpeg" style="margin-top: 20px;" width="100%" height="200px"></img>
+              <img src="@/assets/video/picture2.jpeg" style="margin-top: 20px;" width="100%" height="200px"/>
               <v-divider height="6" style="margin-top: 20px;"></v-divider>
 
               <!--推荐视频列表-->
@@ -532,6 +596,9 @@
         </v-row>
       </div>
     </el-container>
+
+    <!--底部-->
+    <el-footer height="80px"></el-footer>
   </div>
 </template>
 
@@ -559,14 +626,26 @@ export default {
   },
   data() {
     return {
+      /*投诉相关数据*/
+      canComplain: true,/*是否可以投诉该视频｜默认可以投诉（游客未登录也可以【待确认】）*/
+      reasonComplainDisable: '',/*不能投诉该视频的原因，应该是text*/
+      complainDialog: false,/*投诉视频的对话框，默认关闭*/
+      complain_textarea: '',/*投诉对话框中，填写投诉原因*/
       /*评论相关数据*/
       textarea_comment: '',/*发布一级评论的输入框*/
       textarea_comment_l2: '',/*发布二级评论(即reply)的输入框，需要区分*/
-      showDelete: false,/*是否显示评论card中的删除键【应该是随着评论总数变化的一个量】*/
+      /*关于点击“回复”，输入框的显示*/
       display_comment: [],/*展示"点开查看"，随着一级评论变化*/
       i_display: 0,/*display_comment中的遍历量，数组下标，随着一级评论变化*/
       show_comment_input: [],/*点击回复，展示输入框,随着一级评论变化*/
       clickReplyCnt: [],/*点击回复的次数，点1下就显示输入框，点2下就消失。随着一级评论变化*/
+      /*关于鼠标移动，评论的删除键的显示*/
+      canDelete: false,/*用来标记当前的登录者是否是管理员或该视频的作者，用以判断删除权限；默认为false*/
+      showDelete: [],/*是否显示评论card中的删除键【应该是随着评论总数变化的一个量】*/
+      isClickDel: [],/*是否已经点击了删除键【随着评论总数变化的一个量】。如果已经点击了，就设置为true就让删除键显示*/
+      forMaxLen: 150,/*为了for循环遍历清空和设置初始为0【正常的for循环不需要这个】【目前有showDelete和isClickDel使用了】*/
+
+      //delDialogVisible: false,/*确认是否删除一级评论的dialog*/
 
       /*收藏相关数据*/
       starDialogVisible: false,/*是否展示收藏夹的Dialog对话框*/
@@ -601,7 +680,7 @@ export default {
         author_image_url: '',
         author_description: '',
         author_follower_amount: '',
-        isFollowed: false,/*待完善；默认为未关注*/
+        isFollowed: false,/*默认为未关注*/
         follower_amount: '',
         /*视频相关数据*/
         view_amount: '',
@@ -612,7 +691,6 @@ export default {
         liked: false,
         star_amount: 0,
         stared: false,
-        complained: false,
       },
       /*以下为遍历数组*/
       /*一级评论数组（一级评论里有一个reply的数组）*/
@@ -630,7 +708,11 @@ export default {
   },
   created() {
     this.fetchVideoData();
-    this.getComments();/*获取评论*/
+
+    /*每隔一分钟，获取一次评论*/
+    // setInterval(() => {
+    //   this.getComments()
+    // }, 180000);/*3分钟，这里的数字单位是毫秒*/
   },
   // mounted() { /*计算视频长宽*/
   //   this.$nextTick(() => {
@@ -660,7 +742,7 @@ export default {
     fetchVideoData() {
       /*输出登录信息*/
       console.log(this.$store.state.isLogin);
-      console.log(this.$store.state.isAdmin);
+      console.log('a: ' + this.$store.state.isAdmin);
       /*获取当前登录用户的信息（如果已经登录的话）*/
       if (this.$store.state.isLogin) /*不要用true来判断，不灵敏*/ {
         /*如果已经登录，就打印Token值*/
@@ -672,7 +754,7 @@ export default {
             console.log(response);
             console.log(Headers);
             if (response.data.errno == 0) {  //获取成功“我”的身份信息
-              this.user.user_id = response.data.context.uid;
+              this.user.user_id = response.data.context.id;
               this.user.user_name = response.data.context.username;
               this.user.user_avatar = response.data.context.avatar_url;   //这是头像
             }
@@ -715,7 +797,7 @@ export default {
           this.video.author_name = response.data.video.user_name;
           this.video.author_image_url = response.data.video.avatar_url;
           this.video.author_description = response.data.video.user_description;
-          //this.video.isFollowed=response.data.video.1;
+          this.video.isFollowed = response.data.video.followed;
           this.video.author_follower_amount = response.data.video.follower_amount;
 
           /*视频相关数据量*/
@@ -726,14 +808,42 @@ export default {
 
           /*点赞*/
           this.video.like_amount = response.data.video.like_amount;
-          this.video.liked = response.data.liked;
+          this.video.liked = response.data.video.liked;
           /*收藏*/
           this.video.star_amount = response.data.video.fav_amount;
-          this.video.stared = response.data.favorited;
-          this.video.test_debug1 = 5;
+          this.video.stared = response.data.video.favorited;
+
+          if (this.$store.state.isAdmin === "true") /*直接括号判断会出错*/ {
+            console.log('is?Admin: ' + this.$store.state.isAdmin);
+            this.canDelete = true;//管理员拥有删除评论权限
+            console.log('canDelete-isAd: ' + this.canDelete);
+          }
+          else if (this.$store.state.isAdmin === false) {
+            /*不是管理员，判断是不是视频作者*/
+            if (this.video.author_id == this.user.user_id) {
+              this.canDelete = true;//视频作者拥有删除评论权限
+              console.log('canDelete-isAu: ' + this.canDelete);
+            }
+            console.log('I am here::' + this.$store.state.isAdmin);
+          }
+          else {
+            console.log('isAdmin??: ' + this.$store.state.isAdmin);
+          }
+          console.log('canDelete: ' + this.canDelete);
 
           console.log(this.video);
           console.log('c:' + this.comments);
+
+          /*设置for遍历清空或初始赋值最大长度【暂时只有showdelete用到】*/
+          if (this.video.total_comment_amount > this.forMaxLen) {
+            this.forMaxLen = this.video.total_comment_amount + 2;
+          }
+          console.log('MaxL: ' + this.forMaxLen);
+          /*下面这个for循环的相对位置没那么重要的原因是，都是设置为false*/
+          for (let i = 0; i < this.forMaxLen; i++) {
+            this.$set(this.showDelete, i, false);
+            this.$set(this.isClickDel, i, false);
+          }
 
           /*遍历获取所有一级评论*/
           if (this.video.comment_amount > 0) /*一级评论数量大于0，才显示评论的card，才有comments数组*/ {
@@ -744,6 +854,8 @@ export default {
               this.clickReplyCnt.push(0);
               //this.set(this.display_comment,this.i_display,'');
               //this.comments[index] = comment;
+              this.showDelete.push(false);/*每条一级评论是否展示删除键【随着一级评论id变化】*/
+              this.isClickDel.push(false);
             })
             console.log('gc_C:' + this.comments);
           }
@@ -754,7 +866,7 @@ export default {
         })
 
       /*获取推荐视频列表*/
-      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 15 } })
+      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 10 } })
         .then(response => {
           console.log(response);
           response.data.video.forEach((video, index) => {
@@ -767,28 +879,73 @@ export default {
         .catch(error => {
           console.log(error);
         })
+
+      /*先通过get接口判断是不是可以投诉，从而显示“投诉键”对应的样式*/
+      axios.get('/videos/is_complaint', { params: { video_id: this.$route.params.id }, headers: { Authorization: this.$store.getters.getStorage } })/*【还没测】*/
+        .then(response => {
+          console.log(response);
+
+          if (response.data.errno != 0) {
+            /*返回不成功，说明没有投诉权限*/
+            //this.$message.warning(response.data.msg);/*弹窗显示报错的返回信息*/
+            this.reasonComplainDisable = response.data.msg;
+            this.canComplain = false;
+          }
+          /*返回errno为0，没进这个if，说明可以投诉*/
+          console.log('load canComplian?: ' + this.canComplain);
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
     },
     getComments() {
-      if (this.video.comment_amount > 0 && this.video.total_comment_amount > 0) {
-        /*评论数量不为0，获取后评论数组不为空*/
-        axios.get('/videos/get_comment', { params: { video_id: this.$route.params.id } })
-          .then(response => {
-            console.log(response);
-            /*遍历获取所有一级评论*/
-            if (this.video.comment_amount > 0) /*一级评论数量大于0，才显示评论的card，才有comments数组*/ {
-              response.data.comment.forEach((comment, index) => {
-                this.comments[index] = comment;
-              })
-              console.log('gc_C:' + this.comments);
-            }
-          })
-          .catch(error => {
-            console.log('getComments' + error);
-          })
-      }
-      else {
-        console.log('Comments_amount=0');
-      }
+      axios.get('/videos/get_comment', { params: { video_id: this.$route.params.id } })
+        .then(response => {
+          console.log(response);
+          this.video.total_comment_amount = response.data.total_comment_amount;/*不知道能否实时响应，不能的话改成set【】*/
+          this.video.comment_amount = response.data.comment_amount;/*一级评论的数量*/
+          /*要先对之前的comments相关的数组清空*/
+          this.comments = [];
+          /*显示评论的输入框*/
+          this.display_comment = [];
+          this.show_comment_input = [];
+          this.clickReplyCnt = [];
+          /*显示评论的删除键*/
+          this.showDelete = [];
+          this.isClickDel = [];
+
+          console.log('t_c_a: ' + this.video.total_comment_amount);
+          console.log('c_a: ' + this.video.comment_amount);
+
+          /*设置for遍历清空或初始赋值最大长度【暂时只有showdelete用到】*/
+          if (this.video.total_comment_amount > this.forMaxLen) {
+            this.forMaxLen = this.video.total_comment_amount + 2;
+          }
+          console.log('MaxL: ' + this.forMaxLen);
+          /*下面这个for循环的相对位置没那么重要的原因是，都是设置为false*/
+          for (let i = 0; i < this.forMaxLen; i++) {
+            this.$set(this.showDelete, i, false);
+            this.$set(this.isClickDel, i, false);
+          }
+
+          /*遍历获取所有一级评论*/
+          if (this.video.comment_amount > 0) /*一级评论数量大于0，才显示评论的card，才有comments数组*/ {
+            response.data.comment.forEach((comment, index) => {
+              this.comments.push(comment);
+              this.display_comment.push(false);/*页面刷新时，默认是折叠起来的*/
+              this.show_comment_input.push(false);/*页面刷新时，默认该评论框不显示*/
+              this.clickReplyCnt.push(0);
+              //this.set(this.display_comment,this.i_display,'');
+              //this.comments[index] = comment;
+              this.showDelete.push(false);/*每条一级评论是否展示删除键【随着一级评论id变化】*/
+              this.isClickDel.push(false);
+            })
+            console.log('gc_C:' + this.comments);
+          }
+        })
+        .catch(error => {
+          console.log('getComments' + error);
+        })
     },
     /*处理用户点赞和取消点赞该视频*/
     likeHandle() {
@@ -911,42 +1068,203 @@ export default {
       //     console.log('Error: ' + error);
       //   });
     },
-    /*投诉的方法*/
-    Complain() {
-      /*先通过get接口判断是不是可以投诉*/
-      axios.get('/videos/is_complaint', { params: {} })
+    /*投诉相关方法*/
+    CancelComplain() {
+      // if (this.textarea_comment)//content为空
+      // {
+      //   this.complain_textarea = '';
+      //   return;
+      // }
+
+      // this.$message.info('您的投诉已取消');
+      this.complain_textarea = '';
+
+    },
+    /*点击投诉键，出现投诉的对话框*/
+    clickComplain() {
+      //console.log('into complain');
+      // /*先通过get接口判断是不是可以投诉*/
+      // axios.get('/videos/is_complaint', { params: { video_id: this.$route.params.id }, headers: { Authorization: this.$store.getters.getStorage } })
+      //   .then(response => {
+      //     console.log(response);
+
+      //     if(response.data.errno!=0){
+      //       /*返回不成功，没有投诉权限*/
+      //       this.$message.warning(response.data.msg);/*弹窗显示报错的返回信息*/
+      //       return;
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('Error: ' + error);
+      //     this.$message({
+      //       message: response.msg,/*如果不能投诉，显示原因*/
+      //       type: 'info'
+      //     });
+      //     return;
+      //   });
+
+      /*先通过存好的canComplain来确定是否可以投诉*/
+      if (this.canComplain == false) {
+        this.$message.warning(this.reasonComplainDisable);/*消息显示原因*/
+        console.log('can not complain');
+        return;
+      }
+
+      /*如果可以投诉*/
+      this.complainDialog = true;/*弹出投诉的对话框*/
+      /*写入投诉的弹窗MessageBox*/
+      // this.$prompt('请输入投诉原因', '稿件投诉', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      // }).then(({ value }) => {
+      //   /*投诉视频接口*/
+      //   axios.post('/videos/complain_video', { params: { video_id: this.$router.params, content: value } })
+      //   this.$message({
+      //     type: 'success',
+      //     message: '您的投诉已成功发送，正在等待管理员审核'
+      //   });
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '取消投诉'
+      //   });
+      // });
+
+      /*标记投诉状态和记录投诉原因【如果调接口了，还需要存吗？？】*/
+      return;
+    },
+    /*发送投诉*/
+    PostComplain() {
+      /*能弹出对话框填写，说明肯定可以投诉*/
+      /*判断输入框是否为空*/
+      if (!this.complain_textarea)//content为空
+      {
+        this.$message.warning('投诉原因不能为空');
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("video_id", this.$route.params.id);
+      formData.append("content", this.complain_textarea);
+      formData.append("Authorization", this.$store.getters.getStorage);
+
+      let content = this.complain_textarea;
+
+      axios.post('/videos/complain_video', formData)
         .then(response => {
+          console.log(formData);
           console.log(response);
+
+          if (response.data.errno == 0) {
+            this.$message.success('投诉视频成功');
+            this.complainDialog = false;
+            this.complain_textarea = '';
+
+            this.$set(this, 'canComplain', false);
+            this.reasonComplainDisable = "您已投诉过该视频，请耐心等待管理员审核";
+          }
+          else {
+            /*投诉不成功，对话框不关闭*/
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            this.complain_textarea = content;
+            return;
+          }
         })
         .catch(error => {
           console.log('Error: ' + error);
-          this.$message({
-            message: response.msg,/*如果不能投诉，显示原因*/
-            type: 'info'
-          });
-          return;
+          this.$message.warning('发生错误，投诉视频失败');
+          this.complain_textarea = content;
         });
-      /*如果可以投诉*/
-      /*写入投诉的弹窗*/
-      this.$prompt('请输入投诉原因', '稿件投诉', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-      }).then(({ value }) => {
-        /*投诉视频接口*/
-        axios.post('/videos/complain_video', { params: { video_id: this.$router.params, content: value } })
-        this.$message({
-          type: 'success',
-          message: '您的投诉已成功发送，正在等待管理员审核'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消投诉'
-        });
-      });
-      /*标记投诉状态？？*/
     },
     /*评论相关方法*/
+    /*以下4个方法判断是否展示删除键*/
+    judgeShowDelete(comment_id, comment_user_id) {
+      /*先把所有都设置为false再重新判断*/
+      for (let i = 0; i < this.showDelete.length; i++) {
+        this.$set(this.showDelete, i, false);
+      }
+
+      if (this.isClickDel[comment_id] === false) {
+        if (this.canDelete === true)/*是该视频作者或者是管理员*/ {
+          //this.showDelete[comment_id]=true;
+          this.$set(this.showDelete, comment_id, true);
+          //console.log("j1:" + this.showDelete[comment_id]);
+        }
+        else if (this.canDelete === false) {
+          if (comment_user_id === this.user.user_id)/*这条评论的作者是我自己*/ {
+            //this.showDelete[comment_id]=true;
+            this.$set(this.showDelete, comment_id, true);
+            //console.log('mark1');
+          }
+          // else{
+          //   console.log(comment_user_id);
+          //   console.log('u:'+this.user.user_id);
+          // }
+        }
+      }
+      else if (this.isClickDel[comment_id]) {
+        /*把自己这条已经点击了评论的删除键就也要显示*/
+        this.$set(this.showDelete, comment_id, true);
+      }
+      else {
+        console.log('not change');
+      }
+      // console.log(this.isClickDel[comment_id]);
+      // console.log(comment_id);
+      // console.log('l:' + this.showDelete.length);
+      // console.log("judge:" + this.showDelete[comment_id]);
+    },
+    /*当鼠标移开时，隐藏删除键*/
+    hideDelete(comment_id) {
+      if (!this.isClickDel[comment_id]) {
+        /*先把所有都设置为false再重新判断*/
+        for (let i = 0; i < this.showDelete.length; i++) {
+          this.$set(this.showDelete, i, false);
+        }
+
+        //this.showDelete[comment_id]=false;
+        //this.$set(this.showDelete, comment_id, false);
+        //console.log("hide:" + this.showDelete[comment_id]);
+      }
+      else if (this.isClickDel[comment_id]) {
+        /*先把所有都设置为false再重新判断*/
+        for (let i = 0; i < this.showDelete.length; i++) {
+          this.$set(this.showDelete, i, false);
+        }
+
+        /*已经点击了评论的删除键就也要显示*/
+        this.$set(this.showDelete, comment_id, true);
+      }
+    },
+    /*如果已经点击了评论的删除，就要让删除键显示*/
+    clickDel(comment_id) {
+      /*先把所有都设置为false再重新判断*/
+      for (let i = 0; i < this.showDelete.length; i++) {
+        this.$set(this.showDelete, i, false);
+      }
+      /*清空其它id评论的已点击，设为fasle*/
+      for (let i = 0; i < this.isClickDel.length; i++) {
+        this.$set(this.isClickDel, i, false);
+      }
+      /*把当前点击的这个设置为isClick设置为true*/
+      this.$set(this.isClickDel, comment_id, true);
+      this.$set(this.showDelete, comment_id, true);
+    },
+    /*点击删除键后，再点击它的气泡确认框的取消键*/
+    delCancel(comment_id) {
+      /*先把所有都设置为false再重新判断*/
+      for (let i = 0; i < this.showDelete.length; i++) {
+        this.$set(this.showDelete, i, false);
+      }
+      /*清空其它id评论的已点击，设为fasle*/
+      for (let i = 0; i < this.isClickDel.length; i++) {
+        this.$set(this.isClickDel, i, false);
+      }
+      /*经过清空后（防止出错），再进行之后的操作*/
+      //this.$set(this, 'isClickDel', false);
+      this.$set(this.isClickDel, comment_id, false);
+      this.$set(this.showDelete, comment_id, false);
+    },
     /*登录状态下，发布一级评论的接口*/
     PostComment() {
       /*判断当前是否登录，在渲染代码中判断，不需要点击发布键*/
@@ -961,23 +1279,27 @@ export default {
         });
         return;
       }
+      let content = this.textarea_comment;
+
       let formData = new FormData();
       formData.append("video_id", this.$route.params.id);
       formData.append("content", this.textarea_comment);
-      axios.post('/videos/comment_video', formData) //往后端传数据有问题
+      axios.post('/videos/comment_video', formData) /*这里没传token*/
         .then(response => {
           console.log(formData);
           console.log(response);
 
           /*评论成功*/
           if (response.data.errno == 0) {
-            this.$message.info('发送评论成功');
+            this.$message.success('发送评论成功');
             this.textarea_comment = ''; /*清空评论输入框*/
 
-            /*重新get新的所有评论【待完善】*/
+            /*重新get新的所有评论【待测试】*/
+            this.getComments();/*获取评论*/
           }
           else {
             this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            this.textarea_comment = content;
             return;
           }
         })
@@ -985,31 +1307,59 @@ export default {
           console.log('Error: ' + error);
           this.$message({
             message: '发生错误，评论失败',
-            type: 'info'
+            type: 'warning'
           });
         });
     },
-    /*在未登录状态下，点击输入框或发布，跳转到这里*/
+    /*在未登录状态下，点击评论的输入框或发布，跳转到这里*/
     clickSend() {
       this.$message.warning('还未登录，请先登录');/*先去登录*/
       this.$router.push('/login');
       return;
     },
-    /*删除评论*/
+    /*删除一级评论*/
     deleteComment(comment_id) {
       /*判断是否登录*/
       /*判断是否有删除权限*/
-      axios.post('/videos/delete_comment', { params: { comment_id: 1 } })/*需把1改了*/
+      /*【如果没有该条评论的删除权限，应该直接看不到删除键，更不会点进来】*/
+
+      let formData = new FormData();
+      /*不需要视频id？？【】*/
+      formData.append("comment_id", comment_id);
+      formData.append("Authorization", this.$store.getters.getStorage);/*Token*/
+      axios.post('/videos/delete_comment', formData)//【还没测过】
         .then(response => {
-          console.log(reponse);
+          console.log(response);
+
+          if (response.data.errno == 0) {
+            this.$message.success('删除评论成功');
+            /*成功点击确认后。根据鼠标位置，来决定是否显示删除键*/
+            this.$set(this.showDelete, comment_id, false);
+            /*重新get评论，为了实时显示变化*/
+            this.getComments();/*获取评论*/
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            /*删除评论失败的时候，不关闭”删除键“的显示*/
+            return;
+          }
         })
         .catch(error => {
           console.log('Error: ' + error);
+          this.$message.warning('发生错误，删除评论失败');
+          return;
         });
+
+      /*根据鼠标位置，来决定是否显示删除键*/
+      //this.hideDelete(comment_id);
+      this.$set(this.showDelete, comment_id, false);
+      console.log("hide-click:" + this.showDelete[comment_id]);
     },
     /*点击回复键，弹出reply的输入框*/
     /*点击1下是弹出，点击2下是*/
     PopInput(index) {
+      /*给删除键debug【之后删掉】*/
+      // console.log('show:'+this.showDelete[comm_id]);
       /*如果已经登录，点击“回复”弹出输入框*/
       if (this.$store.state.isLogin) {
         /*先遍历，使其它所有的输入框都为false*/
@@ -1042,9 +1392,8 @@ export default {
       }
     },
     /*回复一级评论，发布二级评论即Reply*/
-    PostReply(comment_id, index, content) { /*这里的comment_id是一级评论id，指此reply属于哪个一级评论*/
-      if (!this.textarea_comment_l2)//content为空
-      {
+    PostReply(comment_id, index) { /*这里的comment_id是一级评论id，指此reply属于哪个一级评论*/
+      if (!this.textarea_comment_l2)/*输入为空，不能发布*/ {
         this.$message({
           message: '评论不能为空',
           type: 'warning'
@@ -1052,59 +1401,137 @@ export default {
         return;
       }
 
-      var request = {
-        comment_id: comment_id, /*所回复的一级评论的id；到底要不要独立有待商榷*/
-        content: this.$data.textarea_comment_l2,
-        video_id: this.$route.params.id,
-      };
-      axios.post('/videos/reply_comment', { params: request }) //往后端传数据有问题
-        .then(response => {
-          console.log(request);
-          console.log(response);
-          this.textarea_comment_l2 = '';
-          this.set(this.show_comment_input, index, false);/*将reply输入框关闭*/
+      let content = this.textarea_comment_l2;
+      let formData = new FormData();
+      formData.append("comment_id", comment_id);/*所回复的一级评论的id；到底要不要独立有待商榷*/
+      formData.append("content", this.textarea_comment_l2);
+      formData.append("video_id", this.$route.params.id);
+      formData.append("Authorization", this.$store.getters.getStorage);
 
-          //this.clickReplyCnt = 0;/*将Cnt设置为0，使得下一次点击“回复”，可以弹出输入框*/
-          for (let i = 0; i < this.clickReplyCnt.length; i++) {
-            this.clickReplyCnt[i] = 0;
+      axios.post('/videos/reply_comment', formData)
+        .then(response => {
+          console.log(formData);
+          console.log(response);
+
+          if (response.data.errno == 0) {
+            this.$message.success('回复评论成功');
+            this.textarea_comment_l2 = '';
+            /*将reply输入框关闭*/
+            this.show_comment_input[index] = false;
+            //this.$set(this.show_comment_input, index, false);
+
+            //this.clickReplyCnt = 0;/*将Cnt设置为0，使得下一次点击“回复”，可以弹出输入框*/
+            for (let i = 0; i < this.clickReplyCnt.length; i++) {
+              this.clickReplyCnt[i] = 0;
+            }
+
+            /*重新get评论，为了实时显示变化*/
+            this.getComments();/*获取评论*/
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            this.textarea_comment_l2 = content;
+            return;
           }
         })
         .catch(error => {
           console.log('Error: ' + error);
           this.$message({
-            message: '发生错误，评论失败',
-            type: 'info'
+            message: '发生错误，回复评论失败',
+            type: 'warning'
           });
           this.textarea_comment_l2 = content;
         });
     },
-    /*删除回复*/
-    DeleteReply() {
-      ;
+    /*删除回复（即二级评论）*/
+    /*注意，对应删除回复的地方，要调DeleteReply*/
+    DeleteReply(reply_id) {
+      /*判断是否有删除权限*/
+      /*【如果没有该条评论的删除权限，应该直接看不到删除键，更不会点进来】*/
+      let formData = new FormData();
+      /*不需要视频id？？【】*/
+      formData.append("reply_id", reply_id);
+      formData.append("Authorization", this.$store.getters.getStorage);/*Token*/
+
+      axios.post('/videos/delete_reply', formData)//【还没测过】
+        .then(response => {
+          console.log(response);
+
+          if (response.data.errno == 0) {
+            this.$message.success('删除回复成功');
+            /*成功点击确认后。根据鼠标位置，来决定是否显示删除键*/
+            this.$set(this.showDelete, reply_id, false);
+
+            /*重新get评论，为了实时显示变化*/
+            this.getComments();/*获取评论*/
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            /*删除评论失败的时候，不关闭”删除键“的显示*/
+            return;
+          }
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+          this.$message.warning('发生错误，删除回复失败');
+          return;
+        });
+
+      /*根据鼠标位置，来决定是否显示删除键*/
+      this.$set(this.showDelete, reply_id, false);
+      console.log("hide-click:" + this.showDelete[reply_id]);
     },
+    /*视频作者相关操作*/
     /*关注视频作者*/
     Follow() {
-      // axios.post('/account/create_follow', { params: { id: 1, following_id: 1 } })//??
-      //   .then(response => {
-      //     console.log(response);
-      //   })
-      //   .catch(error => {
-      //     console.log('Error: ' + error);
-      //   });
-      this.$data.video.isFollowed = true;
-      this.$data.video.author_follower_amount++;
+      let formData = new FormData();
+      formData.append("following_id", this.video.user_id);
+      formData.append("Authorization", this.$store.getters.getStorage);
+      axios.post('/account/create_follow', formData)
+        .then(response => {
+          console.log(formData);
+          console.log(response);
+          if (response.data.errno == 0) {
+            this.$message.success('关注成功');
+            this.$data.video.isFollowed = true;
+            this.$data.video.author_follower_amount = response.data.follower;/*根据后端返回的数量来更新前端【待确定行不行】*/
+            //this.$data.video.author_follower_amount++;
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            return;
+          }
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+          this.$message.warning('发生错误，关注失败');
+        });
     },
     /*取关视频作者*/
     DisFollow() {
-      // axios.post('/account/remove_follow', { params: { id: 1, following_id: 1 } })//??
-      //   .then(response => {
-      //     console.log(response);
-      //   })
-      //   .catch(error => {
-      //     console.log('Error: ' + error);
-      //   });
-      this.$data.video.isFollowed = false;
-      this.$data.video.author_follower_amount--;
+      let formData = new FormData();
+      formData.append("following_id", this.video.user_id);
+      formData.append("Authorization", this.$store.getters.getStorage);
+      axios.post('/account/remove_follow', formData)
+        .then(response => {
+          console.log(formData);
+          console.log(response);
+
+          if (response.data.errno == 0) {
+            this.$message.success('取关成功');
+            this.$data.video.isFollowed = false;
+            this.$data.video.author_follower_amount = response.data.follower;/*根据后端返回的数量来更新前端【待确定行不行】*/
+            //this.$data.video.author_follower_amount--;
+          }
+          else {
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            return;
+          }
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+          this.$message.warning('发生错误，取关失败');
+        });
     },
     /*跳转到推荐视频对应的播放页*/
     jumpTo(video_id) {
@@ -1191,10 +1618,11 @@ export default {
 
 .video_player video {
   display: flex;
-  width: 802px;
-  /* height: 400px; */
-  padding-top: 20px;
-  padding-bottom: 15px;
+  width: 100%;
+  min-height: 400px;
+  max-height: 550px;
+  /* padding-top: 20px;
+  padding-bottom: 15px; */
 }
 
 .video_func {
@@ -1290,7 +1718,23 @@ export default {
   text-overflow: ellipsis;
 }
 
+/*以下样式设置鼠标悬停显示颜色*/
 .rec_video_title:hover {
-  color: rgb(37, 113, 234);
+  color: rgb(11, 168, 235);
+}
+
+.videoFuncClick:hover {
+  color: rgb(0, 179, 255);
+  /*这个颜色比较接近链接的颜色*/
+}
+
+.replyBtn:hover {
+  color: rgb(0, 179, 255);
+  /*这个颜色比较接近链接的颜色*/
+}
+
+.textBtn:hover {
+  color: rgb(0, 179, 255);
+  /*这个颜色比较接近链接的颜色*/
 }
 </style>

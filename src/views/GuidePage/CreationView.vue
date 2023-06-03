@@ -114,6 +114,7 @@
         <el-button type="primary" @click="confirmUpload">确定</el-button>
       </span>
     </el-dialog>
+    
   </div>
   </div>
   </div>
@@ -186,13 +187,13 @@ export default {
     },
     upload_video(){
       // this.text=text;
-      // if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
+      if(this.form.cover||this.form.description||this.form.description||this.form.title||this.form.video){
         console.log(this.form.cover);
         // this.uploadConfirmationVisible = true;
         console.log("未保存");
         alert("当前内容未上传");
         return;
-      // }
+      }
       // this.$router.push('/'+text);
     },
     saveVideo(file){
