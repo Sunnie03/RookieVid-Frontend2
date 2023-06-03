@@ -224,7 +224,7 @@ export default {
   <style scoped>
   .person-container {
     border: 1px;
-    background-color: antiquewhite;
+    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: relative;

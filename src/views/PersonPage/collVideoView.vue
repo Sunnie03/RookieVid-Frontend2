@@ -10,7 +10,7 @@
             <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
           </a>
           <div class="titles-container" >
-            <a class="titles" v-on:click="goBack" style="float:left;width:35%;height:auto">回到上一级</a>
+            <a class="titles" v-on:click="goBack" style="float:left;width:25%;height:auto">回到上一级</a>
             
             <div class="text-title" > 
               <img class="photo" :src="collectCov"/>
@@ -38,7 +38,7 @@
                   <div class="author">
                     <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
                     <span class="author-tag">作者</span>
-                    <span class="author-name">{{ video.user_name }}</span>
+                    <span class="author-name">{{ video.user_name | ellipsis}}</span>
                     <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
     
                   </div>
@@ -46,7 +46,7 @@
               
             </div>
           
-            <div v-else><h2>这是一个空收藏夹吖</h2></div>
+            <div v-else><h2 style="margin:50px 0 0 500px">这是一个空收藏夹吖</h2></div>
           </div>
         <!-- </el-main> -->
           
@@ -77,6 +77,16 @@
         null_flag: true
     }
   },
+  filters: {
+    ellipsis(value) {
+      if (!value) return "";
+      if (value.length > 5) {
+        return value.slice(0, 5) + "...";
+      }
+      return value;
+    }
+  },
+
   created() {
     this.getVideo();
     this.collect_id = this.$route.params.collect_id;
@@ -127,28 +137,28 @@
   
   <style scoped>
   .person-container {
-    background-color: antiquewhite;
+    background-color: #faf1e6;
     border: 1px;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
   }
   .photo {
-    width: 180px;
+    width: 220px;
     height: 150px;
     vertical-align: middle;
+    margin-right: 50px;
   }
   .text-title {
     display:inline;
     font-size: 30px;
     background-repeat: repeat;
-    margin-left: 40px;
+    margin-left: 20px;
   }
   
   .info-container{
-  background-color: antiquewhite;
+  background-color: #faf1e6;
   color: #4a5045;
   text-align:justify;
   font-size: 15px;
@@ -168,7 +178,7 @@
   
   /*首页抄的视频代码*/
    .recommend-container {
-    background-color: antiquewhite;
+    background-color: #faf1e6;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
@@ -259,15 +269,15 @@
     font-size: 10px;
     background-color: rgba(35, 179, 241, 0.1);
     border-radius: 4px;
-    padding: 2px 8px;
+    padding: 2px 6px;
     margin-right: 8px;
-    width:55px;
+    width:60px;
   }
   
   .author-name {
     font-weight: bold;
     color: grey;
-    padding: 2px 8px;
+    width: 150px;
     /* margin-right:0; */
   }
   .time{

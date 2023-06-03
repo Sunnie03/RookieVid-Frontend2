@@ -42,7 +42,7 @@ methods: {
 <style scoped>
 .el-menu-demo{
     overflow: hidden;
-    background-color:rgb(139, 199, 196);
+    background-color:rgb(142, 208, 217);
 }
 /*设置点击前的样式 */
 a{

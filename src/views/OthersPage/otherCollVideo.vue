@@ -36,18 +36,16 @@
           </el-col>
 
           <div class="titles-container" style="margin-top:40px">
-                <a class="titles" v-on:click="goBack" style="float:left;width:10%;height:auto">回到上一级</a>
+                <a class="titles" v-on:click="goBack" style="padding-left:50px;width:25%;height:auto">回到上一级</a>
                 
                 <div class="text-title" > 
-                  <img class="photo" :src="collectCov" style="border-radius:3%;height:120px;width:180px"/>
+                  <img class="photo" :src="collectCov" style="border-radius:3%;height:120px;width:180px;
+                  margin-right: 30px;"/>
                   收藏夹：{{ collect_name }}
                 </div>
               </div>
 
           <div class="recommend-container" v-if="!this.null_flag">
-            <!-- 这里要改，v-if的逻辑不对，title-container应该是始终显示的 -->
-            
-            <!-- <div id="collect-video-container" v-if="!this.null_flag"> -->
               <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
                 <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
                 <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
@@ -65,7 +63,7 @@
                 <div class="author">
                   <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
                   <span class="author-tag">作者</span>
-                  <span class="author-name">{{ video.user_name }}</span>
+                  <span class="author-name">{{ video.user_name | ellipsis }}</span>
                   <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
   
                 </div>
@@ -115,6 +113,16 @@ export default {
     this.collect_name = this.$route.params.collect_name;
     console.log(this.$store.state)
   },
+  filters: {
+    ellipsis(value) {
+      if (!value) return "";
+      if (value.length > 5) {
+        return value.slice(0, 5) + "...";
+      }
+      return value;
+    }
+  },
+
   methods: {
     openVideo(){
         this.$router.push({name:'lookPerson',params:this.look_user})//注意看应该是获取到的user_id
@@ -275,12 +283,13 @@ export default {
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
     padding-top: 40px;
+    padding-bottom: 40px;
   }
   .recommend-item {
       width: 85%;
       height: 250px;
       position: relative;
-      /*margin-bottom: 20px;*/
+      margin-bottom: 20px;
   }
   .recommend-img{
     width:100%;
@@ -359,14 +368,15 @@ export default {
     font-size: 10px;
     background-color: rgba(35, 179, 241, 0.1);
     border-radius: 4px;
-    padding: 2px 8px;
+    padding: 2px 6px;
+    width:60px;
     margin-right: 8px;
   }
   
   .author-name {
     font-weight: bold;
     color: grey;
-    padding: 2px 8px;
+    width: 150px;
     /* margin-right:0; */
   }
   .time{

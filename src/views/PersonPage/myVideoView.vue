@@ -57,7 +57,7 @@
               </div>
             </div>
           </div>
-          <div v-else><h2>你还没有投稿哦~</h2></div>
+          <div v-else><h2 style="margin:50px 0 0 500px">你还没有投稿哦~</h2></div>
         </div>
       <!-- </el-main> -->
         
@@ -150,7 +150,7 @@ methods: {
 
 <style scoped>
 .person-container {
-  background-color: antiquewhite;
+  background-color: #faf1e6;
   border: 1px;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
@@ -177,7 +177,7 @@ methods: {
   line-height: 150px;
   }
 .info-container{
-background-color: antiquewhite;
+background-color: #faf1e6;
 color: #4a5045;
 text-align:justify;
 font-size: 15px;
@@ -200,7 +200,7 @@ el-main {
 
 /*首页抄的视频代码*/
  .recommend-container {
-  background-color: antiquewhite;
+  background-color: #faf1e6;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;

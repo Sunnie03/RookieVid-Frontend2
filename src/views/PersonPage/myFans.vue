@@ -14,8 +14,8 @@
             
               <li v-for="(user, index) in followList" :key="index" class="follow-item">
                 <img :src="user.avatar_url" class="photo" @click="openLook(user.id)">
-                <div class="user-name" @click="openLook(user.id)">{{ user.username }}</div>
-                <div class="user-sign" v-if="user.signature">{{user.signature}}</div>
+                <div class="user-name" @click="openLook(user.id)">{{ user.username | ellipsis_name }}</div>
+                <div class="user-sign" v-if="user.signature">{{user.signature | ellipsis_descp}}</div>
                 <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
                 <button class="follow-button">+ 回粉</button>
               </li>
@@ -51,6 +51,23 @@ created() {
   this.getData();
   console.log(this.$store.state)
 },
+filters: {
+    ellipsis_name(value) {
+      if (!value) return "";
+      if (value.length > 10) {
+        return value.slice(0, 10) + "...";
+      }
+      return value;
+    },
+    ellipsis_descp (value) {
+      if (!value) return "";
+      if (value.length > 30) {
+        return value.slice(0, 30) + "...";
+      }
+      return value;
+    }
+  },
+
 methods: {
   getData() {
     let Headers={'Authorization': this.$store.state.token}
@@ -98,7 +115,7 @@ methods: {
 <style scoped>
 .person-container {
   border: 1px;
-  background-color: antiquewhite;
+  background-color: #faf1e6;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
   position: absolute;

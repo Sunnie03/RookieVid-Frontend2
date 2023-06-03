@@ -171,25 +171,25 @@ export default {
       formData2.append("email", this.email);
       formData2.append("vcode", this.verify);
       
-      if(this.email != this.oldEmail) {
+      if(this.email !== this.oldEmail) {
           Promise.all([   //昵称+个性签名，邮箱
           axios.post('/account/edit_profile', formData1, { headers: Headers}),
           axios.post('/account/change_email', formData2, {headers: Headers})
         ])
         .then(([res1,res2]) =>  {
           //处理成功响应
-          console.log("修改用户名+个性签名"+res1)
-          console.log("修改邮箱"+res2)
-          if(res1.errno == 0 && res2.errno == 0){
+          console.log(res1)
+          console.log(res2)
+          if(res1.data.errno === 0 && res2.data.errno === 0){
             alert("已成功修改信息");
             location.reload()
-          } else if(res1.errno) {
-            alert(res1.msg);
-            if(res2.errno) {
-              alert(res2.msg);
+          } else if(res1.data.errno !== 0) {
+            alert(res1.data.msg);
+            if(res2.data.errno) {
+              alert(res2.data.msg);
             }
           } else {
-            alert(res2.msg);
+            alert(res2.data.msg);
           }
           
         })
@@ -199,13 +199,14 @@ export default {
       }
       else{ //不用修改邮箱，不要判断验证码
           axios.post('/account/edit_profile',formData1, {headers: Headers})
-          .then(res => {
-            console.log("修改用户名+个性签名 "+res)
-            if(res.errno == 0){
+          .then((res) => {
+            // console.log("修改用户名+个性签名 "+res)
+            console.log(res)
+            if(res.data.errno == 0){
               alert("已成功修改信息");
               location.reload()
             } else {
-              alert(res.msg);
+              alert(res.data.msg);
             }
             
           })
@@ -224,9 +225,11 @@ export default {
       axios.post('/account/change_password', formData, {headers: Headers})
       .then(res => {
         console.log(res)
-        if(res.errno == 0) {
+        if(res.data.errno == 0) {
           alert("修改密码成功")
           location.reload()
+        } else {
+          alert(res.data.msg)
         }
       })
       .catch(
@@ -239,10 +242,10 @@ export default {
     sendVerification() {
         let formData  = new FormData();
         formData.append("email",this.email);
-        axios.post('/account/sendvcode',formData)
+        axios.post('/account/send_vcode',formData)
         .then(response => {
           //处理成功响应
-          if(response.data.errno == 1000){
+          if(response.data.errno === 0){
             alert("已发送验证码，注意5分钟内有效");
           } else {
             alert(response.data.msg)
@@ -264,7 +267,7 @@ export default {
 <style scoped>
 .person-container {
     border: 1px;
-    background-color: antiquewhite;
+    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: relative;
