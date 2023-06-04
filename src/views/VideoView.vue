@@ -10,7 +10,7 @@
           <v-col cols="12" md="8">
             <v-card flat>
               <!--视频head介绍-->
-              <v-card-title>
+              <div>
                 <!--标题-->
                 <v-row align-content="stretch" height="60px">
                   <v-col cols="12" md="12" style="padding-bottom: 0px;" class="playvideo_title"
@@ -47,12 +47,14 @@
                     </div>
                   </v-col>
                 </v-row>
-              </v-card-title>
+              </div>
 
-              <v-card-text>
+              <!--视频播放模块-->
+              <div>
                 <!--视频播放器-->
-                <div class="video_player" style="margin-top:15px;width=100%">
-                  <video controls :src="video.url" muted style="min-width:100%;max-width:100%;min-height:550px">
+                <div class="video_player" style="margin-top:18px;width:100%;">
+                  <video controls :src="video.url" muted style="width:100%;min-height:550px;background-color:black"
+                    :poster="video.cover_url">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
                     <!-- <source src="../assets/hz.mp4" /> -->
@@ -76,46 +78,76 @@
 
                     <span class="star" style="margin-right:30px">
                       <!-- 获取是否收藏，并在点击时切换状态和更新数量 -->
-                      <!--##【这个点击收藏触发的动作待完善】-->
-                      <v-btn icon :color="video.stared ? 'blue' : undefined"
-                        @click="starDialogVisible = true; getStarList()" size="large" style="width: 50px;height: 50px;">
+                      <!--点击收藏键，打开收藏夹对话框。把关闭原因设置为空-->
+                      <v-btn icon :color="video.stared ? 'blue' : undefined" @click="openStarDialog();" size="large"
+                        style="width: 50px;height: 50px;">
                         <v-icon style="font-size: 30px;">{{ video.stared ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
                       </v-btn>
                       <p class="d-flex align-center my-auto">{{ video.star_amount }}</p>
                     </span>
 
                     <!--收藏夹弹出对话框-->
-                    <el-dialog title="添加到收藏夹" :visible.sync="starDialogVisible" width="20%" height="auto" center>
+                    <el-dialog title="添加到收藏夹" :visible.sync="starDialogVisible" width="25%" center
+                      @close="closeStarDialog">
+                      <!-- <v-divider style="padding-top: 0px;"></v-divider> -->
                       <!--收藏夹展示-->
-                      <el-scrollbar style="max-height:100%;overflow:auto;">
-                        <div class="starListShow">
-                          <el-checkbox-group v-model="starHavedList">
-                            <div v-for="(item, index) in starList" :key="index" style="padding-top: 10px;">
-                              <el-checkbox :label="item">收藏夹{{ item }}</el-checkbox>
-                            </div>
-                          </el-checkbox-group>
-                        </div>
-                        <div>
-                          <div v-if="newStarInput" style="display:flex;margin-top: 15px;">
-                            <div style="flex:2;">
-                              <el-input type="text" placeholder="最多可输入20个字" v-model="starCreateNewInput" maxlength="20"
-                                show-word-limit>
-                              </el-input>
-                            </div>
-                            <div style="flex:0;">
-                              <el-button slot="append" @click="createFav(starCreateNewInput)">新建</el-button>
-                            </div>
+                      <div class="dialogContent" style="height: 330px;overflow: auto;">
+                        <div class="starListShow" @click="judgeChange">
+                          <div v-for="(fav_item, index) in favorites" :key="index">
+                            <!--点击选项框，就会使对应的favorited变为1-->
+                            <!--tsetBox()是为了debug，之后可以删掉-->
+                            <v-checkbox v-model="fav_item.favorited" :true-value=1 :false-value=0>
+                              <template v-slot:label>
+                                {{ fav_item.title }}<span v-if="fav_item.is_private"> [私密]</span>
+                              </template>
+                            </v-checkbox>
                           </div>
-                          <div v-else class="starCreateNewDiv" @click="newStarInput = true">
-                            <i class="el-icon-plus" style="margin-left: 5px;margin-right: 5px;"></i> 新建收藏夹
+                          <!-- <el-checkbox-group v-model="favedId">
+                            <div v-for="(fav_item, index) in favorites" :key="index" style="padding-top: 10px;">
+                              <div>
+                                <el-checkbox :label="fav_item.id">{{ fav_item.title }}</el-checkbox>
+                                <span>[私密]111111111111111111111</span>
+                              </div>
+                            </div>
+                          </el-checkbox-group> -->
+                        </div>
+                        <!--新建收藏夹选项-->
+                        <!--输入收藏夹名字-->
+                        <div v-if="newStarInput" style="display:flex;margin-top: 15px;">
+                          <div style="flex:2;">
+                            <el-input type="text" placeholder="最多可输入20个字" v-model="starCreateNewInput" maxlength="20"
+                              show-word-limit>
+                            </el-input>
+                          </div>
+                          <div style="flex:0;">
+                            <el-button slot="append" @click="createFav(starCreateNewInput)">新建</el-button>
                           </div>
                         </div>
-                      </el-scrollbar>
+                        <!--新建收藏夹 按钮-->
+                        <div v-else class="starCreateNewDiv" @click="newStarInput = true">
+                          <i class="el-icon-plus" style="margin-left: 5px;margin-right: 5px;"></i> 新建收藏夹
+                        </div>
+                      </div>
+
+                      <v-divider style="margin-top: 35px;height:8px"></v-divider>
                       <!--收藏夹的对话框底部-->
-                      <span slot="footer" class="dialog-footer">
-                        <el-button @click="starDialogVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="starDialogVisible = false">确 定</el-button>
-                      </span>
+                      <!--有变化，可以确认-->
+                      <div style="height:35px;display: flex;justify-content: center; ">
+                        <div v-if="canSaveStar" slot="footer" class="dialog-footer" @click="closeCreateStar">
+                          <v-btn color="info" @click="saveStar()" style="margin-top: 13px;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;确认&nbsp;&nbsp;&nbsp;&nbsp;
+                          </v-btn>
+                          <!-- <el-button type="primary" @click="saveStar()">确 定</el-button> -->
+                        </div>
+                        <!--无变化，不能确认-->
+                        <div v-else slot="footer" class="dialog-footer" @click="closeCreateStar"
+                          style="margin-top: 13px;">
+                          <v-btn depressed disabled>
+                            &nbsp;&nbsp;&nbsp;&nbsp;确认&nbsp;&nbsp;&nbsp;&nbsp;
+                          </v-btn>
+                        </div>
+                      </div>
+                      <!-- </el-scrollbar> -->
                     </el-dialog>
 
                     <!--投诉-->
@@ -128,8 +160,7 @@
                     </span>
 
                     <!--投诉的对话框-->
-                    <el-dialog title="稿件投诉" :visible.sync="complainDialog" @close="CancelComplain()" width="29%"
-                      >
+                    <el-dialog title="稿件投诉" :visible.sync="complainDialog" @close="CancelComplain()" width="29%">
                       <h3 style="margin-bottom: 20px;">请填写投诉原因</h3>
                       <el-input type="textarea" :rows="5" placeholder="请输入投诉原因，限制200字" v-model="complain_textarea"
                         maxlength="200" show-word-limit>
@@ -156,174 +187,128 @@
                 </v-card>
 
                 <!--视频文字描述-->
-                <div class="video_dsp" style="margin-left: 20px;margin-top: 30px;margin-bottom: 50px;">
+                <div class="video_dsp" style="margin-left: 20px;margin-top: 30px;margin-bottom: 25px;">
                   <p>{{ video.description }}</p>
                 </div>
 
                 <!--视频分区-->
                 <div class="video_partition">
-                  <el-button plain class="v_part_c">{{ video.label }}</el-button>
+                  <el-tag><span style="font-size:14px">&nbsp;&nbsp;{{ video.label }}&nbsp;&nbsp;</span></el-tag>
+                  <!-- <el-button plain class="v_part_c">{{ video.label }}</el-button> -->
                 </div>
-              </v-card-text>
+              </div>
             </v-card>
 
             <!--分隔美化-->
             <v-divider height="6" class="mt-4"></v-divider>
-            <img src="@/assets/video/picture4.jpeg" style="margin-top: 27px;" width="100%" height="200px"/>
+            <img src="@/assets/video/picture4.jpeg" style="margin-top: 27px;" width="100%" height="200px" />
 
             <!--评论区-->
-            <v-card class="mt-10 mb-10" flat>
-              <v-row :style="{ width: '100%' }">
-                <v-col style="font-weight: bold;font-size: 20px;">评论 {{ video.total_comment_amount }}</v-col>
-              </v-row>
+            <div class="comment_area">
+              <v-card class="mt-10 mb-10" flat>
+                <v-row :style="{ width: '100%' }">
+                  <v-col style="font-weight: bold;font-size: 20px;">评论 {{ video.total_comment_amount }}</v-col>
+                </v-row>
 
-              <!--评论区头-->
-              <v-row align-content="stretch" :style="{ width: '100%', 'margin-bottom': '30px' }" align="center">
-                <!--justify="center"-->
-                <!--当前用户头像-->
-                <v-col cols="12" md="1" class="d-flex" align="center">
-                  <v-avatar>
-                    <img :src="user.user_avatar" /><!--未登录时有问题【】-->
-                  </v-avatar>
-                </v-col>
-                <!--一级评论输入框-->
-                <!--登录后，可以输入，发布评论-->
-                <v-col v-if="this.$store.state.isLogin" cols="12" md="11" align="center" class="d-flex">
-                  <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
-                    suffix-icon="el-icon-s-promotion">
-                  </el-input>
-                  <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
-                </v-col>
-                <!--没有登录，输入不了-->
-                <v-col v-else cols="12" md="11" align="center" class="d-flex" @click="clickSend">
-                  <el-input type="textarea" :rows="2" placeholder="登录后才可以发布评论" v-model="textarea_comment"
-                    suffix-icon="el-icon-s-promotion" @click="clickSend" :disabled="true">
-                  </el-input>
-                  <el-button class="comment-btn" type="primary" disabled @click="clickSend">发布</el-button>
-                </v-col>
-              </v-row>
-
-              <v-divider /><!--为了调整样式，之后可以删-->
-
-              <!--评论样式-->
-              <v-card v-if="video.total_comment_amount" flat class="mb-3" v-for="(comment_item, index) in this.comments"
-                :key="index">
-                <v-row>
-                  <v-col cols="12" md="1">
-                    <v-avatar>
-                      <img :src="comment_item.avatar_url" />
+                <!--评论区头-->
+                <v-row align-content="stretch" :style="{ width: '100%', 'margin-bottom': '30px' }" align="center">
+                  <!--justify="center"-->
+                  <!--当前用户头像-->
+                  <v-col cols="12" md="1" class="d-flex" align="center">
+                    <v-avatar v-if="this.$store.state.isLogin">
+                      <img :src="user.user_avatar" /><!--未登录时有问题【】-->
+                    </v-avatar>
+                    <v-avatar v-else>
+                      <img src="@/assets/my_avatar.png"></img>
                     </v-avatar>
                   </v-col>
+                  <!--一级评论输入框-->
+                  <!--登录后，可以输入，发布评论-->
+                  <v-col v-if="this.$store.state.isLogin" cols="12" md="11" align="center" class="d-flex">
+                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea_comment"
+                      suffix-icon="el-icon-s-promotion">
+                    </el-input>
+                    <el-button class="comment-btn" type="primary" @click="PostComment()">发布</el-button>
+                  </v-col>
+                  <!--没有登录，输入不了-->
+                  <v-col v-else cols="12" md="11" align="center" class="d-flex" @click="clickSend">
+                    <el-input type="textarea" :rows="2" placeholder="登录后才可以发布评论" v-model="textarea_comment"
+                      suffix-icon="el-icon-s-promotion" @click="clickSend" :disabled="true">
+                    </el-input>
+                    <el-button class="comment-btn" type="primary" disabled @click="clickSend">发布</el-button>
+                  </v-col>
+                </v-row>
 
-                  <v-col cols="12" md="11">
-                    <!--一级评论部分（不包括二级的）-->
-                    <div @mouseover="judgeShowDelete(comment_item.id, comment_item.user_id)"
-                      @mouseleave="hideDelete(comment_item.id)">
-                      <!--评论者用户名-->
-                      <div style="align-items: center;margin-bottom: 12px;">
-                        <span style="font-weight:bolder;font-size: 20px;margin-right: 15px;">
-                          {{ comment_item.user_name }}
-                        </span>
-                        <!--作者的tag-->
-                        <span style="align-items: center!important;"><el-tag
-                            v-if="comment_item.user_id == video.author_id" type="info" effect="plain"
-                            size="mini">作者</el-tag></span>
-                      </div>
+                <v-divider /><!--为了调整样式，之后可以删-->
 
-                      <!--一级评论内容-->
-                      <div>
-                        {{ comment_item.content }}</div>
-                      <!--一级评论时间，精确到秒-->
-                      <div style="align-items: center;margin-top: 5px;">
-                        <span style="font-size: 14px;color: grey;margin-right: 40px;">
-                          {{ comment_item.created_at.split('T')[0] }} {{
-                            comment_item.created_at.split('T')[1].split('.')[0]
-                          }}
-                        </span>
+                <!--评论样式-->
+                <v-card v-if="video.total_comment_amount" flat class="mb-3" v-for="(comment_item, index) in this.comments"
+                  :key="index">
+                  <v-row>
+                    <v-col cols="12" md="1">
+                      <v-avatar>
+                        <img :src="comment_item.avatar_url" />
+                      </v-avatar>
+                    </v-col>
 
-                        <!--回复键，点击弹出reply的输入框-->
-                        <span style="margin-right: 40px;color:grey">
-                          <span style="font-size: 14px;" @click="PopInput(index)" class="replyBtn">回复</span>
-                          <!-- <el-button type="text" @click="PopInput(index)">回复</el-button> -->
-                        </span>
+                    <v-col cols="12" md="11">
+                      <!--一级评论部分（不包括二级的）-->
+                      <div @mouseover="judgeShowDelete(comment_item.id, comment_item.user_id)"
+                        @mouseleave="hideDelete(comment_item.id)">
+                        <!--评论者用户名-->
+                        <div style="align-items: center;margin-bottom: 12px;">
+                          <span style="font-weight:500;font-size: 16px;margin-right: 15px;color:rgb(109, 106, 106)">
+                            {{ comment_item.user_name }}
+                          </span>
+                          <!--作者的tag-->
+                          <span style="align-items: center!important;"><el-tag
+                              v-if="comment_item.user_id == video.author_id" type="danger" effect="plain"
+                              size="mini">作者</el-tag></span>
+                        </div>
 
-                        <!--删除一级评论-->
-                        <span v-if="showDelete[comment_item.id]"><!--如果删除键可以看到-->
-                          <!-- <el-button type="text" v-if="showDelete[comment_item.id]"
+                        <!--一级评论内容-->
+                        <div>
+                          {{ comment_item.content }}</div>
+                        <!--一级评论时间，精确到秒-->
+                        <div style="align-items: center;margin-top: 5px;">
+                          <span style="font-size: 14px;color: grey;margin-right: 40px;">
+                            {{ comment_item.created_at }}
+                          </span>
+
+                          <!--回复键，点击弹出reply的输入框-->
+                          <span style="margin-right: 40px;color:grey">
+                            <span style="font-size: 14px;" @click="PopInput(index)" class="replyBtn">回复</span>
+                            <!-- <el-button type="text" @click="PopInput(index)">回复</el-button> -->
+                          </span>
+
+                          <!--删除一级评论-->
+                          <span v-if="showDelete[comment_item.id]" style="font-size: 14px;color:grey"><!--如果删除键可以看到-->
+                            <!-- <el-button type="text" v-if="showDelete[comment_item.id]"
                             @click="delDialogVisible = true; clickDel(comment_item.id)">删除</el-button> -->
 
-                          <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
-                            icon="el-icon-info" icon-color="red" @confirm="deleteComment(comment_item.id)"
-                            @cancel="delCancel(comment_item.id)">
-                            <el-button slot="reference" type="text" @click="clickDel(comment_item.id)">删除</el-button>
-                          </el-popconfirm>
-                        </span>
-                      </div>
+                            <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
+                              icon="el-icon-info" icon-color="red" @confirm="deleteComment(comment_item.id)"
+                              @cancel="delCancel(comment_item.id)">
+                              <span slot="reference" class="replyBtn" @click="clickDel(comment_item.id)">删除</span>
+                              <!-- <el-button slot="reference" type="text" @click="clickDel(comment_item.id)">删除</el-button> -->
+                            </el-popconfirm>
+                          </span>
+                        </div>
 
-                      <!--点击删除键，弹出“确认删除”的对话框-->
-                      <!-- <el-dialog title="提示" :visible.sync="delDialogVisible" width="20%" center>
+                        <!--点击删除键，弹出“确认删除”的对话框-->
+                        <!-- <el-dialog title="提示" :visible.sync="delDialogVisible" width="20%" center>
                         <span>确认是否删除</span>
                         <span slot="footer" class="dialog-footer">
                           <el-button @click="delDialogVisible = false; isClickDel = false">取 消</el-button>
                           <el-button type="primary" @click="delDialogVisible = false; deleteComment()">确 定</el-button>
                         </span>
                       </el-dialog> -->
-                    </div>
-
-                    <!--二级评论内容-->
-                    <div v-if="comment_item.reply_amount"> <!--如果该一级评论的二级评论数量大于0，才显示二级评论-->
-                      <div v-if="comment_item.reply_amount <= 2"> <!--【二级评论数量<=2，无需折叠，正常循环数组】-->
-                        <v-card flat v-for="(reply_item, r_index) in comment_item.reply" :keys="r_index">
-                          <v-row class="mt-4">
-                            <!--二级评论用户头像-->
-                            <v-col cols="12" md="1">
-                              <v-avatar size="40">
-                                <img :src="reply_item.avatar_url" />
-                              </v-avatar>
-                            </v-col>
-
-                            <v-col cols="12" md="11">
-                              <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
-                                @mouseleave="hideDelete(reply_item.id)">
-                                <!--二级评论者用户名-->
-                                <div style="align-items: center;margin-bottom: 14px;">
-                                  <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
-                                    {{ reply_item.user_name }}
-                                  </span>
-                                  <span style="align-items: center!important;"><el-tag
-                                      v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
-                                      size="mini">作者</el-tag>
-                                  </span>
-                                </div>
-                                <!--二级评论内容-->
-                                <div>{{ reply_item.content }}</div>
-                                <!--二级评论时间信息和删除-->
-                                <div style="align-items: center;">
-                                  <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                    reply_item.created_at.split('T')[0] }} {{
-    reply_item.created_at.split('T')[1].split('.')[0] }}
-                                  </span>
-                                  <span v-if="showDelete[reply_item.id]">
-                                    <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
-                                      icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
-                                      @cancel="delCancel(reply_item.id)">
-                                      <el-button slot="reference" type="text"
-                                        @click="clickDel(reply_item.id)">删除</el-button></el-popconfirm>
-                                  </span>
-                                </div>
-                              </div>
-                            </v-col>
-                          </v-row>
-                        </v-card>
                       </div>
 
-                      <!--代码分隔-->
-                      <div v-else> <!--reply数量大于2【这时需要考虑到底是否展开】-->
-                        <div v-if="display_comment[index]"><!--【若为true】则该条一级评论需要显示所有的reply-->
-                          <!--小于6条，没有分页【分页显示待完善】-->
-                          <!-- <div v-if="display_comment[index]<6"> -->
-                          <v-card flat v-for="(reply_item, r_index_dis) in comment_item.reply" :key="r_index_dis">
-                            <!--指定从2开始循环-->
+                      <!--二级评论内容-->
+                      <div v-if="comment_item.reply_amount"> <!--如果该一级评论的二级评论数量大于0，才显示二级评论-->
+                        <div v-if="comment_item.reply_amount <= 2"> <!--【二级评论数量<=2，无需折叠，正常循环数组】-->
+                          <v-card flat v-for="(reply_item, r_index) in comment_item.reply" :keys="r_index">
                             <v-row class="mt-4">
                               <!--二级评论用户头像-->
                               <v-col cols="12" md="1">
@@ -336,8 +321,9 @@
                                 <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
                                   @mouseleave="hideDelete(reply_item.id)">
                                   <!--二级评论者用户名-->
-                                  <div style="align-items: center;margin-bottom: 14px;">
-                                    <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
+                                  <div style="align-items: center!important;margin-bottom: 14px;">
+                                    <span
+                                      style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
                                       {{ reply_item.user_name }}
                                     </span>
                                     <span style="align-items: center!important;"><el-tag
@@ -347,17 +333,18 @@
                                   </div>
                                   <!--二级评论内容-->
                                   <div>{{ reply_item.content }}</div>
-                                  <div style="align-items: center;">
+                                  <!--二级评论时间信息和删除-->
+                                  <div style="align-items: center;margin-top: 5px;">
                                     <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                      reply_item.created_at.split('T')[0]
-                                    }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
+                                      reply_item.created_at }}
                                     </span>
-                                    <span v-if="showDelete[reply_item.id]">
+                                    <span v-if="showDelete[reply_item.id]" style="font-size: 14px;color:grey">
                                       <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
                                         icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
                                         @cancel="delCancel(reply_item.id)">
-                                        <el-button slot="reference" type="text"
-                                          @click="clickDel(reply_item.id)">删除</el-button>
+                                        <span slot="reference" class="replyBtn" @click="clickDel(reply_item.id)">删除</span>
+                                        <!-- <el-button slot="reference" type="text"
+                                        @click="clickDel(reply_item.id)">删除</el-button> -->
                                       </el-popconfirm>
                                     </span>
                                   </div>
@@ -365,78 +352,132 @@
                               </v-col>
                             </v-row>
                           </v-card>
-                          <!-- </div> -->
-                          <!--大于6条，有分页，一页6条【还没想好分页要怎么写，待后续完善】-->
-                          <!-- <div v-else>
+                        </div>
+
+                        <!--代码分隔-->
+                        <div v-else> <!--reply数量大于2【这时需要考虑到底是否展开】-->
+                          <div v-if="display_comment[index]"><!--【若为true】则该条一级评论需要显示所有的reply-->
+                            <!--小于6条，没有分页【分页显示待完善】-->
+                            <!-- <div v-if="display_comment[index]<6"> -->
+                            <v-card flat v-for="(reply_item, r_index_dis) in comment_item.reply" :key="r_index_dis">
+                              <!--指定从2开始循环-->
+                              <v-row class="mt-4">
+                                <!--二级评论用户头像-->
+                                <v-col cols="12" md="1">
+                                  <v-avatar size="40">
+                                    <img :src="reply_item.avatar_url" />
+                                  </v-avatar>
+                                </v-col>
+
+                                <v-col cols="12" md="11">
+                                  <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
+                                    @mouseleave="hideDelete(reply_item.id)">
+                                    <!--二级评论者用户名-->
+                                    <div style="align-items: center;margin-bottom: 14px;">
+                                      <span
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
+                                        {{ reply_item.user_name }}
+                                      </span>
+                                      <span style="align-items: center!important;"><el-tag
+                                          v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
+                                          size="mini">作者</el-tag>
+                                      </span>
+                                    </div>
+                                    <!--二级评论内容-->
+                                    <div>{{ reply_item.content }}</div>
+                                    <!--二级评论时间信息和删除-->
+                                    <div style="align-items: center;margin-top: 5px">
+                                      <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
+                                        reply_item.created_at
+                                      }}
+                                      </span>
+                                      <span v-if="showDelete[reply_item.id]">
+                                        <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定'
+                                          cancel-button-text='取消' icon="el-icon-info" icon-color="red"
+                                          @confirm="DeleteReply(reply_item.id)" @cancel="delCancel(reply_item.id)">
+                                          <el-button slot="reference" type="text"
+                                            @click="clickDel(reply_item.id)">删除</el-button>
+                                        </el-popconfirm>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </v-col>
+                              </v-row>
+                            </v-card>
+                            <!-- </div> -->
+                            <!--大于6条，有分页，一页6条【还没想好分页要怎么写，待后续完善】-->
+                            <!-- <div v-else>
                             <el-pagination :current-page="currentPage[index]" :page-size="5" :total="comment.replies.length" @current-change="handlePageChange(index, $event)">
                             </el-pagination>
                           </div> -->
 
-                        </div>
-                        <div v-else> <!--只显示前两条reply，而且要有“查看“-->
-                          <v-card flat v-for="(reply_item, r_index) in comment_item.reply.slice(0, 2)" :keys="r_index">
-                            <v-row class="mt-4">
-                              <!--二级评论用户头像-->
-                              <v-col cols="12" md="1">
-                                <v-avatar size="40">
-                                  <img :src="reply_item.avatar_url" />
-                                </v-avatar>
-                              </v-col>
+                          </div>
+                          <div v-else> <!--只显示前两条reply，而且要有“查看“-->
+                            <v-card flat v-for="(reply_item, r_index) in comment_item.reply.slice(0, 2)" :keys="r_index">
+                              <v-row class="mt-4">
+                                <!--二级评论用户头像-->
+                                <v-col cols="12" md="1">
+                                  <v-avatar size="40">
+                                    <img :src="reply_item.avatar_url" />
+                                  </v-avatar>
+                                </v-col>
 
-                              <v-col cols="12" md="11">
-                                <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
-                                  @mouseleave="hideDelete(reply_item.id)">
-                                  <!--二级评论者用户名-->
-                                  <div style="align-items: center;margin-bottom: 14px;">
-                                    <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
-                                      {{ reply_item.user_name }}
-                                    </span>
-                                    <span style="align-items: center!important;"><el-tag
-                                        v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
-                                        size="mini">作者</el-tag>
-                                    </span>
+                                <v-col cols="12" md="11">
+                                  <div @mouseenter="judgeShowDelete(reply_item.id, reply_item.user_id)"
+                                    @mouseleave="hideDelete(reply_item.id)">
+                                    <!--二级评论者用户名-->
+                                    <div style="align-items: center;margin-bottom: 14px;">
+                                      <span
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
+                                        {{ reply_item.user_name }}
+                                      </span>
+                                      <span style="align-items: center!important;"><el-tag
+                                          v-if="reply_item.user_id == video.author_id" type="info" effect="plain"
+                                          size="mini">作者</el-tag>
+                                      </span>
+                                    </div>
+                                    <!--二级评论内容-->
+                                    <div>{{ reply_item.content }}</div>
+                                    <!--二级评论时间信息和删除-->
+                                    <div style="align-items: center;margin-top: 5px;">
+                                      <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
+                                        reply_item.created_at
+                                      }}
+                                      </span>
+                                      <span v-if="showDelete[reply_item.id]">
+                                        <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定'
+                                          cancel-button-text='取消' icon="el-icon-info" icon-color="red"
+                                          @confirm="DeleteReply(reply_item.id)" @cancel="delCancel(reply_item.id)">
+                                          <el-button slot="reference" type="text"
+                                            @click="clickDel(reply_item.id)">删除</el-button>
+                                        </el-popconfirm>
+                                      </span>
+                                    </div>
                                   </div>
-                                  <!--二级评论内容-->
-                                  <div>{{ reply_item.content }}</div>
-                                  <div style="align-items: center;">
-                                    <span style="font-size: 14px;color: grey;margin-right: 40px;">{{
-                                      reply_item.created_at.split('T')[0]
-                                    }} {{ reply_item.created_at.split('T')[1].split('.')[0] }}
-                                    </span>
-                                    <span v-if="showDelete[reply_item.id]">
-                                      <el-popconfirm title="确定是否删除这条评论？" confirm-button-text='确定' cancel-button-text='取消'
-                                        icon="el-icon-info" icon-color="red" @confirm="DeleteReply(reply_item.id)"
-                                        @cancel="delCancel(reply_item.id)">
-                                        <el-button slot="reference" type="text"
-                                          @click="clickDel(reply_item.id)">删除</el-button>
-                                      </el-popconfirm>
-                                    </span>
-                                  </div>
-                                </div>
-                              </v-col>
-                            </v-row>
-                          </v-card>
-                          <!--“查看”-->
-                          <div style="margin-top: 20px;">
-                            <p style="color:grey;font-size:15px">共{{ comment_item.reply_amount }}条回复，<span
-                                @click="display_comment[index] = true" class="textBtn">点击查看</span></p>
+                                </v-col>
+                              </v-row>
+                            </v-card>
+                            <!--“查看”-->
+                            <div style="margin-top: 20px;">
+                              <p style="color:grey;font-size:15px">共{{ comment_item.reply_amount }}条回复，<span
+                                  @click="display_comment[index] = true" class="textBtn">点击查看</span></p>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <!--显示所有的评论，注释掉-->
-                      <!-- <v-card flat v-for="(reply_item, r_index) in comment_item.reply" :keys="r_index">
+                        <!--显示所有的评论，注释掉-->
+                        <!-- <v-card flat v-for="(reply_item, r_index) in comment_item.reply" :keys="r_index">
                         <v-row class="mt-4"> -->
-                      <!--二级评论用户头像-->
-                      <!-- <v-col cols="12" md="1">
+                        <!--二级评论用户头像-->
+                        <!-- <v-col cols="12" md="1">
                             <v-avatar size="40">
                               <img :src="reply_item.avatar_url" />
                             </v-avatar>
                           </v-col>
 
                           <v-col cols="12" md="11"> -->
-                      <!--二级评论者用户名-->
-                      <!-- <div style="align-items: center;margin-bottom: 14px;">
+                        <!--二级评论者用户名-->
+                        <!-- <div style="align-items: center;margin-bottom: 14px;">
                               <span style="font-weight:bolder;font-size: 16px;margin-right: 15px;">
                                 {{ reply_item.user_name }}
                               </span>
@@ -445,8 +486,8 @@
                                   size="mini">作者</el-tag>
                               </span>
                             </div> -->
-                      <!--二级评论内容-->
-                      <!-- <div>{{ reply_item.content }}</div>
+                        <!--二级评论内容-->
+                        <!-- <div>{{ reply_item.content }}</div>
                             <div style="align-items: center;">
                               <span style="font-size: 14px;color: grey;margin-right: 40px;">{{ reply_item.created_at }}
                               </span>
@@ -458,72 +499,72 @@
                         </v-row>
                       </v-card> -->
 
-                      <!-- <div v-if="comment_item.reply_amount > 2">
+                        <!-- <div v-if="comment_item.reply_amount > 2">
                         <v-row>
                           <p>共{{ comment_item.reply_amount }}条回复，<el-button type="text" @click="">点击查看</el-button></p>
                         </v-row>
                       </div> -->
-                    </div>
+                      </div>
 
-                    <!--点击回复，弹出的输入框；点击发布后，要收起-->
-                    <v-row v-if="show_comment_input[index]" style="margin-top: 10px;">
-                      <!--当前用户头像-->
-                      <v-col cols="12" md="1" class="d-flex" align="center">
-                        <v-avatar>
-                          <img :src="user.user_avatar" />
-                        </v-avatar>
-                      </v-col>
-                      <!--二级评论输入框-->
-                      <v-col cols="12" md="11" align="center" class="d-flex">
-                        <el-input type="textarea" :rows="2" :placeholder="`回复 @${comment_item.user_name}`"
-                          v-model="textarea_comment_l2" suffix-icon="el-icon-s-promotion">
-                        </el-input>
-                        <el-button class="comment-btn" type="primary"
-                          @click="PostReply(comment_item.id, index)">发布</el-button>
-                      </v-col>
-                    </v-row>
+                      <!--点击回复，弹出的输入框；点击发布后，要收起-->
+                      <v-row v-if="show_comment_input[index]" style="margin-top: 10px;">
+                        <!--当前用户头像-->
+                        <v-col cols="12" md="1" class="d-flex" align="center">
+                          <v-avatar>
+                            <img :src="user.user_avatar" />
+                          </v-avatar>
+                        </v-col>
+                        <!--二级评论输入框-->
+                        <v-col cols="12" md="11" align="center" class="d-flex">
+                          <el-input type="textarea" :rows="2" :placeholder="`回复 @${comment_item.user_name}`"
+                            v-model="textarea_comment_l2[index]" suffix-icon="el-icon-s-promotion">
+                          </el-input>
+                          <el-button class="comment-btn" type="primary"
+                            @click="PostReply(comment_item.id, index)">发布</el-button>
+                        </v-col>
+                      </v-row>
 
-                    <!--一级评论之间的评论分隔线-->
-                    <v-row>
-                      <v-divider height="6" style="margin-top: 20px;"></v-divider>
-                    </v-row>
-                  </v-col>
-                </v-row>
+                      <!--一级评论之间的评论分隔线-->
+                      <v-row>
+                        <v-divider height="6" style="margin-top: 20px;"></v-divider>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-card>
               </v-card>
-            </v-card>
+            </div>
           </v-col>
 
           <!--右侧-->
           <v-col cols="12" md="4">
-            <div class="right-col" style="width:100%;margin-left: 30px;">
+            <v-card flat class="right-col" style="width:100%;margin-left: 30px;">
               <!--作者信息-->
-              <v-card flat>
-                <div style="margin:15px;margin-top:20px;margin-bottom: 20px;">
+              <div>
+                <div style="margin:15px;margin-bottom: 20px;">
                   <v-row style="width:100%;margin-top:10px">
-                    <v-col cols="12" md="3">
-                      <div style="margin-top: 10px;">
-                        <v-avatar>
-                          <img :src="video.author_image_url" />
-                        </v-avatar>
+                    <!-- <v-col cols="12" md="3"> -->
+                    <div style="margin-top: 10px;">
+                      <v-avatar>
+                        <img :src="video.author_image_url" />
+                      </v-avatar>
+                    </div>
+                    <!-- </v-col> -->
+
+                    <div style="margin-left: 14px;">
+                      <!--作者名字-->
+                      <div style="font-size: 17px;font-weight: 500;">
+                        <!-- <router-link :to="'/user/' + video.author_id">  -->
+                        {{ video.author_name }}
+                        <!-- </router-link> -->
                       </div>
-                    </v-col>
 
-                    <v-col cols="12" md="9">
-                      <v-row style="margin-top: 7px;">
-                        <div>
-                          <!-- <router-link :to="'/user/' + video.author_id">  -->
-                          <h1>{{ video.author_name }}</h1>
-                          <!-- </router-link> -->
-                        </div>
-                      </v-row>
-
-                      <v-row>
-                        <div style="margin-top: 7px;margin-bottom: 7px;">
+                      <div>
+                        <div style="margin-top: 7px;margin-bottom: 10px;color:rgb(68, 67, 67)">
                           {{ video.author_description }}
                         </div>
-                      </v-row>
+                      </div>
 
-                      <v-row>
+                      <div>
                         <div style="margin-bottom: 20px;margin-top: 3px">
                           <span v-if="video.isFollowed"> <!--如果已关注-->
                             <v-btn depressed @click="DisFollow">
@@ -536,24 +577,24 @@
                             </v-btn>
                           </span>
                         </div>
-                      </v-row>
-                    </v-col>
+                      </div>
+                    </div>
                   </v-row>
                 </div>
-              </v-card>
+              </div>
 
               <!--图片2-->
-              <img src="@/assets/video/picture2.jpeg" style="margin-top: 20px;" width="100%" height="200px"/>
+              <img src="@/assets/video/picture2.jpeg" style="margin-top: 20px;" width="100%" height="200px" />
               <v-divider height="6" style="margin-top: 20px;"></v-divider>
 
               <!--推荐视频列表-->
               <v-card flat>
-                <div style="font-size: 18px;margin-top: 20px;margin-bottom: 20px;">
+                <div style="font-size: 18px;margin-top: 20px;margin-bottom: 20px;font-weight: bold;">
                   推荐视频列表
                 </div>
 
-                <v-card v-for="(recommend_item, index) in videos_recommend" :key="index">
-                  <div class="recommend_block" style="padding-top: 20px;padding-bottom: 10px;">
+                <v-card v-for="(recommend_item, index) in videos_recommend" :key="index" flat>
+                  <div class="recommend_block" style="padding-top: 20px;padding-bottom: 10px;margin-bottom: 13px;">
                     <v-row>
                       <v-col cols="12" md="6">
                         <div style="padding-left: 15px;">
@@ -564,24 +605,32 @@
 
                       <v-col class="rec_introdction" cols="12" md="6">
                         <div class="rec_video_title" v-bind:title="recommend_item.title"
-                          @click="jumpTo(recommend_item.id)">
+                          @click="jumpTo(recommend_item.id)" style="font-size: 15px;font-weight: 400;">
                           {{ recommend_item.title }}
                         </div>
 
-                        <div style="margin-top: 10px;margin-bottom: 10px;">
-                          <el-tag type="info" effect="plain" size="mini">作者 </el-tag> {{ recommend_item.user_name }}
+                        <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
+                          <span class="rec_video_author textBtn" v-bind:title="'作者: ' + recommend_item.user_name"> <el-tag
+                              type="info" effect="plain" size="mini">作者 </el-tag>
+                            {{
+                              recommend_item.user_name }}</span>
                         </div>
 
-                        <div>
-                          <span style="margin-right: 25px;">
-                            <v-icon
-                              style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
+                        <div style="color:rgb(109, 106, 106);font-size: 14px;">
+                          <span style="margin-right: 16px;">
+                            <v-icon size="20"
+                              style="width: 3px;height: 3px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
                             {{ recommend_item.view_amount }}
                           </span>
-                          <span>
-                            <v-icon
-                              style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-thumb-up-outline</v-icon>
+                          <span style="margin-right: 16px;">
+                            <v-icon size="20"
+                              style="width: 3px;height: 3px;margin-left: 8px;margin-right: 8px;">mdi-thumb-up-outline</v-icon>
                             {{ recommend_item.like_amount }}
+                          </span>
+                          <span>
+                            <v-icon size="20"
+                              style="width: 3px;height: 3px;margin-left: 8px;margin-right: 8px;">mdi-star-outline</v-icon>
+                            {{ recommend_item.fav_amount }}
                           </span>
                         </div>
 
@@ -591,7 +640,7 @@
                 </v-card>
 
               </v-card>
-            </div>
+            </v-card>
           </v-col>
         </v-row>
       </div>
@@ -633,7 +682,7 @@ export default {
       complain_textarea: '',/*投诉对话框中，填写投诉原因*/
       /*评论相关数据*/
       textarea_comment: '',/*发布一级评论的输入框*/
-      textarea_comment_l2: '',/*发布二级评论(即reply)的输入框，需要区分*/
+      textarea_comment_l2: [],/*发布二级评论(即reply)的输入框，需要区分*/
       /*关于点击“回复”，输入框的显示*/
       display_comment: [],/*展示"点开查看"，随着一级评论变化*/
       i_display: 0,/*display_comment中的遍历量，数组下标，随着一级评论变化*/
@@ -648,9 +697,21 @@ export default {
       //delDialogVisible: false,/*确认是否删除一级评论的dialog*/
 
       /*收藏相关数据*/
+      favorites: [],/*收藏夹数组，存放收藏夹的相关数据*/
       starDialogVisible: false,/*是否展示收藏夹的Dialog对话框*/
-      starHavedList: [1, 3, 4, 5, 6, 8],/*收藏夹清单，其中是已经选中的收藏夹的id*/
-      starList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],/*收藏夹清单，其中是所有的收藏夹的id【后面get数据后换成后端数据】*/
+      sendFavId: [],/*点击确认键之后，将这个通过接口传给后端。每次打开收藏面板时设为[]。*/
+      beforeFavedId: [],/*每次打开收藏夹时，已收藏的id*/
+      afterFavedId: [],/*每次操作收藏夹时，已收藏的id*/
+      canSaveStar: false,/*收藏夹面板能否“确认”，不能就显示为灰色且点击无用*/
+      //starBoxTitle: '',/*设置对话框的标题样式*/
+
+      /*下面是一些没用了的，因为我每次打开时，重新get*/
+      //closeReasonIsSave: false,/*关闭收藏夹对话框的原因，判断是否是因为“确认”，每次打开面板的时候设置为错（即因取消而关闭）；用在回调函数中*/
+      //backupSelectedItems: [],/*用于保存上一次的选中状态*/
+      //favedId: [],/*收藏夹清单，其中是已经选中的收藏夹的id*/
+      //favAllId: [],/*收藏夹清单，其中是所有的收藏夹的id【后面get数据后换成后端数据】*/
+
+
       isActive: false,/*新建收藏夹边框是否呈现蓝色效果【失败了】*/
       newStarInput: false,/*是否显示新建收藏夹输入名字的输入框*/
       starCreateNewInput: '',/*新建收藏夹输入名字的输入框中的内容，有限制最多20个字*/
@@ -709,11 +770,19 @@ export default {
   created() {
     this.fetchVideoData();
 
-    /*每隔一分钟，获取一次评论*/
+    /*每隔一分钟，获取一次评论【答辩时打开】*/
     // setInterval(() => {
     //   this.getComments()
-    // }, 180000);/*3分钟，这里的数字单位是毫秒*/
+    // }, 18000);/*1分钟60000，1s1000，这里的数字单位是毫秒*/
   },
+  // mounted() {
+  //   // 在 mounted 钩子中设置自定义标题
+  //   this.title = `
+  //       <span style="display: inline-block; border-top: 1px solid #999; padding-top: 8px;">
+  //         ${'添加到收藏夹'}
+  //       </span>
+  //     `
+  // },
   // mounted() { /*计算视频长宽*/
   //   this.$nextTick(() => {
   //     this.updateVideoSize();
@@ -766,12 +835,13 @@ export default {
           })
       }
       else {
+        console.log('没登录 头像');
         /*没有登录的话，把自己的头像显示为未登录*/
-        this.user.user_avatar = "@/assets/my_avatar.png";
+        //this.user.user_avatar = "./assets/my_avatar.png";
       }
 
       /*获取视频信息*/
-      axios.get('/videos/view_video', { params: { video_id: this.$route.params.id } })
+      axios.get('/videos/view_video', { params: { video_id: this.$route.params.id } }, { headers: Headers })
         .then(response => {
           console.log(response);
           console.log('fetchId' + this.$route.params.id);
@@ -786,11 +856,13 @@ export default {
           this.video.id = this.$route.params.id;
           this.video.title = response.data.video.title;
           this.video.url = response.data.video.video_url;
+          this.video.cover_url = response.data.video.cover_url;
           this.video.label = response.data.video.label;
           this.video.description = response.data.video.description;
-          var day = response.data.video.created_at.split('T')[0];
-          var time = response.data.video.created_at.split('T')[1].split('Z')[0];
-          this.video.create_time = day + ' ' + time;
+          // var day = response.data.video.created_at.split('T')[0];
+          // var time = response.data.video.created_at.split('T')[1].split('Z')[0];
+          // this.video.create_time = day + ' ' + time;
+          this.video.create_time = response.data.video.created_at;
 
           /*视频作者相关信息*/
           this.video.author_id = response.data.video.user_id;
@@ -805,6 +877,8 @@ export default {
           /*评论*/
           this.video.total_comment_amount = response.data.video.total_comment_amount;/*将一级二级评论都算进去*/
           this.video.comment_amount = response.data.video.comment_amount;/*一级评论数量*/
+
+          console.log(response.data.video);
 
           /*点赞*/
           this.video.like_amount = response.data.video.like_amount;
@@ -851,6 +925,7 @@ export default {
               this.comments.push(comment);
               this.display_comment.push(false);/*页面刷新时，默认是折叠起来的*/
               this.show_comment_input.push(false);/*页面刷新时，默认该评论框不显示*/
+              this.textarea_comment_l2.push('');/*每个回复的输入框【】*/
               this.clickReplyCnt.push(0);
               //this.set(this.display_comment,this.i_display,'');
               //this.comments[index] = comment;
@@ -866,7 +941,7 @@ export default {
         })
 
       /*获取推荐视频列表*/
-      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 10 } })
+      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 6 } })
         .then(response => {
           console.log(response);
           response.data.video.forEach((video, index) => {
@@ -885,25 +960,37 @@ export default {
         .then(response => {
           console.log(response);
 
-          if (response.data.errno != 0) {
-            /*返回不成功，说明没有投诉权限*/
-            //this.$message.warning(response.data.msg);/*弹窗显示报错的返回信息*/
-            this.reasonComplainDisable = response.data.msg;
-            this.canComplain = false;
+          if (response.data.errno == 0) /*说明成功返回*/ {
+            if (response.data.is_complaint)/*说明已经投诉，没有投诉权限*/ {//this.$message.warning(response.data.msg);/*弹窗显示报错的返回信息*/
+              this.reasonComplainDisable = response.data.msg;
+              this.canComplain = false;
+            }
           }
-          /*返回errno为0，没进这个if，说明可以投诉*/
+          /*返回errno不为0，没进这个if，说明不可以投诉*/
           console.log('load canComplian?: ' + this.canComplain);
         })
         .catch(error => {
           console.log('Error: ' + error);
         });
+
+      /*获取收藏夹*/
+      this.getStarList();
+      console.log(this.favorites);
     },
+    /*获取评论  */
     getComments() {
+      console.log('in get_comment');
       axios.get('/videos/get_comment', { params: { video_id: this.$route.params.id } })
         .then(response => {
           console.log(response);
-          this.video.total_comment_amount = response.data.total_comment_amount;/*不知道能否实时响应，不能的话改成set【】*/
-          this.video.comment_amount = response.data.comment_amount;/*一级评论的数量*/
+          // console.log(response.data);
+          // console.log(response.data.amount);
+          // console.log(response.data.amount.total_comment_amount);
+          // console.log(response.data.amount.comment_amount);
+
+          this.video.total_comment_amount = response.data.amount.total_comment_amount;/*不知道能否实时响应，不能的话改成set【】*/
+          this.video.comment_amount = response.data.amount.comment_amount;/*一级评论的数量*/
+
           /*要先对之前的comments相关的数组清空*/
           this.comments = [];
           /*显示评论的输入框*/
@@ -914,14 +1001,14 @@ export default {
           this.showDelete = [];
           this.isClickDel = [];
 
-          console.log('t_c_a: ' + this.video.total_comment_amount);
-          console.log('c_a: ' + this.video.comment_amount);
+          console.log('in total_comment_amount: ' + this.video.total_comment_amount);
+          console.log('in comment_amount: ' + this.video.comment_amount);
 
           /*设置for遍历清空或初始赋值最大长度【暂时只有showdelete用到】*/
           if (this.video.total_comment_amount > this.forMaxLen) {
             this.forMaxLen = this.video.total_comment_amount + 2;
           }
-          console.log('MaxL: ' + this.forMaxLen);
+          console.log('in MaxL: ' + this.forMaxLen);
           /*下面这个for循环的相对位置没那么重要的原因是，都是设置为false*/
           for (let i = 0; i < this.forMaxLen; i++) {
             this.$set(this.showDelete, i, false);
@@ -934,14 +1021,17 @@ export default {
               this.comments.push(comment);
               this.display_comment.push(false);/*页面刷新时，默认是折叠起来的*/
               this.show_comment_input.push(false);/*页面刷新时，默认该评论框不显示*/
+              this.textarea_comment_l2.push('');/*每个回复的输入框【】*/
               this.clickReplyCnt.push(0);
               //this.set(this.display_comment,this.i_display,'');
               //this.comments[index] = comment;
               this.showDelete.push(false);/*每条一级评论是否展示删除键【随着一级评论id变化】*/
               this.isClickDel.push(false);
             })
-            console.log('gc_C:' + this.comments);
+            console.log('getComments: ' + this.comments);
           }
+          console.log('in');
+          console.log(this.comments);
         })
         .catch(error => {
           console.log('getComments' + error);
@@ -986,19 +1076,188 @@ export default {
         });
     },
     /*收藏相关方法*/
+    /*打开收藏夹对话框*/
+    openStarDialog() {
+      if (this.$store.state.isLogin === 'true')/*已登录*/ {
+        console.log('in open Star');
+        console.log(this.favorites);
+        this.beforeFavedId = [];/*清空*/
+        /*存每次打开收藏夹面板时，选中的id*/
+        for (let i = 0, j = 0; i < this.favorites.length; i++) {
+          if (this.favorites[i].favorited)/*已经收藏*/ {
+            this.beforeFavedId[j] = this.favorites[i].id;
+            j++;
+          }
+        }
+        /*打开收藏夹面板*/
+        this.starDialogVisible = true;
+        this.$set(this, 'canSaveStar', false);/*【不知道可不可以这样写】*/
+        console.log(this.canSaveStar);
+      }
+      else {
+        this.$message.warning('请先登录');
+        this.$router.push('/login');
+        return;
+      }
+    },
+    /*获取收藏夹*/
     getStarList() {
-      /*通过axios.get得到收藏夹，还有已存在的收藏夹，需要返回我一个arrayList，就像starList那样*/
+      /*通过axios.get得到收藏夹，还有已存在的收藏夹*/
+      this.favorites = [];/*清空数组*/
+      let Headers = { 'Authorization': this.$store.getters.getStorage };
+      axios.get('/videos/get_favorite', { params: { video_id: this.$route.params.id } }, { headers: Headers })
+        .then(response => {
+          console.log(response);
+          if (response.data.errno == 0) {
+            response.data.favorite.forEach((favorite, index) => {
+              this.favorites.push(favorite);
+            })
+            console.log('in getStarList success');
+            console.log(this.favorites);
+          }
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
     },
+    /*关闭收藏夹对话框时，所做的操作*/
+    closeStarDialog() {
+      /*关闭对话框时，更新favorites*/
+      this.getStarList();
+      console.log('in close star');
+      //console.log(this.favorites);/*在getStarList中会输出*/
+    },
+    /*收藏夹对话框的回调函数，用来判断是由于“确认”还是“取消”引起的关闭*/
+    // judgeCloseReason(done){
+    //   if(this.closeReasonIsSave===true){
+    //     this.saveStar();
+    //     done(false);
+    //   }
+    //   else {
+    //     this.cancelStar();
+    //     done(true);
+    //   }
+    // },
+    /*判断当前收藏夹会不会有变化，来决定确定键按钮的颜色*/
+    judgeChange() {
+      //this.$set(this,'newStarInput',false);
+      this.closeCreateStar();
+
+      this.afterFavedId = [];
+      for (let i = 0, j = 0; i < this.favorites.length; i++) {
+        if (this.favorites[i].favorited)/*已经收藏*/ {
+          this.afterFavedId[j] = this.favorites[i].id;
+          j++;
+        }
+      }
+
+      if (this.afterFavedId.length != this.beforeFavedId.length) {
+        /*长度不相等，说明有变化*/
+        this.$set(this, 'canSaveStar', true);
+        return;
+      }
+
+      for (let i = 0; i < this.beforeFavedId.length; i++) {
+        if (this.beforeFavedId[i] != this.afterFavedId[i]) {
+          this.$set(this, 'canSaveStar', true);
+          return;
+        }
+      }
+
+      /*能到这里，说明没变化；也可以在这个方法开头写这句*/
+      this.$set(this, 'canSaveStar', false);
+    },
+    /*点击收藏框的确认，保存结果，并通过接口发送至后端，改变stared显示*/
+    saveStar() {
+      console.log('in save star');
+      /*无论之前收不收藏，都遍历一遍。*/
+      /*发送此次这个视频还存在于其中的收藏夹id*/
+      this.sendFavId = [];/*先清空*/
+      for (let i = 0; i < this.favorites.length; i++) {
+        if (this.favorites[i].favorited == 1) {
+          this.sendFavId.push(this.favorites[i].id);//['14,15,16']。最后选用这个形式
+          //this.sendFavId.push(this.favorites[i].id.toString());//["14","15","16"]
+          //this.sendFavId.push(`'${this.favorites[i].id.toString()}'`);//["'15'", "'16'"]
+          //this.sendFavId.push(`'${this.favorites[i].id}'`);//["'15'", "'16'"]
+        }
+      }
+      //this.sendFavId.push();
+      console.log('send');
+      console.log(this.sendFavId);
+
+      /*调用接口，发送请求*/
+      let formData = new FormData();
+      formData.append("video_id", this.$route.params.id);
+      formData.append("favorite_list", this.sendFavId);
+      formData.append("Authorization", this.$store.getters.getStorage);
+      axios.post('/videos/favorite_video', formData)
+        .then(response => {
+          console.log(formData);
+          console.log(response);
+
+          if (response.data.errno == 0) {
+            console.log('fav success');
+
+            console.log('len: ' + this.sendFavId.length);
+            /*更新stared状态*/
+            if (this.sendFavId.length === 0)/*经过操作后，没有收藏了*/ {
+              /*如果之前收藏了，就做出对应更改*/
+              if (this.video.stared) {
+                this.video.stared = false;
+                this.video.star_amount -= 1;
+              }
+              /*如果之前就是没收藏的，就不需要变化*/
+            }
+            else/*经过操作后，变成已经收藏*/ {
+              /*如果之前未收藏，就做出对应更改*/
+              if (!this.video.stared) {
+                this.video.stared = true;
+                this.video.star_amount += 1;
+              }
+              /*如果之前就是收藏的，就不需要变化*/
+            }
+
+            /*关闭收藏夹对话框*/
+            this.starDialogVisible = false;
+          }
+          else {
+            console.log('1');
+            this.$message.warning(response.data.msg);/*弹窗显示报错*/
+            return;
+          }
+        }).catch(error => {
+          console.log('2');
+          console.log('Error: ' + error);
+          this.$message({
+            message: '发生错误，确认收藏失败',
+            type: 'warning'
+          });
+        });
+    },
+    /*点击收藏框的取消，回到之前的结果*/
+    // cancelStar() {
+    //   if (this.closeReasonIsSave === false)/*因为取消而关闭收藏夹对话框时，才执行以下操作*/ {
+    //     console.log('in true cancel Star');
+    //     console.log(this.favorites);
+    //     this.favorites = this.backupSelectedItems;
+    //     console.log(this.favorites);
+    //   }
+    //   else if(this.closeReasonIsSave===true)/*由于保存而关闭收藏夹对话框*/{
+    //     console.log('in virtual cancel Star');
+    //     console.log(this.closeReasonIsSave);
+    //   }
+    // },
+
     /*检查该视频是否已在收藏夹中*/
-    isStaredCheck(id) {
-      return this.starHavedList.includes(id); /*判断标识符id是否在数组starHavedList中出现过。出现过就是已收藏*/
-    },
-    /*更新StarHavedList数组中的值*/
-    updateStarHavedList(newList) {
-      this.starHavedList = newList.filter(id => {
-        return this.isChecked(id);
-      });
-    },
+    // isStaredCheck(id) {
+    //   return this.favedId.includes(id); /*判断标识符id是否在数组favedId中出现过。出现过就是已收藏*/
+    // },
+    /*更新favedId数组中的值*/
+    // updatefavedId(newList) {
+    //   this.favedId = newList.filter(id => {
+    //     return this.isChecked(id);
+    //   });
+    // },
     /*边框蓝色效果*/
     toggleActive() {
       this.isActive = !this.isActive;
@@ -1015,58 +1274,42 @@ export default {
         return;
       }
       else {
-        /*接口成功*/
-        this.newStarInput = false;
-        this.starCreateNewInput = '';
+        let formData = new FormData();
+        formData.append("title", this.starCreateNewInput);
+        formData.append("Authorization", this.$store.getters.getStorage);
+
+        let title = this.starCreateNewInput;
+        axios.post('/videos/create_favorite', formData)
+          .then(response => {
+            console.log(formData);
+            console.log(response);
+            /*创建收藏夹成功*/
+            if (response.data.errno === 0) {
+              this.getStarList();
+
+              /*接口成功，关闭输入框*/
+              //this.newStarInput = false;
+              this.$set(this, 'newStarInput', false);
+              this.starCreateNewInput = '';
+            }
+            else/*创建收藏夹失败*/ {
+              this.$message.warning(response.data.msg);
+              this.starCreateNewInput = title;
+            }
+          }).catch(error => {
+            console.log('Error: ' + error);
+            this.$message({
+              message: '发生错误，创建收藏夹失败',
+              type: 'warning'
+            });
+            this.starCreateNewInput = title;
+          });
       }
     },
-    /*点击收藏键，打开收藏夹*/
-    // OpenStarWindow() {
-    // StarWindowVisable = true;
-    // axios.get('/videos/get_favorite')
-    //   .then(reponse => {
-    //     console.log(response);
-    //     /*下面这个待完善，获取所有收藏夹的名字和该视频在收藏夹中的情况*/
-    //     response.data.favorite_id.forEach((favorite_id, index) => {
-    //       this.starbox[index] = favorite_id;
-
-    //     }).catch(error => {
-    //       console.log(error);
-    //     })
-    //   })
-    // },
-    /*创建新的收藏夹*/
-    // CreateStar() {
-    //   axios.get('/videos/create_favorite', { params: { title: this.$data.starTitle } })
-    //     .then(reponse => {
-    //       console.log(response);
-    //       /*Q??【需要立刻显示，这个该怎么实现】*/
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     })
-    //   NewStarV = true;
-    //   starTitle = '';
-    // },
-    StarHandle() { //点击收藏键触发
-
-      if (this.$data.video.stared) {
-        this.$data.video.stared = false;
-        this.$data.video.star_amount -= 1;
-      }
-      else {
-        this.$data.video.stared = true;
-        this.$data.video.star_amount += 1;
-      }//这个行为要在这里立刻传回后端吗？还是已经改变了呢？
-
-      var self = this;
-      // axios.post('/videos/favorite_video', { params: { video_id: this.$route.params.id, favorite_id: 1 } }) //往后端传数据有问题
-      //   .then(function (response) {
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     console.log('Error: ' + error);
-      //   });
+    closeCreateStar() {
+      this.$set(this, 'newStarInput', false);
+      this.newStarInput = '';
+      /*把输入框置为空*/
     },
     /*投诉相关方法*/
     CancelComplain() {
@@ -1161,7 +1404,11 @@ export default {
             this.complain_textarea = '';
 
             this.$set(this, 'canComplain', false);
-            this.reasonComplainDisable = "您已投诉过该视频，请耐心等待管理员审核";
+            //this.reasonComplainDisable = "您已投诉过该视频，请耐心等待管理员审核";
+
+            /*调用get投诉的接口*/
+            /*评论成功之后，通过get接口更新投诉状态，从而显示“投诉键”对应的样式*/
+            this.getComplainState();
           }
           else {
             /*投诉不成功，对话框不关闭*/
@@ -1174,6 +1421,32 @@ export default {
           console.log('Error: ' + error);
           this.$message.warning('发生错误，投诉视频失败');
           this.complain_textarea = content;
+        });
+    },
+    /*得到投诉状态*/
+    getComplainState() {
+      /*通过get接口更新投诉状态，从而显示“投诉键”对应的样式 和 返回信息*/
+      axios.get('/videos/is_complaint', { params: { video_id: this.$route.params.id }, headers: { Authorization: this.$store.getters.getStorage } })/*【还没测】*/
+        .then(response => {
+          console.log(response);
+
+          if (response.data.errno == 0) /*说明成功返回*/ {
+            if (response.data.is_complaint)/*说明已经投诉，没有投诉权限*/ {//this.$message.warning(response.data.msg);/*弹窗显示报错的返回信息*/
+              console.log('in here');
+              this.reasonComplainDisable = response.data.msg;
+              this.canComplain = false;
+            }
+            else {
+              console.log('in getComplain State: can complain');
+              this.canComplain = true;
+            }
+          }
+
+          /*返回errno不为0，没进这个if，说明不可以投诉*/
+          console.log('load canComplian?: ' + this.canComplain);
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
         });
     },
     /*评论相关方法*/
@@ -1284,6 +1557,7 @@ export default {
       let formData = new FormData();
       formData.append("video_id", this.$route.params.id);
       formData.append("content", this.textarea_comment);
+      formData.append("Authorization", this.$store.getters.getStorage);/*Token*/
       axios.post('/videos/comment_video', formData) /*这里没传token*/
         .then(response => {
           console.log(formData);
@@ -1293,6 +1567,7 @@ export default {
           if (response.data.errno == 0) {
             this.$message.success('发送评论成功');
             this.textarea_comment = ''; /*清空评论输入框*/
+            this.textarea_comment_l2=[];
 
             /*重新get新的所有评论【待测试】*/
             this.getComments();/*获取评论*/
@@ -1393,7 +1668,7 @@ export default {
     },
     /*回复一级评论，发布二级评论即Reply*/
     PostReply(comment_id, index) { /*这里的comment_id是一级评论id，指此reply属于哪个一级评论*/
-      if (!this.textarea_comment_l2)/*输入为空，不能发布*/ {
+      if (!this.textarea_comment_l2[index])/*输入为空，不能发布*/ {
         this.$message({
           message: '评论不能为空',
           type: 'warning'
@@ -1401,10 +1676,10 @@ export default {
         return;
       }
 
-      let content = this.textarea_comment_l2;
+      let content = this.textarea_comment_l2[index];
       let formData = new FormData();
       formData.append("comment_id", comment_id);/*所回复的一级评论的id；到底要不要独立有待商榷*/
-      formData.append("content", this.textarea_comment_l2);
+      formData.append("content", this.textarea_comment_l2[index]);
       formData.append("video_id", this.$route.params.id);
       formData.append("Authorization", this.$store.getters.getStorage);
 
@@ -1415,7 +1690,8 @@ export default {
 
           if (response.data.errno == 0) {
             this.$message.success('回复评论成功');
-            this.textarea_comment_l2 = '';
+            this.textarea_comment_l2[index] = '';
+            this.textarea_comment_l2=[];
             /*将reply输入框关闭*/
             this.show_comment_input[index] = false;
             //this.$set(this.show_comment_input, index, false);
@@ -1430,7 +1706,7 @@ export default {
           }
           else {
             this.$message.warning(response.data.msg);/*弹窗显示报错*/
-            this.textarea_comment_l2 = content;
+            this.textarea_comment_l2[index] = content;
             return;
           }
         })
@@ -1440,7 +1716,7 @@ export default {
             message: '发生错误，回复评论失败',
             type: 'warning'
           });
-          this.textarea_comment_l2 = content;
+          this.textarea_comment_l2[index] = content;
         });
     },
     /*删除回复（即二级评论）*/
@@ -1485,9 +1761,13 @@ export default {
     /*关注视频作者*/
     Follow() {
       let formData = new FormData();
-      formData.append("following_id", this.video.user_id);
-      formData.append("Authorization", this.$store.getters.getStorage);
-      axios.post('/account/create_follow', formData)
+      formData.append("following_id", this.video.author_id);
+      //console.log(this.video.author_id);
+      //formData.append("Authorization", this.$store.getters.getStorage);
+
+      let Headers = { 'Authorization': this.$store.getters.getStorage };
+
+      axios.post('/account/create_follow', formData, { headers: Headers })
         .then(response => {
           console.log(formData);
           console.log(response);
@@ -1510,7 +1790,7 @@ export default {
     /*取关视频作者*/
     DisFollow() {
       let formData = new FormData();
-      formData.append("following_id", this.video.user_id);
+      formData.append("following_id", this.video.author_id);
       formData.append("Authorization", this.$store.getters.getStorage);
       axios.post('/account/remove_follow', formData)
         .then(response => {
@@ -1539,6 +1819,15 @@ export default {
       const video_play_url = '/video/' + video_id;
       window.open(video_play_url, '_self');
     },
+    
+
+
+
+    /*获取视频宽度*/
+    // onResize() {
+    //   const boxWidth = this.$refs.box.offsetWidth;
+    //   console.log(boxWidth);
+    // },
 
     // submitComment() {
     //   this.submittingComment = true;
@@ -1549,10 +1838,19 @@ export default {
     //   }, 1000);
     // },
   },
+  /*获取视频块宽度*/
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     window.addEventListener("resize", this.onResize);
+  //   });
+  // },
+  // beforeDestroy() {
+  //   window.removeEventListener("resize", this.onResize);
+  // },
   // watch: {
   //   /*监听checkList数组的变化。当checkList数组发生变化时，调用updateCheckList方法来更新选中的多选框。*/
-  //   starHavedList(newList) {
-  //     this.updateStarHavedList(newList);
+  //   favedId(newList) {
+  //     this.updatefavedId(newList);
   //   }
   // },
 }
@@ -1612,7 +1910,7 @@ export default {
 } */
 
 .video_player {
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
   display: inline-block;
 }
 
@@ -1682,6 +1980,15 @@ export default {
   border: 2px solid blue;
 }
 
+.recommend_block {
+  /* border: 1px solid rgba(176, 170, 170, 0.703);
+  border-radius: 4px; */
+  border: 2px solid #d0dcdc9a;
+  border-radius: 10px;
+  padding: 10px 0 10px 0;
+  box-shadow: 0 .5px 0 .5px#e7f6f69a;
+}
+
 /* 
 .comment {
   display: flex;
@@ -1714,6 +2021,14 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rec_video_author {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   overflow: hidden;
   text-overflow: ellipsis;
 }
