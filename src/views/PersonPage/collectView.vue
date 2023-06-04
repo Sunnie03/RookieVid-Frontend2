@@ -55,7 +55,7 @@
                   </el-form>
                   <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="newCollect, dialogFormVisible = false">确 定</el-button>
+                    <el-button type="primary" @click="newCollect(), dialogFormVisible = false">确 定</el-button>
                   </div>
                 </el-dialog>
              </div>
@@ -157,14 +157,14 @@ export default {
       axios.post('/videos/create_favorite', formData,{headers: Headers})
       .then((res) =>  {
           //处理成功响应
-          if(res.errno == 0){
+          console.log(res.data)
+          if(res.data.errno == 0){
             alert("创建成功！");
             //还得刷新页面记得
             location.reload()
           } else {
-            alert(res.msg)
+            alert(res.data.msg)
           }
-          console.log(res.msg)
          
         })
         .catch(
@@ -185,9 +185,10 @@ export default {
     removeCollect(collect_id) {
       let Headers={'Authorization': this.$store.getters.getStorage}
       console.log('collect_id/favorite_id: '+collect_id)
-      
+      let formData = new FormData()
+      formData.append('favorite_id', collect_id)
       if(confirm("确认要删除此收藏夹吗？")) {
-        axios.post('account/delete_favorite',{headers: Headers, body:{favorite_id :collect_id}})
+        axios.post('account/delete_favorite', formData, {headers: Headers})
       .then((res) =>  {
           //处理成功响应
           if(res.data.errno == 0){

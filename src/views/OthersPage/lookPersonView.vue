@@ -3,19 +3,7 @@
         <!-- 根标签 -->
         <top-header></top-header>
         <div class="info-container">
-        <div class="title-container" >
-          <img class="photo" :src="avatar">
-          <div class="text-container" style="flex:1;">
-            <div class="text-title" > 昵称：{{ username }}</div>
-            <div class="user-sign" v-if="signature">个性签名：{{signature}}</div>
-            <div class="user-sign" v-else>个性签名：这个人很懒，什么都没写吖</div>
-            <div class="user-sign">邮箱：{{email}}</div>
-          </div>
-          <button class="follow-button">+关注</button>
-          
-        </div>
-
-        
+        <info-title></info-title>
 
         <el-main>
          
@@ -73,26 +61,25 @@ import router from '@/router'
 import axios from 'axios'
 // import { callbackify } from 'util'
 import Header from '@/components/HomePage/Header.vue'
+import Title from '@/components/PersonPage/otherTitle.vue'
 
 // Vue.component('my-component', NavComponent);
 export default {
   components: {
     'top-header':Header,
+    'info-title':Title
   },
   data () {
     return {
       look_user: 0,
-      username: '',
-      avatar: '',
-      userid: '',
-      email: '',
-      signature: '',
+      
       null_flag: false,
       partition:[''],
     }
   },
   created() {
-    this.getData();
+    // this.getData();
+    this.look_user = this.$route.params.user_id
     this.getVideo();
     console.log(this.$store.state)
   },
@@ -104,27 +91,7 @@ export default {
       // window.open(collect_url,'_blank');
       this.$router.push({name:'lookOthersCollect',params:this.look_user})//注意看应该是获取到的user_id
     },
-    getData() {
-      this.look_user = this.$route.params.user_id
-      let Headers={'Authorization': this.$store.state.token}
-      axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.look_user} })
-      .then((res) => {
-        console.log(res);
-        console.log(Headers);
-        if(res.data.errno == 0){  //获取成功
-          this.userid = res.data.context.uid,
-          this.username = res.data.context.username,
-          this.email = res.data.context.email
-          this.signature = res.data.context.signature  //这是个性签名
-          this.avatar = res.data.context.avatar_url   //这是头像
-        }else {
-            alert(res.data.msg)
-            // if(res.data.errno == )
-        }
-      }).catch(
-        console.error()
-      )
-    },
+    
     getVideo() {
     let Headers={'Authorization': this.$store.getters.getStorage}
     axios.get('/account/get_videos',{ headers: Headers, params:{user_id: this.look_user} })
@@ -163,27 +130,7 @@ export default {
 .info-container {
   height: 100%;
 }
-.photo {
-    /*border-style: double;*/
-    width: 80px;
-    height: 80px;
-    border-radius: 50% ;
-    vertical-align: middle;
-}
-.text-title {
-    display:inline;
-    font-size: 30px;
-    background-repeat: repeat;
-    margin-left: 40px;
-    margin-bottom: 100px;
-}
-.user-sign {
-  font-size: 16px;
-  margin-right: 10px;
-  width: 600px;
-  margin-left: 40px;
-  color: rgb(61, 59, 59);
-}
+
 
 .el-main {
   color: #4a5045;

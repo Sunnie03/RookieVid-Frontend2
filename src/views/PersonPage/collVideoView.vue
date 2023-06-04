@@ -143,6 +143,7 @@
     background-repeat: no-repeat;
     position: relative;
     width: 100%;
+    height: 90%;
   }
   .photo {
     width: 220px;
@@ -173,6 +174,9 @@
     border:#09553d 1px;
     height: 200px;
     opacity: 0.9;
+  }
+  .el-main {
+    height: 100%;
   }
   
   

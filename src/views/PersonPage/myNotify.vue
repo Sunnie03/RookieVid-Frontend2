@@ -31,12 +31,12 @@
               <el-tab-pane label="未读消息" name="first">
                 <ul class="unread-list" v-if="this.count_unread!=0">
               
-                  <li v-for="(notify, index) in unreadList" :key="index" class="notify-item" @click="readIt(notify.id)">
-                    <img :src="notify.avatar_url" class="photo" @click="openLook(notify.id)">
-                    <div class="user-name" @click="openLook(notify.id)">{{ notify.username | ellipsis_name}}</div>
+                  <li v-for="(notify, index) in unreadList" :key="index" class="notify-item" >
+                    <img :src="notify.avatar_url" class="photo" >
+                    <div class="user-name" >{{ notify.username | ellipsis_name}}</div>
                     <div class="user-sign" >{{notify.content | ellipsis_descp}}</div>
                     <div class="time" style="float:right">{{ notify.create_at ? notify.create_at.split('T')[0] : '' }}</div>
-                    <button class="notify-button" ><i class="el-icon-check"></i> 已读</button>
+                    <button class="notify-button" @click="readIt1(notify)"><i class="el-icon-check"></i> 已读</button>
                   </li>
                 
               </ul>
@@ -44,14 +44,14 @@
               </el-tab-pane>
 
               <el-tab-pane label="已读消息" name="second">
-                <ul class="read-list" v-if="this.readList.leng>0">
+                <ul class="read-list" v-if="this.readList.length>0">
               
                   <li v-for="(notify, index) in readList" :key="index" class="notify-item">
-                    <img :src="notify.avatar_url" class="photo" @click="openLook(notify.id)">
-                    <div class="user-name" @click="openLook(user.id)">{{ notify.username | ellipsis_name }}</div>
+                    <img :src="notify.avatar_url" class="photo" >
+                    <div class="user-name" >{{ notify.username | ellipsis_name }}</div>
                     <div class="user-sign" >{{notify.content | ellipsis_descp }}</div>
                     <div class="time" style="float:right">{{ notify.created_at ? notify.created_at.split('T')[0] : '' }}</div>
-                    <!-- <button class="notify-button">+ 回粉</button> -->
+                    <button class="notify-button" @click="readIt2(notify)"> 详情</button>
                   </li>
                 
               </ul>
@@ -60,7 +60,36 @@
               </el-tab-pane>
             </el-tabs>
             
+            <el-dialog title="消息内容" :visible.sync="readVisible">
+            <!-- <el-dialog title="消息内容" > -->
 
+              
+
+              <el-form >
+
+                <div :label-width="formLabelWidth" style="display:flex">
+                  <avatar :src="form.avatar_url" style="width:80px;height:80px;margin-left:30px" ></avatar>
+                  <div class="notify-from" >{{ form.username | ellipsis_name }}</div>
+                </div>
+                
+                <div >{{form.content | ellipsis_descp }}</div>
+                <div class="time" >{{ form.created_at ? form.created_at.split('T')[0] : '' }}</div>
+                
+                <!-- <el-form-item label="sender" :label-width="formLabelWidth">
+                  <el-input v-model="form.collectName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="一句话描述" :label-width="formLabelWidth">
+                  <el-input v-model="form.collectDes" autocomplete="off"></el-input>
+                </el-form-item> -->
+                
+                
+                
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="readVisible = false">取 消</el-button>
+                <el-button type="primary" @click="newCollect, readVisible = false">确 定</el-button>
+              </div>
+            </el-dialog>
             
           </div>
         </el-main>
@@ -74,21 +103,24 @@
   // import { callbackify } from 'util'
   import NavComponent from '../../components/PersonPage/navMenu.vue';
   import Header from '../../components/HomePage/Header.vue'
+import { Avatar } from 'element-ui';
   
   // Vue.component('my-component', NavComponent);
   export default {
   components: {
-    'my-component': NavComponent,
-    'top-header':Header,
-  
-  },
+    "my-component": NavComponent,
+    "top-header": Header,
+    Avatar
+},
   data () {
     return {
       readList:[''],
       unreadList:[''],
       count_unread: 0,
       activeName: 'first',
-      readVisiable: false
+      readVisible: false,
+      form:[''],
+      formLabelWidth: '120px',
     }
   },
   created() {
@@ -128,7 +160,7 @@
           if(Array.isArray(res.data.read_list) && res.data.read_list.length > 0) {
             this.readList = res.data.read_list
           }
-          
+          console.log(this.readList)
         } else {
             alert(res.data.msg)
         }
@@ -141,7 +173,7 @@
         alert('没有未读消息啦！')
         return 
       }
-
+    
       let Headers={'Authorization': this.$store.state.token}
       axios.post('/notification/read_all',{ headers: Headers})
       .then((res) => {
@@ -159,17 +191,37 @@
     deleteNotify(){
 
     },
-    readIt(notify_id) {
+    readIt1(notify) {
 
+      this.readVisible = true
       let Headers={'Authorization': this.$store.state.token}
-      let formData = new FormData();
-      formData.append('notification_id', notify_id)
-      axios.get('/notification/check_notification',formData, { headers: Headers})
+      let notify_id = notify.id
+      axios.get('/notification/check_notification', { headers: Headers, params:{notification_id: notify_id}})
       .then((res) => {
         console.log(res)
         if(res.data.errno === 0) {
+          this.form = notify
           console.log('已读成功')
           location.reload()
+          return 
+        } else {
+          alert(res.data.msg)
+
+        }
+      })
+    },
+    readIt2(notify) {
+
+      this.readVisible = true
+      let Headers={'Authorization': this.$store.state.token}
+      let notify_id = notify.id
+      axios.get('/notification/check_notification', { headers: Headers, params:{notification_id: notify_id}})
+      .then((res) => {
+        console.log(res)
+        if(res.data.errno === 0) {
+          this.form = notify
+          console.log('已读成功')
+          // location.reload()
           return 
         } else {
           alert(res.data.msg)
@@ -215,6 +267,16 @@
     line-height: 80px;
     border-bottom:3px solid #BBBBBB;
   }
+  .el-form-item__content {
+    
+    margin: 0px 0px 0px 20px;
+    line-height: 40px;
+    position: relative;
+    font-size: 14px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
   .item {
     margin-top: 30px;
     margin-right: 40px;
@@ -305,6 +367,16 @@
     width: 100px;
   } 
 
+
+  .notify-from {
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-left:30px;
+    width: 150px;
+    line-height: 80px;
+    vertical-align: middle;
+  }
 
   .el-tabs{
     margin: 10px 80px 20px 100px;

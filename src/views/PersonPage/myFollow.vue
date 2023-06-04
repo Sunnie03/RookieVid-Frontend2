@@ -15,15 +15,15 @@
                   <div class="user-name" @click="openLook(user.id)">{{ user.username | ellipsis_name}}</div>
                   <div class="user-sign" v-if="user.signature">{{user.signature | ellipsis_descp}}</div>
                   <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
-                  <button class="remove-button" @click="removeFollow(user.id)" >已关注</button>
-                  <!-- <button class="follow-button" @click="addFollow(user.id)" v-else>+关注</button> -->
+                  <button class="remove-button" @click="removeFollow(user.id, index)" v-if="followFlag[index]===1">已关注</button>
+                  <button class="follow-button" @click="addFollow(user.id, index)" v-else>+关注</button>
                 </li>
               
               <!-- <li class="follow-item">关注用户2 </li> -->
             </ul>
           </div>
         </el-main>
-          
+           
     </div>
 </template>
 
@@ -44,6 +44,7 @@ export default {
   data () {
     return {
       followList:[''],
+      followFlag:[],
     }
   },
   created() {
@@ -78,6 +79,11 @@ export default {
           if(Array.isArray(res.data.data)) {
             this.followList = res.data.data
           }
+          let i=0;
+          for(i=0;i<this.followList.length;i++) {
+            this.followFlag.push(1);
+          }
+          console.log(this.followFlag)
         }else {
             alert("获取数据出错")
             alert(res.data.msg)
@@ -90,17 +96,23 @@ export default {
       let look_url='/lookPerson/'+look_user;
       window.open(look_url,'_blank');
     },
-    removeFollow(user_id){
+    removeFollow(user_id, index){
       console.log('following_id: '+ user_id)
       let Headers={'Authorization': this.$store.state.token}
       let formData = new FormData()
+      
       formData.append('following_id', user_id)
+      // formData.forEach((v,k)=>{
+      //   console.log(v+k)
+      // })
       axios.post('/account/remove_follow',formData, { headers: Headers})
       .then(res => {
         console.log(res)
         if(res.data.errno === 0){
-          alert('取关成功')
-          // this.following_flag = false
+          alert(index)
+          alert('取关成功,取关id'+index)
+          this.followFlag[index] = 0;
+          
           // this.$router.replace(location)
           location.reload()
         } else {
@@ -111,7 +123,23 @@ export default {
         console.error()
       )
     },
-    
+    addFollow(user_id,index){
+      
+      let Headers={'Authorization': this.$store.state.token}
+      axios.post('/account/create_follow', { headers: Headers, body:{following_id: user_id}})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno ===  0){
+          alert('关注成功')
+          this.followFlag[index] = 1;
+        }else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    }
   }
   }
 </script>

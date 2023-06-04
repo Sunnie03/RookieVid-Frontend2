@@ -69,8 +69,13 @@ export default {
           console.log(this.$store.state.token)    //打印当前token
           //刷新首页
           console.log(this.$store.state)
-          window.opener.location.reload()
-          window.close()
+          if(window.opener === null) {
+            this.$router.push("/")
+          }else {
+            window.opener.location.reload()
+            window.close()
+          }
+          
           // this.$router.push({name:'home'})
         } else {
           alert(res.data.msg)

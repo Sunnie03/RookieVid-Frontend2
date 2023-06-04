@@ -50,6 +50,7 @@ export default new Vuex.Store({
       localStorage.removeItem('isLogin');
       localStorage.removeItem('isAdmin');
       localStorage.removeItem('token');
+      localStorage.removeItem('nowUser');
     },
     $_logAdmin(state, value) {
       if(value == 1)  { //登录的是管理员

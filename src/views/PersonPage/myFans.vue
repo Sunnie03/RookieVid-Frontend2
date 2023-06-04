@@ -44,7 +44,8 @@ components: {
 },
 data () {
   return {
-    followList:['']
+    followList:[''],
+    followFlag:[],
   }
 },
 created() {
@@ -91,7 +92,7 @@ methods: {
     let look_url='/lookPerson/'+look_user;
     window.open(look_url,'_blank');
   },
-  addFollow(user_id){
+  addFollow(user_id,index){
       
       let Headers={'Authorization': this.$store.state.token}
       axios.post('/account/create_follow', { headers: Headers, body:{following_id: user_id}})
@@ -99,7 +100,7 @@ methods: {
         console.log(res)
         if(res.data.errno ===  0){
           alert('关注成功')
-          this.following_flag = true
+          this.followFlag[index] = 1;
         }else {
           alert(res.data.msg)
         }
