@@ -215,8 +215,11 @@
                   <!--justify="center"-->
                   <!--当前用户头像-->
                   <v-col cols="12" md="1" class="d-flex" align="center">
-                    <v-avatar>
+                    <v-avatar v-if="this.$store.state.isLogin">
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
+                    </v-avatar>
+                    <v-avatar v-else>
+                      <img src="@/assets/my_avatar.png"></img>
                     </v-avatar>
                   </v-col>
                   <!--一级评论输入框-->
@@ -832,8 +835,9 @@ export default {
           })
       }
       else {
+        console.log('没登录 头像');
         /*没有登录的话，把自己的头像显示为未登录*/
-        this.user.user_avatar = "@/assets/my_avatar.png";
+        //this.user.user_avatar = "./assets/my_avatar.png";
       }
 
       /*获取视频信息*/
@@ -1815,6 +1819,7 @@ export default {
       const video_play_url = '/video/' + video_id;
       window.open(video_play_url, '_self');
     },
+    
 
 
 

@@ -32,61 +32,63 @@
             <p>全部视频 &nbsp;&nbsp;共{{ amount }}条</p>
           </div>
           <!--for循环-->
-          <v-card v-for="(video_item, index) in videos" :key="index" flat>
-            <div class="show_video_block"
-              style="padding-top: 20px;padding-left: 20px;margin-bottom: 14px;padding-right: 9px;">
-              <v-row>
-                <v-col cols="12" md="4">
-                  <img class="video_cover" :src="video_item.cover_url" width="100%" height="128px"
-                    @click="jumpTo(video_item.id)" />
-                </v-col>
+            <v-card v-for="(video_item, index) in videos" :key="index" flat>
+              <div class="show_video_block"
+                style="padding-top: 20px;padding-left: 20px;margin-bottom: 14px;padding-right: 9px;">
+                <v-row>
+                  <v-col cols="12" md="4">
+                    <img class="video_cover" :src="video_item.cover_url" width="100%" height="128px"
+                      @click="jumpTo(video_item.id)" />
+                  </v-col>
 
-                <v-col class="video_introdction" cols="12" md="8">
-                  <div class="video_title" v-bind:title="video_item.title" @click="jumpTo(video_item.id)"
-                    style="font-weight: 400;font-size: 18px;">
-                    <span>{{ video_item.title }}</span>
-                  </div>
+                  <v-col class="video_introdction" cols="12" md="8">
+                    <div class="video_title" v-bind:title="video_item.title" @click="jumpTo(video_item.id)"
+                      style="font-weight: 400;font-size: 18px;">
+                      <span>{{ video_item.title }}</span>
+                    </div>
 
-                  <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                    <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"> <el-tag 
-                        effect="plain" size="mini">作者 </el-tag>
-                      {{
-                        video_item.user_name }}</span>
-                  </div>
+                    <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
+                      <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"> <el-tag
+                          effect="plain" size="mini">作者 </el-tag>
+                        {{
+                          video_item.user_name }}</span>
+                    </div>
 
-                  <div style="margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                    <v-icon size="20"
-                          style="width: 8px;height: 8px;margin-left: 8px;margin-right: 8px;">mdi-clock-time-nine-outline</v-icon>&nbsp;{{ video_item.created_at }}
-                  </div>
+                    <div style="margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
+                      <v-icon size="20"
+                        style="width: 8px;height: 8px;margin-left: 8px;margin-right: 8px;">mdi-clock-time-nine-outline</v-icon>&nbsp;{{
+                          video_item.created_at }}
+                    </div>
 
-                  <div class="video_playData" style="color:rgb(109, 106, 106);font-size: 14px;">
-                    <span style="margin-right: 25px;">
-                      <v-icon
-                        style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
-                      {{ video_item.view_amount }}
-                    </span>
-                    <span style="margin-right: 25px;">
-                      <v-icon
-                        style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-thumb-up-outline</v-icon>
-                      {{ video_item.like_amount }}
-                    </span>
-                    <span style="margin-right: 25px;">
-                      <v-icon style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-star-outline</v-icon>
-                      {{ video_item.fav_amount }}
-                    </span>
-                    <!--评论数量-->
-                    <!-- <span>
+                    <div class="video_playData" style="color:rgb(109, 106, 106);font-size: 14px;">
+                      <span style="margin-right: 25px;">
+                        <v-icon
+                          style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-motion-play-outline</v-icon>
+                        {{ video_item.view_amount }}
+                      </span>
+                      <span style="margin-right: 25px;">
+                        <v-icon
+                          style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-thumb-up-outline</v-icon>
+                        {{ video_item.like_amount }}
+                      </span>
+                      <span style="margin-right: 25px;">
+                        <v-icon
+                          style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-star-outline</v-icon>
+                        {{ video_item.fav_amount }}
+                      </span>
+                      <!--评论数量-->
+                      <!-- <span>
                       <v-icon
                         style="width: 4px;height: 4px;margin-left: 8px;margin-right: 8px;">mdi-text-box-outline</v-icon>
                       {{video_item.fav_amount }}
                     </span> -->
-                  </div>
-                </v-col>
-              </v-row>
+                    </div>
+                  </v-col>
+                </v-row>
 
-            </div>
-            <v-divider />
-          </v-card>
+              </div>
+              <v-divider />
+            </v-card>
         </div>
 
       </el-main>
@@ -94,9 +96,8 @@
     <!-- <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop> -->
     <!--底部-->
     <el-footer height="80px"></el-footer>
-    
+
   </div>
-  
 </template>
 
 <script>
@@ -117,7 +118,7 @@ export default {
       //   ['mdi-account-supervisor-circle', 'Supervisors'],
       //   ['mdi-clock-start', 'Clock-in'],
       // ],
-      amount:'',
+      amount: '',
     }
   },
   created() {
@@ -134,7 +135,7 @@ export default {
             response.data.video.forEach((video, index) => {
               this.videos.push(video);/*【这样写】*/
             })
-            this.amount=this.videos.length;
+            this.amount = this.videos.length;
             console.dir(this.videos);
           }
           else {
@@ -156,7 +157,7 @@ export default {
 
 </script>
 
-<style>
+<style >
 /* .el-aside {
   background-color: #D3DCE6;
   color: #333;
@@ -199,4 +200,5 @@ export default {
 .textBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
-}</style>
+}
+</style>
