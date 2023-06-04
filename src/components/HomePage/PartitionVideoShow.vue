@@ -13,13 +13,15 @@
               {{ video.like_amount }}
             </span>
           </div>
+          <!-- <div class="_title"> -->
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <div class="recommend-title" @click="videoPlay(video.id)">{{ video.title }}</div>
-          <!-- </router-link> -->
+            <div class="recommend-title" :data-fulltitle="video.title" @click="videoPlay(video.id)">{{ video.title }}</div>
+          <!-- </div> -->
+            <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
-            <span class="author-name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
-            <span class="time">{{ video.created_at?video.created_at.split('T')[0]:'' }}</span>
+            <span class="author-name" :data-fullname="video.user_name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
+            <span class="time">{{ video.created_at?video.created_at.substring(0,10):'' }}</span>
           </div>
         </div>
       </div>
@@ -116,6 +118,10 @@ a{
 .router-link-active {
   text-decoration: none;
 }
+._title{
+  height:20%;
+  width:100%;
+}
 .recommend-title {
     position: relative;
     bottom: 0;
@@ -144,7 +150,20 @@ a{
 .recommend-title:hover{
     color:#1e90ff;
   }
-
+.recommend-title:hover::before {
+  content: attr(data-fulltitle);
+  position: absolute;
+  border-radius:5px;
+  background: rgb(228, 228, 228);
+  border: 1px solid rgb(180, 180, 180);
+  padding: 2px 8px;
+  font-weight: normal;
+  color:black;
+  font-size: 10px;
+  top: 100%;
+  left: 30%;
+  white-space: nowrap;
+}
 .author {
   display: flex;
   /* justify-content: space-between; */
@@ -163,14 +182,24 @@ a{
   background-color: rgba(35, 179, 241, 0.1);
   border-radius: 4px;
   padding: 2px 8px;
-  margin-right: 8px;
+  /* margin-right: 8px; */
 }
 
 .author-name {
+  width:49%;
   font-weight: bold;
   color: grey;
   padding: 2px 8px;
+  font-size:15px;
   cursor:pointer;
+  box-sizing: border-box;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    word-break:break-all;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:1;
+    overflow:hidden;
   
   
   /* margin-right:0; */
@@ -178,11 +207,25 @@ a{
 .author-name:hover{
   color:orange
 }
+.author-name:hover::before {
+  content: attr(data-fullname);
+  position: absolute;
+  border-radius:5px;
+  background: rgb(228, 228, 228);
+  border: 1px solid rgb(180, 180, 180);
+  padding: 2px 8px;
+  font-weight: normal;
+  color:black;
+  font-size: 10px;
+  top: 100%;
+  left: 30%;
+  white-space: nowrap;
+}
 .time{
   color:grey;
   font-size:smaller;
   margin-top:5px;
-  margin-left:30px;
+  margin-left:0;
   
 }
 </style>
