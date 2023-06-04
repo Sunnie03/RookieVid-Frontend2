@@ -8,8 +8,9 @@
                     <i class="el-icon-upload" ></i>
                     投稿
                 </el-button>
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                <el-menu-item index="1">稿件管理</el-menu-item>
+                <el-menu :default-active="activeIndex" class="el-menu-demo" @select="handleSelect">
+                <el-menu-item index="1">首页</el-menu-item>
+                <el-menu-item index="2">稿件管理</el-menu-item>
                 </el-menu>
             </div>
         
