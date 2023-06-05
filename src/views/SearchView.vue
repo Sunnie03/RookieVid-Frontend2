@@ -108,8 +108,6 @@ export default {
   },
   created(){
     this.getData(this.$route.query.keyword);
-  const lastSelectedTab = localStorage.getItem('selectedTab');
-  this.selectedTab = lastSelectedTab || this.selectedTab;
   //   console.log(this.$route.query)
   },
   mounted(){
@@ -119,9 +117,6 @@ export default {
   //   console.log(this.$route.query.targetdata);
   },
   watch: {
-    selectedTab(newTab) {
-    localStorage.setItem('selectedTab', newTab);
-  },
     '$route.query.keyword'(newKeyword, oldKeyword) {
       if (newKeyword !== oldKeyword) {
         this.getData(newKeyword);
@@ -169,13 +164,7 @@ export default {
         .then((response)=>{
           console.log(response);
           console.log(response.data.msg);
-          if(response.data.errno!=0){
-            alert(response.data.msg);
-          }
-            
-          else{
-            window.location.reload();
-          }
+          alert(response.data.msg);
         })
       },
       defollow(id){
@@ -189,8 +178,7 @@ export default {
         .then((response)=>{
           console.log(response);
           console.log(response.data.msg);
-          if(response.data.errno!=0)
-            alert(response.data.msg);
+          alert(response.data.msg);
           if(response.data.errno==0){
             console.log(response.data.errno);
             window.location.reload();
@@ -228,7 +216,7 @@ export default {
   }
 </script>
 
-<style scoped>
+<style>
 
 
 /* .search-container {

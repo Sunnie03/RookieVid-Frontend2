@@ -304,6 +304,12 @@ export default {
   padding-left: 3%;
   /* height:100%; */
 }
+.search-input:focus{
+  outline:none;
+  border-color: rgb(147, 227, 252);
+  box-shadow: 0 0 5px rgb(105, 163, 255);
+  background-color: white;
+}
 
 .userPhoto {
   justify-content: center;
