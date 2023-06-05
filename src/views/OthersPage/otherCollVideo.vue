@@ -152,7 +152,10 @@ export default {
     },
     goBack(){
         this.$router.push({name:'lookOthersCollect',params:this.look_user})
-    }
+    },
+    playVideo(id){
+      this.$router.push({ name: 'video/', params: { id }})
+    },
   }
 }
 </script>

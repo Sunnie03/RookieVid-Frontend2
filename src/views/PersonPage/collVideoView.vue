@@ -98,9 +98,6 @@
     playVideo(id){
       this.$router.push({ name: 'video', params: { id }})
     },
-    changeVideo(id){
-      this.$router.push({ name: 'video', params: { id }})//这里是修改稿件的路由，需要设置跳转，以及传入参数
-    },
     
     getVideo() {
       let Headers={'Authorization': this.$store.getters.getStorage}
@@ -129,7 +126,8 @@
     },
     goBack() {
         window.close()
-    }
+    },
+    
   }
   }
   </script>
