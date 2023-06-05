@@ -53,8 +53,8 @@
               <div>
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:18px;width:100%;">
-                  <video controls :src="video.url" style="width:100%;min-height:550px;background-color:black"
-                    :poster="video.cover_url">
+                  <video id="shipin" ref="video" controls :src="video.url"
+                    style="width:100%;min-height:550px;background-color:black" :poster="video.cover_url" volume="0.25">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
                     <!-- <source src="../assets/hz.mp4" /> -->
@@ -151,12 +151,19 @@
                     </el-dialog>
 
                     <!--投诉-->
-                    <span class="complaint videoFuncClick" style="margin-right:30px">
+                    <span v-if="isLoginComp" class="complaint videoFuncClick" style="margin-right:30px">
                       <v-btn icon :color="canComplain ? undefined : 'blue'" @click="clickComplain()" size="large"
                         style="width: 50px;height: 50px;">
                         <v-icon class="videoFuncClick">mdi-alert-outline</v-icon>
                       </v-btn>
                       <p class="d-flex align-center my-auto" @click="clickComplain()">稿件投诉</p>
+                    </span>
+                    <span v-else class="complaint videoFuncClick" style="margin-right:30px">
+                      <v-btn icon @click="toLogin()" size="large"
+                        style="width: 50px;height: 50px;">
+                        <v-icon class="videoFuncClick">mdi-alert-outline</v-icon>
+                      </v-btn>
+                      <p class="d-flex align-center my-auto" @click="toLogin()">稿件投诉</p>
                     </span>
 
                     <!--投诉的对话框-->
@@ -219,7 +226,7 @@
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                     </v-avatar>
                     <v-avatar v-else>
-                      <img src="@/assets/my_avatar.png"/>
+                      <img src="@/assets/my_avatar.png" />
                     </v-avatar>
                   </v-col>
                   <!--一级评论输入框-->
@@ -257,7 +264,9 @@
                         @mouseleave="hideDelete(comment_item.id)">
                         <!--评论者用户名-->
                         <div class="textBtn" style="align-items: center;margin-bottom: 12px;">
-                          <span class="textBtn" style="font-weight:500;font-size: 16px;margin-right: 15px;color:rgb(109, 106, 106)" @click="jumpToUser(comment_item.user_id)">
+                          <span class="textBtn"
+                            style="font-weight:500;font-size: 16px;margin-right: 15px;color:rgb(109, 106, 106)"
+                            @click="jumpToUser(comment_item.user_id)">
                             {{ comment_item.user_name }}
                           </span>
                           <!--作者的tag-->
@@ -323,7 +332,8 @@
                                   <!--二级评论者用户名-->
                                   <div style="align-items: center!important;margin-bottom: 14px;">
                                     <span
-                                      style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click="jumpToUser(reply_item.user_id)">
+                                      style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
+                                      @click="jumpToUser(reply_item.user_id)">
                                       {{ reply_item.user_name }}
                                     </span>
                                     <span style="align-items: center!important;"><el-tag
@@ -375,7 +385,8 @@
                                     <!--二级评论者用户名-->
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
-                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click=jumpToUser(reply_item.user_id)>
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
+                                        @click=jumpToUser(reply_item.user_id)>
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -428,7 +439,8 @@
                                     <!--二级评论者用户名-->
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
-                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click=jumpToUser(reply_item.user_id)>
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
+                                        @click=jumpToUser(reply_item.user_id)>
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -568,7 +580,7 @@
                         <div style="margin-bottom: 20px;margin-top: 3px">
                           <span v-if="video.isFollowed"> <!--如果已关注-->
                             <v-btn depressed @click="DisFollow">
-                              <i class="el-icon-check"></i> 已关注{{ video.author_follower_amount }}
+                              <i class="el-icon-check"></i> 已关注 {{ video.author_follower_amount }}
                             </v-btn>
                           </span>
                           <span v-else> <!--如果未关注-->
@@ -610,8 +622,9 @@
                         </div>
 
                         <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                          <span class="rec_video_author textBtn" v-bind:title="'作者: ' + recommend_item.user_name" @click="jumpToUser(recommend_item.user_id)"> <el-tag
-                              type="info" effect="plain" size="mini">作者 </el-tag>
+                          <span class="rec_video_author textBtn" v-bind:title="'作者: ' + recommend_item.user_name"
+                            @click="jumpToUser(recommend_item.user_id)"> <el-tag type="info" effect="plain" size="mini">作者
+                            </el-tag>
                             {{
                               recommend_item.user_name }}</span>
                         </div>
@@ -675,11 +688,14 @@ export default {
   },
   data() {
     return {
+      /*视频音量*/
+      shouldMute: true,
       /*投诉相关数据*/
-      canComplain: true,/*是否可以投诉该视频｜默认可以投诉（游客未登录也可以【待确认】）*/
+      canComplain: false,/*是否可以投诉该视频｜默认不可以投诉（游客未登录就不可以【待确认】）*/
       reasonComplainDisable: '',/*不能投诉该视频的原因，应该是text*/
       complainDialog: false,/*投诉视频的对话框，默认关闭*/
       complain_textarea: '',/*投诉对话框中，填写投诉原因*/
+      isLoginComp:false,/*是否登录，来判断投诉*/
       /*评论相关数据*/
       textarea_comment: '',/*发布一级评论的输入框*/
       textarea_comment_l2: [],/*发布二级评论(即reply)的输入框，需要区分*/
@@ -692,7 +708,7 @@ export default {
       canDelete: false,/*用来标记当前的登录者是否是管理员或该视频的作者，用以判断删除权限；默认为false*/
       showDelete: [],/*是否显示评论card中的删除键【应该是随着评论总数变化的一个量】*/
       isClickDel: [],/*是否已经点击了删除键【随着评论总数变化的一个量】。如果已经点击了，就设置为true就让删除键显示*/
-      forMaxLen: 150,/*为了for循环遍历清空和设置初始为0【正常的for循环不需要这个】【目前有showDelete和isClickDel使用了】*/
+      forMaxLen: 32000,/*为了for循环遍历清空和设置初始为0【正常的for循环不需要这个】【目前有showDelete和isClickDel使用了】*/
 
       //delDialogVisible: false,/*确认是否删除一级评论的dialog*/
 
@@ -740,7 +756,7 @@ export default {
         author_name: '',
         author_image_url: '',
         author_description: '',
-        author_follower_amount: '',
+        author_follower_amount: 0,
         isFollowed: false,/*默认为未关注*/
         follower_amount: '',
         /*视频相关数据*/
@@ -775,14 +791,32 @@ export default {
     //   this.getComments()
     // }, 18000);/*1分钟60000，1s1000，这里的数字单位是毫秒*/
   },
-  // mounted() {
-  //   // 在 mounted 钩子中设置自定义标题
-  //   this.title = `
-  //       <span style="display: inline-block; border-top: 1px solid #999; padding-top: 8px;">
-  //         ${'添加到收藏夹'}
-  //       </span>
-  //     `
-  // },
+  mounted() {
+    // 在 mounted 钩子中设置自定义标题
+    // this.title = `
+    //     <span style="display: inline-block; border-top: 1px solid #999; padding-top: 8px;">
+    //       ${'添加到收藏夹'}
+    //     </span>`
+
+
+    // 将 shouldMute 设为 false，以恢复浏览器记录的音量
+    setTimeout(() => {
+      this.$nextTick(() => {
+        console.log(this.$refs.video.volume);
+
+        //console.log(document.getElementById("shipin").volume);
+
+        this.shouldMute = false;
+        this.$refs.video.volume = 0.25; // 设置视频音量为 25%
+        console.log('in v');
+        console.log(this.$refs.video.volume);
+        //console.log(document.getElementById("shipin").volume);
+        //document.getElementById("shipin").volume = 0.2;
+        //console.log(document.getElementById("shipin").volume);
+
+      });
+    });
+  },
   // mounted() { /*计算视频长宽*/
   //   this.$nextTick(() => {
   //     this.updateVideoSize();
@@ -806,6 +840,25 @@ export default {
     //   }
     //   console.log(this.videoWidth,this.videoHeight);
     // },
+    // onLoadMetadata() {
+    //   // 将 shouldMute 设为 false，以恢复浏览器记录的音量
+    //   this.$nextTick(() => {
+    //  console.log(this.$refs.video.volume); 
+
+    //  //console.log(document.getElementById("shipin").volume);
+
+    //   this.shouldMute = false;
+    //   this.$set(this.$refs.video,volume, 0.25);
+    //   this.$refs.video.volume = 0.25; // 设置视频音量为 25%
+    //   console.log('in v');
+    //  console.log(this.$refs.video.volume); 
+    //  console.log(document.getElementById("shipin").volume);
+    //  this.$set(this,)
+    //  document.getElementById("shipin").volume=0.2;
+    //  console.log(document.getElementById("shipin").volume);
+    //   })
+
+    // },
 
     /*获取视频详情页相关数据（在刷新时加载一次）*/
     fetchVideoData() {
@@ -826,6 +879,7 @@ export default {
               this.user.user_id = response.data.context.id;
               this.user.user_name = response.data.context.username;
               this.user.user_avatar = response.data.context.avatar_url;   //这是头像
+              this.isLoginComp=true;
             }
             else {
               this.$message.warning(response.data.msg);
@@ -836,6 +890,7 @@ export default {
       }
       else {
         console.log('没登录 头像');
+        this.isLoginComp=false;
         /*没有登录的话，把自己的头像显示为未登录*/
         //this.user.user_avatar = "./assets/my_avatar.png";
       }
@@ -941,7 +996,7 @@ export default {
         })
 
       /*获取推荐视频列表*/
-      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 6 } })
+      axios.get('/videos/get_related_video', { params: { video_id: this.$route.params.id, num: 10 } })
         .then(response => {
           console.log(response);
           response.data.video.forEach((video, index) => {
@@ -965,13 +1020,33 @@ export default {
               this.reasonComplainDisable = response.data.msg;
               this.canComplain = false;
             }
+            else {
+              console.log('可以投诉');
+              this.canComplain = true;
+            }
           }
+          else {
+            /*未登录不能投诉*/
+            console.log('in get Complain State' + this.$store.state.isLogin);
+            // if (this.$store.state.isLogin === false) {
+            //   console.log('in get Complain State' + this.$store.state.isLogin);
+            //   this.canComplain = true;/*显示为灰色*/
+            // }
+          }
+
           /*返回errno不为0，没进这个if，说明不可以投诉*/
           console.log('load canComplian?: ' + this.canComplain);
         })
         .catch(error => {
           console.log('Error: ' + error);
         });
+
+      // /*未登录不能投诉*/
+      // console.log('in get Complain State' + this.$store.state.isLogin);
+      // if (this.$store.state.isLogin === "false") {
+      //   console.log('in get Complain State' + this.$store.state.isLogin);
+      //   this.canComplain = true;/*显示为灰色*/
+      // }
 
       /*获取收藏夹*/
       this.getStarList();
@@ -1050,6 +1125,10 @@ export default {
           if (response.data.errno == 401) /*用户未登录，就跳转到用户登录界面去登录*/ {
             this.$message.warning(response.data.msg);/*先去登录*/
             this.$router.push('/login');
+            // console.log('here');//【】
+            // const url = '/login';
+            // window.open(url, '_blank');
+            // console.log('there');//【】
             return;
           }
           else if (response.data.errno != 0)/*点赞失败的其它错误【待完善】*/ {
@@ -1097,6 +1176,8 @@ export default {
       else {
         this.$message.warning('请先登录');
         this.$router.push('/login');
+        // const url = '/login';
+        // window.open(url, '_blank');
         return;
       }
     },
@@ -1323,6 +1404,10 @@ export default {
       this.complain_textarea = '';
 
     },
+    toLogin(){
+      this.$message.warning('请先登录');
+      this.$router.push('/login');
+    },
     /*点击投诉键，出现投诉的对话框*/
     clickComplain() {
       //console.log('into complain');
@@ -1457,6 +1542,8 @@ export default {
         this.$set(this.showDelete, i, false);
       }
 
+
+      // console.log('hahaha'+comment_id);
       if (this.isClickDel[comment_id] === false) {
         if (this.canDelete === true)/*是该视频作者或者是管理员*/ {
           //this.showDelete[comment_id]=true;
@@ -1567,7 +1654,7 @@ export default {
           if (response.data.errno == 0) {
             this.$message.success('发送评论成功');
             this.textarea_comment = ''; /*清空评论输入框*/
-            this.textarea_comment_l2=[];
+            this.textarea_comment_l2 = [];
 
             /*重新get新的所有评论【待测试】*/
             this.getComments();/*获取评论*/
@@ -1590,6 +1677,8 @@ export default {
     clickSend() {
       this.$message.warning('还未登录，请先登录');/*先去登录*/
       this.$router.push('/login');
+      // const url = '/login';
+      // window.open(url, '_blank');
       return;
     },
     /*删除一级评论*/
@@ -1663,6 +1752,8 @@ export default {
         /*没有登录，点击“回复”，显示“未登录”*/
         this.$message.warning('当前未登录，请先去登录');/*先去登录*/
         this.$router.push('/login');
+        // const url = '/login';
+        // window.open(url, '_blank');
         return;
       }
     },
@@ -1691,7 +1782,7 @@ export default {
           if (response.data.errno == 0) {
             this.$message.success('回复评论成功');
             this.textarea_comment_l2[index] = '';
-            this.textarea_comment_l2=[];
+            this.textarea_comment_l2 = [];
             /*将reply输入框关闭*/
             this.show_comment_input[index] = false;
             //this.$set(this.show_comment_input, index, false);
@@ -1760,32 +1851,50 @@ export default {
     /*视频作者相关操作*/
     /*关注视频作者*/
     Follow() {
+
       let formData = new FormData();
       formData.append("following_id", this.video.author_id);
       //console.log(this.video.author_id);
       //formData.append("Authorization", this.$store.getters.getStorage);
 
-      let Headers = { 'Authorization': this.$store.getters.getStorage };
+      if (this.$store.state.isLogin === true) {
+        let Headers = { 'Authorization': this.$store.getters.getStorage };
 
-      axios.post('/account/create_follow', formData, { headers: Headers })
-        .then(response => {
-          console.log(formData);
-          console.log(response);
-          if (response.data.errno == 0) {
-            this.$message.success('关注成功');
-            this.$data.video.isFollowed = true;
-            this.$data.video.author_follower_amount = response.data.follower;/*根据后端返回的数量来更新前端【待确定行不行】*/
-            //this.$data.video.author_follower_amount++;
-          }
-          else {
-            this.$message.warning(response.data.msg);/*弹窗显示报错*/
-            return;
-          }
-        })
-        .catch(error => {
-          console.log('Error: ' + error);
-          this.$message.warning('发生错误，关注失败');
-        });
+        axios.post('/account/create_follow', formData, { headers: Headers })
+          .then(response => {
+            console.log(formData);
+            console.log(response);
+            if (response.data.errno == 401) /*用户未登录，就跳转到用户登录界面去登录*/ {
+              this.$message.warning(response.data.msg);/*先去登录*/
+              //this.$router.push('/login');
+              const url = '/login';
+              window.open(url, '_blank');
+              return;
+            }
+            else if (response.data.errno == 0) {
+              this.$message.success('关注成功');
+              this.$data.video.isFollowed = true;
+              this.$data.video.author_follower_amount = response.data.follower_num;/*根据后端返回的数量来更新前端【待确定行不行】*/
+              //this.$data.video.author_follower_amount++;
+            }
+            else {
+              this.$message.warning(response.data.msg);/*弹窗显示报错*/
+              return;
+            }
+          })
+          .catch(error => {
+            console.log('Error: ' + error);
+            this.$message.warning('发生错误，关注失败');
+          });
+      }
+      else {
+        console.log(this.$store.state.isLogin);
+        this.$message.warning('还未登录，请先登录');/*先去登录*/
+        //this.$router.push('/login');
+        const url = '/login';
+        window.open(url, '_blank');
+        return;
+      }
     },
     /*取关视频作者*/
     DisFollow() {
@@ -1800,7 +1909,7 @@ export default {
           if (response.data.errno == 0) {
             this.$message.success('取关成功');
             this.$data.video.isFollowed = false;
-            this.$data.video.author_follower_amount = response.data.follower;/*根据后端返回的数量来更新前端【待确定行不行】*/
+            this.$data.video.author_follower_amount = response.data.follower_num;/*根据后端返回的数量来更新前端【待确定行不行】*/
             //this.$data.video.author_follower_amount--;
           }
           else {
@@ -1821,9 +1930,9 @@ export default {
     },
     jumpToUser(user_id) {
       const display_user_url = '/lookPerson/' + user_id;
-      window.open(display_user_url, '_blank');
+      window.open(display_user_url, '_self');
     },
-    
+
 
     /*获取视频宽度*/
     // onResize() {
@@ -2038,20 +2147,24 @@ export default {
 /*以下样式设置鼠标悬停显示颜色*/
 .rec_video_title:hover {
   color: rgb(11, 168, 235);
+  cursor: pointer;
 }
 
 .videoFuncClick:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 
 .replyBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 
 .textBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 </style>

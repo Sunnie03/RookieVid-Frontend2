@@ -9,7 +9,7 @@
     <el-container>
       <div :style="{ 'width': '60vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
 
-        <div v-if="videoNum>0">
+        <div v-if="videoNum > 0">
           <div style="font-weight: 400;font-size: 25px;margin-bottom: 18px;">共有{{ videoNum }}条视频待审核</div>
 
           <div class="block" style="padding-left: 20px;padding-right: 20px;padding-bottom: 20px;">
@@ -23,7 +23,8 @@
                 </div>
                 <div style="font-weight: 500;font-size: 20px;color:rgb(57, 56, 56);margin-bottom: 7px;">
                   <v-avatar><img :src="video_item.avatar_url" /></v-avatar>
-                  &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name }}</span>
+                  &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name
+                  }}</span>
                 </div>
                 <div style="font-size: 18px;color:rgb(57, 56, 56);margin-bottom: 7px;">
                   <i>投稿时间：{{ video_item.created_at }} </i>
@@ -61,8 +62,8 @@
 
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:18px;width:100%;">
-                  <video controls :src="video_item.video_url" style="width:100%;height:100%;background-color:black"
-                    :poster="video_item.cover_url">
+                  <video controls id="shipin" ref="video" :src="video_item.video_url"
+                    style="width:100%;height:100%;background-color:black" :poster="video_item.cover_url">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
                   </video>
@@ -102,10 +103,31 @@ export default {
   created() {
     this.fetchData();
   },
+  mounted() {
+    // 将 shouldMute 设为 false，以恢复浏览器记录的音量
+    setTimeout(() => {
+      console.log('hello');
+      this.$nextTick(() => {
+        console.log(this.$refs.video);
+        console.log(this.$refs.video[0].volume);
+        //console.log(document.getElementById("shipin").volume);
+        this.shouldMute = false;
+        for(let i=0;i<this.$refs.video.length;i++)
+        this.$refs.video[i].volume = 0.25; // 设置视频音量为 25%
+        
+        console.log('in v');
+        //console.log(this.$refs.video.volume);
+        //console.log(document.getElementById("shipin").volume);
+        //document.getElementById("shipin").volume = 0.2;
+        //console.log(document.getElementById("shipin").volume);
+
+      });
+    });
+  },
   methods: {
     jumpToUser(user_id) {
       const display_user_url = '/lookPerson/' + user_id;
-      window.open(display_user_url, '_blank');
+      window.open(display_user_url, '_self');
     },
     fetchData() {
       let Headers = { 'Authorization': this.$store.getters.getStorage };/*获取token*/
@@ -227,6 +249,7 @@ export default {
 .textBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 
 .block {
