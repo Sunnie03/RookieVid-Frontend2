@@ -26,11 +26,6 @@ const routes = [
     name: 'creation',
     component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/CreationView.vue')
   },
-  {
-    path: '/message',
-    name: 'message',
-    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/MessageView.vue')
-  },
    /*视频播放页面*/
   {
     path: '/video/:id',/*注意这里*/
