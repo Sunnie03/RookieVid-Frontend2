@@ -291,9 +291,9 @@ export default {
 
 .guide_menu {
   align-items: center;
-  margin-left: 13%;
+  /* margin-right: 7%; */
   /* margin-right: 50px; */
-  /* flex: 1; */
+  flex: 1;
 }
 
 .search {
@@ -303,7 +303,7 @@ export default {
   align-items: center;
   flex-direction: row;
   /* flex: 1; */
-  margin-left: 10%;
+  margin-left: 8%;
 }
 
 .search-input {
