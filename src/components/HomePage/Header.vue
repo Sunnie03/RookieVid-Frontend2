@@ -263,7 +263,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .header {
   display: flex;
   flex-direction: column;
