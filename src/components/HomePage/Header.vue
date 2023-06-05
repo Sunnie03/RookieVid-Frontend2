@@ -286,7 +286,7 @@ export default {
   /* left: 100px; */
   padding-left: 100px;
   /* margin-right:5%; */
-  /* flex: 1 auto; */
+  flex: 1 auto;
 }
 
 .guide_menu {
