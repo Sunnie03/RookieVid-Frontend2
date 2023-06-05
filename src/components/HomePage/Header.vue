@@ -271,14 +271,14 @@ export default {
 
 .head_guide {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   /*好像没区别*/
   background-color: #b2deed;
   /* background-color: #ceeef9; */
   padding: 5px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   align-items: center;
-  flex-direction: row;
+  /* flex-direction: row; */
 }
 
 .logo {
@@ -291,17 +291,19 @@ export default {
 
 .guide_menu {
   align-items: center;
+  margin-left: 15%;
   /* margin-right: 50px; */
   /* flex: 1; */
 }
 
 .search {
   /* display: flex; */
-  width: 400px;
+  width: 420px;
   /* justify-content: center; */
   align-items: center;
   flex-direction: row;
   /* flex: 1; */
+  margin-left: 12%;
 }
 
 .search-input {
@@ -320,10 +322,11 @@ export default {
 }
 
 .userPhoto {
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  flex-direction: row;
-  margin-left: 20px;
+  margin-left: 3%;
+  /* flex-direction: row; */
+  /* margin-left: 20px; */
   margin-right: 20px;
 }
 
