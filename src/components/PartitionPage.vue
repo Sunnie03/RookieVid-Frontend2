@@ -56,9 +56,9 @@
             
             <li class="ranking-item" v-for="(video,index) in this.ranking_list" :key="index">
               <span class="ranking-number">{{ index+1 }}</span>
-              <div class="top-cover-container" v-if="index==0">
+              <!-- <div v-if="index==0" class="top-cover-container" > -->
                 <img v-if="index===0" :src="video.cover_url" class="top-cover" @click="videoPlay(video.id)">
-              </div>
+              <!-- </div> -->
               <span class="ranking-video-title" @click="videoPlay(video.id)">{{ video.title }}</span>
             </li>
           </ul>
@@ -244,13 +244,13 @@
     background-color: rgba(208, 208, 208, 0.3);
   }
   .top-cover-container{
-    height:50%;
+    height:40%;
     width:35%;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .top-cover{
-    height:100%;
-    width:100%;
+    height:40%;
+    width:35%;
     object-fit:cover;
     border-radius:15%;
   }
@@ -296,6 +296,7 @@
   }
   .ranking-video-title:hover{
     color:rgb(0, 191, 255);
+    cursor: pointer;
   }
   .ranking-item:first-child .ranking-video-title{
     -webkit-line-clamp: var(--rank-title-line, 3);
