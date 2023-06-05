@@ -1,10 +1,10 @@
 <template>
   <div class="admin_guide">
     <!--管理栏的导航栏-->
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1"><router-link to="/admin" class="no_underline">全部视频</router-link></el-menu-item>
-      <el-menu-item index="2"><router-link to="/admin/complain" class="no_underline">投诉视频</router-link></el-menu-item>
-      <el-menu-item index="3"><router-link to="/admin/check" class="no_underline">待审核视频</router-link></el-menu-item>
+    <el-menu :router="true" :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu-item index="allVideo">全部视频</el-menu-item>
+      <el-menu-item index="complain">投诉视频</el-menu-item>
+      <el-menu-item index="check">待审核视频</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -14,8 +14,21 @@ export default {
   name: 'AdminGuide',
   data() {
     return {
-      activeIndex: "1",
+      activeIndex2: "allVideo",
     };
+  },
+  created() {
+    this.$set(this, 'activeIndex2', this.$route.meta.index2);
+    //this.activeIndex = this.$route.meta.index;
+    //this.pageName = this.$route.name;
+  },
+  watch: {
+    '$route': function () {
+      //this.activeIndex = this.$route.meta.index;
+      this.$set(this, 'activeIndex2', this.$route.meta.index2);
+      window.location.reload();
+    }
+
   },
   methods: {
     handleSelect(key, keyPath) {

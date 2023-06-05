@@ -122,20 +122,22 @@ const routes = [
   /*管理端页面*/
   /*投诉列表*/
   {
-    path: '/admin', 
+    path: '/admin/allVideo', 
     name: 'allVideo',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/AllVideoView.vue'),
-    meta: { index: 'admin' }
+    meta: { index: 'admin',index2:'allVideo' },
   },
   {
     path: '/admin/complain', 
     name: 'complainList',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/ComplainView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/ComplainView.vue'),
+    meta: { index: 'admin' ,index2: 'complain'},
   },
   {
     path: '/admin/check', 
     name: 'check',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/CheckView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/CheckView.vue'),
+    meta: { index: 'admin',index2: 'check'},
   },
   /* Person页面 */
 
