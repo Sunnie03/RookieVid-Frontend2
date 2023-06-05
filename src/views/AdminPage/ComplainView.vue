@@ -26,11 +26,11 @@
                     <v-col class="complain_introdction" cols="12" md="7">
                       <div class="complain_video_title" v-bind:title="video_item.title"
                         style="font-weight: 400;font-size: 18px;">
-                        <span>{{ video_item.title }}</span>
+                        <span @click="jumpTo(video_item.id)">{{ video_item.title }}</span>
                       </div>
 
                       <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                        <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"> <el-tag
+                        <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name" @click="jumpToUser(video_item.user_id)"> <el-tag
                             effect="plain" size="mini">作者 </el-tag>
                           {{
                             video_item.user_name }}</span>
@@ -74,7 +74,7 @@
 
                       <div ref="show_block">
                         <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                          <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name"> <el-tag
+                          <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name" @click="jumpToUser(c_item.user_id)"> <el-tag
                               type="danger" effect="plain" size="mini">投诉用户 </el-tag>&nbsp;
                             {{
                               c_item.username }}</span>
@@ -98,7 +98,7 @@
 
                         <div ref="show_block">
                           <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                            <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name"> <el-tag
+                            <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name" @click="jumpToUser(c_item.user_id)"> <el-tag
                                 type="danger" effect="plain" size="mini">投诉用户 </el-tag>&nbsp;
                               {{
                                 c_item.username }}</span>
@@ -120,7 +120,7 @@
 
                         <div ref="show_block">
                           <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                            <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name"> <el-tag
+                            <span class="video_author textBtn" v-bind:title="'作者: ' + c_item.user_name" @click="jumpToUser(c_item.user_id)"> <el-tag
                                 type="danger" effect="plain" size="mini">投诉用户 </el-tag>&nbsp;
                               {{
                                 c_item.username }}</span>
@@ -222,6 +222,15 @@ export default {
   //   }, 1000);
   // },
   methods: {
+    jumpTo(video_id) {
+      //this.$router.push('/video/'+video_id);
+      const video_play_url = '/video/' + video_id;
+      window.open(video_play_url, '_self');
+    },
+    jumpToUser(user_id) {
+      const display_user_url = '/lookPerson/' + user_id;
+      window.open(display_user_url, '_self');
+    },
     fetchData() {
       let Headers = { 'Authorization': this.$store.getters.getStorage };/*获取token*/
       console.log(Headers);
@@ -367,10 +376,12 @@ export default {
 /*以下样式设置鼠标悬停显示颜色*/
 .complain_video_title:hover {
   color: rgb(11, 168, 235);
+  cursor: pointer;
 }
 
 .textBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 </style>

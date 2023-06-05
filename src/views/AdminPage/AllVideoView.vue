@@ -1,7 +1,7 @@
 <template>
   <div class="admin_all_video">
     <!--导航栏-->
-    <Header/>
+    <Header />
     <!--管理栏的导航栏-->
     <AdminGuide />
 
@@ -27,10 +27,11 @@
 
       <el-main>
         <div :style="{ 'width': '45vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
-          <div style="margin-bottom: 10px;font-weight: 500;font-size: 22px;">
-            <p>全部视频 &nbsp;&nbsp;共{{ amount }}条</p>
-          </div>
-          <!--for循环-->
+          <div v-if="amount > 0">
+            <div style="margin-bottom: 10px;font-weight: 500;font-size: 22px;">
+              <p>全部视频 &nbsp;&nbsp;共{{ amount }}条</p>
+            </div>
+            <!--for循环-->
             <v-card v-for="(video_item, index) in videos" :key="index" flat>
               <div class="show_video_block"
                 style="padding-top: 20px;padding-left: 20px;margin-bottom: 14px;padding-right: 9px;">
@@ -47,8 +48,8 @@
                     </div>
 
                     <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                      <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"> <el-tag
-                          effect="plain" size="mini">作者 </el-tag>
+                      <span class="video_author textBtn" v-bind:title="'作者: ' + video_item.user_name"
+                        @click="jumpToUser(video_item.user_id)"> <el-tag effect="plain" size="mini">作者 </el-tag>
                         {{
                           video_item.user_name }}</span>
                     </div>
@@ -88,6 +89,11 @@
               </div>
               <v-divider />
             </v-card>
+          </div>
+          <!--正在加载中-->
+          <div v-else style="display: flex;justify-content: center; ">
+            <div style="font-size: 30px;color:grey;margin-top: 20px;">视频较多，正在加载中，请耐心等待～</div>
+          </div>
         </div>
 
       </el-main>
@@ -124,6 +130,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    jumpToUser(user_id) {
+      const display_user_url = '/lookPerson/' + user_id;
+      window.open(display_user_url, '_self');
+    },
     fetchData() {
       let Headers = { 'Authorization': this.$store.getters.getStorage };/*获取token*/
       console.log(Headers);
@@ -149,7 +159,7 @@ export default {
     jumpTo(video_id) {
       //this.$router.push('/video/'+video_id);
       const video_play_url = '/video/' + video_id;
-      window.open(video_play_url, '_blank');
+      window.open(video_play_url, '_self');
     },
   }
 }
@@ -194,10 +204,12 @@ export default {
 /*以下样式设置鼠标悬停显示颜色*/
 .video_title:hover {
   color: rgb(11, 168, 235);
+  cursor: pointer;
 }
 
 .textBtn:hover {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
+  cursor: pointer;
 }
 </style>
