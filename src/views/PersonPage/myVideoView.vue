@@ -24,8 +24,8 @@
       </el-col>
       
       <div class="info-container">
-        <a id="TOPUp" href="#topAnchor">
-          <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
+        <a id="TOPUp" href="#">
+          <img style="width: 100%;height: 100%;border-radius:50%" src="../../assets/top.jpg" alt="">
         </a>
         <div class="titles-container" >
           <img class="photo" :src="avatar">
@@ -152,7 +152,7 @@ methods: {
   border: 1px;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
 }
@@ -174,10 +174,11 @@ methods: {
   vertical-align: middle;
   line-height: 150px;
   }
-  .el-menu-vertical-demo {
-    background-color:#fcfcf7;
-    height: 100%;
-  }
+.el-menu-vertical-demo {
+  background-color:#fcfcf7;
+  height: 100%;
+}
+
 .info-container{
 color: #4a5045;
 text-align:justify;

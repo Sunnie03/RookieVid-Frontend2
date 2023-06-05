@@ -7,6 +7,10 @@
 
         <el-main>
          
+          <a id="TOPUp" href="#">
+            <img style="width: 100%;height: 100%;border-radius:50%" src="../../assets/top.jpg" alt="">
+          </a>
+
           <el-col :span="4" style="height:100%">
             <el-menu
               default-active="1-4-1"
@@ -282,5 +286,15 @@ export default {
     margin-top:5px;
     text-align: right;
     width: 100%;
+  }
+  #TOPUp{
+    position: fixed;
+    right: 45px;
+    bottom: 100px;
+    width: 40px;
+    height: 40px;
+    z-index: 99999999;
+    box-shadow: 0px 0px 4px 4px #ecefef;
+    border-radius: 600px;
   }
 </style>
