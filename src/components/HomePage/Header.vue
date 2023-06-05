@@ -1,15 +1,18 @@
 <template>
-    <div class="header">
+  <div class="header">
 
-      <!-- <v-app-bar> -->
-      <!--主页最上方导航栏 链接-->
-      <div class="head_guide">
-        <!--logo图标-->
+    <!-- <v-app-bar> -->
+    <!--主页最上方导航栏 链接-->
+    <div class="head_guide">
+      <!--logo图标-->
+        <!-- <v-col cols="12" md="2"> -->
         <div class="logo">
           <img alt="web logo" src="@/assets/web_logo.png" height="80px">
         </div>
+      <!-- </v-col>Ï -->
 
         <!--搜索框-->
+        <!-- <v-col cols="12" md="4"> -->
         <div class="search">
           <el-row type="flex">
             <input placeholder="请输入内容" v-model="input" class="search-input" @keydown.enter="search_by_key">
@@ -22,8 +25,10 @@
 
           </el-row>
         </div>
+      <!-- </v-col> -->
 
         <!--导航栏菜单-->
+        <!-- <v-col cols="12" md="4"> -->
         <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
           <el-row type="flex" justify="end">
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
@@ -33,8 +38,8 @@
               <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
                 创作中心</el-menu-item>
 
-              <el-menu-item index="notification" @click="jumpTo('notification')" style="font-size:15px"><el-badge :max="99"
-                  :value="messageNum" class="item">消息</el-badge></el-menu-item>
+              <el-menu-item index="notification" @click="jumpTo('notification')" style="font-size:15px"><el-badge
+                  :max="99" :value="messageNum" class="item">消息</el-badge></el-menu-item>
 
               <el-menu-item index="admin" @click="jumpTo('admin')">管理中心</el-menu-item>
             </el-menu>
@@ -48,13 +53,15 @@
               <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
               <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
               <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-              <el-menu-item index="message" @click="jumpTo('message')">消息</el-menu-item>
+              <el-menu-item index="notification" @click="jumpTo('notification')">消息</el-menu-item>
             </el-menu>
           </el-row>
         </div>
+      <!-- </v-col> -->
 
         <!--没有登录，显示默认样式-->
         <!--当前用户还没登录，为游客-->
+        <!-- <v-col cols="12" md="2"> -->
         <div v-if="this.$store.state.isLogin === false" class="userPhoto">
           <el-dropdown @command="handleCommandLogin">
             <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
@@ -67,20 +74,20 @@
         <!--用户已经登录-->
         <div v-else class="userPhoto">
           <el-dropdown @command="handleCommandPerson">
-            <v-avatar class="el-dropdown-link" @click="open_login">
+            <v-avatar class="el-dropdown-link" @click="jumpTo('person')">
               <img :src="avatar" />
             </v-avatar>
-            {{ username }}
+            <!-- {{ username }} -->
             <el-dropdown-menu slot="dropdown" @click="open_login">
               <el-dropdown-item icon="el-icon-s-custom" command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-
-      </div>
-      <!-- </v-app-bar> -->
-
+      <!-- </v-col> -->
     </div>
+    <!-- </v-app-bar> -->
+
+  </div>
 </template>
 
 <script>
@@ -278,22 +285,23 @@ export default {
   /* position: relative; */
   /* left: 100px; */
   padding-left: 100px;
-  flex: 1;
+  /* margin-right:5%; */
+  /* flex: 1 auto; */
 }
 
 .guide_menu {
   align-items: center;
   /* margin-right: 50px; */
-  flex: 1;
+  /* flex: 1; */
 }
 
 .search {
   /* display: flex; */
-  width: 500px;
-  justify-content: center;
+  width: 400px;
+  /* justify-content: center; */
   align-items: center;
   flex-direction: row;
-  /* flex: 2; */
+  /* flex: 1; */
 }
 
 .search-input {
@@ -301,7 +309,7 @@ export default {
   width: 80%;
   border-radius: 5px;
   /* text-align: left; */
-  padding-left: 3%;
+  /* padding-left: 3%; */
   /* height:100%; */
 }
 .search-input:focus{
@@ -316,6 +324,7 @@ export default {
   align-items: center;
   flex-direction: row;
   margin-left: 20px;
+  margin-right: 20px;
 }
 
 /* .partitions {

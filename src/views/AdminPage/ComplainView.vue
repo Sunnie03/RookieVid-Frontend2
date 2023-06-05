@@ -155,8 +155,11 @@
                   <el-button type="danger" plain @click="reasonDialog = true">删除</el-button>
                 </div>
               </v-col>
-              <v-divider></v-divider>
             </v-row>
+
+            <v-row>
+            <v-divider></v-divider>
+          </v-row>
 
             <!--原因的对话框-->
                 <el-dialog title="请填写删除原因" :visible.sync="reasonDialog" @close="CancelDelete()" width="29%"
@@ -175,8 +178,6 @@
                   </span>
 
                 </el-dialog>
-
-            <v-divider></v-divider>
 
           </v-card>
         </div>
