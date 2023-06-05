@@ -309,7 +309,7 @@ export default {
   width: 80%;
   border-radius: 5px;
   /* text-align: left; */
-  /* padding-left: 3%; */
+  padding-left: 3%;
   /* height:100%; */
 }
 .search-input:focus{
