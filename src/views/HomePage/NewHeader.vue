@@ -35,7 +35,7 @@
                 target="_blank">用户主页</router-link></el-menu-item>
             <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
                 target="_blank">创作中心</router-link></el-menu-item>
-            <el-menu-item index="4"><router-link to="/message" class="no_underline"
+            <el-menu-item index="4"><router-link to="/notification" class="no_underline"
                 target="_blank">消息</router-link></el-menu-item>
             <el-menu-item index="5"><router-link to="/admin" class="no_underline"
                 target="_blank">管理中心</router-link></el-menu-item>
