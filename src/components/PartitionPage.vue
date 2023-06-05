@@ -56,8 +56,9 @@
             
             <li class="ranking-item" v-for="(video,index) in this.ranking_list" :key="index">
               <span class="ranking-number">{{ index+1 }}</span>
+              <div class="top-cover-container" v-if="index==0">
                 <img v-if="index===0" :src="video.cover_url" class="top-cover" @click="videoPlay(video.id)">
-  
+              </div>
               <span class="ranking-video-title" @click="videoPlay(video.id)">{{ video.title }}</span>
             </li>
           </ul>
@@ -242,9 +243,15 @@
   .ranking-item:nth-child(even){
     background-color: rgba(208, 208, 208, 0.3);
   }
-  .top-cover{
+  .top-cover-container{
     height:50%;
     width:35%;
+    overflow: hidden;
+  }
+  .top-cover{
+    height:100%;
+    width:100%;
+    object-fit:cover;
     border-radius:15%;
   }
   
