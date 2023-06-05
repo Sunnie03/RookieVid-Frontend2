@@ -10,11 +10,11 @@ Vue.use(VueRouter)
 const routes = [
    /*导航栏跳转页面*/
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     // component: () => import(/* webpackChunkName: "about" */ '../views/HomePage/HomeView.vue')
     component: HomeView,
-    meta: { index: 'home' }
+    meta: { index: '' }
   },
   {
     path: '/homeHeader',
@@ -178,7 +178,8 @@ const routes = [
   {
     path: '/notification',
     name: 'myNotify',
-    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myNotify.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/myNotify.vue'),
+    meta: { index: 'notification' }
   },
   /*别人的主页 */
   {

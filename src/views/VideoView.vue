@@ -53,7 +53,7 @@
               <div>
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:18px;width:100%;">
-                  <video controls :src="video.url" muted style="width:100%;min-height:550px;background-color:black"
+                  <video controls :src="video.url" style="width:100%;min-height:550px;background-color:black"
                     :poster="video.cover_url">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
@@ -1824,8 +1824,6 @@ export default {
       window.open(display_user_url, '_blank');
     },
     
-
-
 
     /*获取视频宽度*/
     // onResize() {
