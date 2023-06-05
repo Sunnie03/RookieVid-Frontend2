@@ -187,7 +187,7 @@ export default {
           .then(response => {
             console.log(response);
 
-            if (response.errno == 0) {
+            if (response.data.errno == 0) {
               this.messageNum = response.data.count;
               console.log('message num');
             }
@@ -334,8 +334,7 @@ export default {
   display: flex;
 } */
 
-/* .item {
-  margin-top: 10px;
-  margin-right: 40px;
-} */
+.item {
+  /* padding-top: 10px; */
+}
 </style>
