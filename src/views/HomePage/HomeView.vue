@@ -44,7 +44,7 @@
             <!-- </router-link> -->
             <div class="author">
               <span class="author-tag">作者</span>
-              <span class="author-name"  @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
+              <span class="author-name" :data-fullname="video.user_name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
               <span class="time">{{ video.created_at?video.created_at.substring(0, 10):'' }}</span>
             </div>
 

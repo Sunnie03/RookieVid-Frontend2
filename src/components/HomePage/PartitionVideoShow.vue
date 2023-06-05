@@ -221,6 +221,7 @@ a{
   top: 100%;
   left: 30%;
   white-space: nowrap;
+  z-index:1;
 }
 .time{
   color:grey;
