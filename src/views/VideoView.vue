@@ -159,8 +159,7 @@
                       <p class="d-flex align-center my-auto" @click="clickComplain()">稿件投诉</p>
                     </span>
                     <span v-else class="complaint videoFuncClick" style="margin-right:30px">
-                      <v-btn icon @click="toLogin()" size="large"
-                        style="width: 50px;height: 50px;">
+                      <v-btn icon @click="toLogin()" size="large" style="width: 50px;height: 50px;">
                         <v-icon class="videoFuncClick">mdi-alert-outline</v-icon>
                       </v-btn>
                       <p class="d-flex align-center my-auto" @click="toLogin()">稿件投诉</p>
@@ -695,7 +694,7 @@ export default {
       reasonComplainDisable: '',/*不能投诉该视频的原因，应该是text*/
       complainDialog: false,/*投诉视频的对话框，默认关闭*/
       complain_textarea: '',/*投诉对话框中，填写投诉原因*/
-      isLoginComp:false,/*是否登录，来判断投诉*/
+      isLoginComp: false,/*是否登录，来判断投诉*/
       /*评论相关数据*/
       textarea_comment: '',/*发布一级评论的输入框*/
       textarea_comment_l2: [],/*发布二级评论(即reply)的输入框，需要区分*/
@@ -879,7 +878,7 @@ export default {
               this.user.user_id = response.data.context.id;
               this.user.user_name = response.data.context.username;
               this.user.user_avatar = response.data.context.avatar_url;   //这是头像
-              this.isLoginComp=true;
+              this.isLoginComp = true;
             }
             else {
               this.$message.warning(response.data.msg);
@@ -890,7 +889,7 @@ export default {
       }
       else {
         console.log('没登录 头像');
-        this.isLoginComp=false;
+        this.isLoginComp = false;
         /*没有登录的话，把自己的头像显示为未登录*/
         //this.user.user_avatar = "./assets/my_avatar.png";
       }
@@ -1404,7 +1403,7 @@ export default {
       this.complain_textarea = '';
 
     },
-    toLogin(){
+    toLogin() {
       this.$message.warning('请先登录');
       this.$router.push('/login');
     },
@@ -1857,7 +1856,8 @@ export default {
       //console.log(this.video.author_id);
       //formData.append("Authorization", this.$store.getters.getStorage);
 
-      if (this.$store.state.isLogin === true) {
+      /*已经登录*/
+      if (this.$store.state.isLogin === "true") {
         let Headers = { 'Authorization': this.$store.getters.getStorage };
 
         axios.post('/account/create_follow', formData, { headers: Headers })
