@@ -107,8 +107,11 @@ export default {
     }
   },
   created(){
+    
     this.getData(this.$route.query.keyword);
   //   console.log(this.$route.query)
+    const lastSelectedTab = localStorage.getItem('selectedTab');
+    this.selectedTab = lastSelectedTab || 'video';
   },
   mounted(){
     const keyword=this.$route.query.keyword;
@@ -117,6 +120,9 @@ export default {
   //   console.log(this.$route.query.targetdata);
   },
   watch: {
+    selectedTab(newTab) {
+    localStorage.setItem('selectedTab', newTab);
+  },
     '$route.query.keyword'(newKeyword, oldKeyword) {
       if (newKeyword !== oldKeyword) {
         this.getData(newKeyword);
@@ -164,7 +170,14 @@ export default {
         .then((response)=>{
           console.log(response);
           console.log(response.data.msg);
-          alert(response.data.msg);
+          if(response.data.errno==0){
+            console.log(response.data.errno);
+            window.location.reload();
+          }
+          else{
+            alert(response.data.msg);
+          }
+          
         })
       },
       defollow(id){
@@ -178,10 +191,13 @@ export default {
         .then((response)=>{
           console.log(response);
           console.log(response.data.msg);
-          alert(response.data.msg);
+          
           if(response.data.errno==0){
             console.log(response.data.errno);
             window.location.reload();
+          }
+          else{
+            alert(response.data.msg);
           }
         })
       },
