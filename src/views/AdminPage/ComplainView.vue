@@ -14,7 +14,7 @@
           </div>
 
           <!--for循环-->
-          <v-card v-for="(video_item, index) in complainVideos" :key="index" flat>
+          <div v-for="(video_item, index) in complainVideos" :key="index" >
             <v-row>
               <v-col cols="12" md="5">
                 <div class="complained_video_block" style="padding-left: 20px;margin-bottom: 20px;padding-right: 9px;">
@@ -157,29 +157,27 @@
               </v-col>
             </v-row>
 
-            <v-row>
-            <v-divider></v-divider>
-          </v-row>
+              <v-divider style="margin-bottom:20px"></v-divider>
 
             <!--原因的对话框-->
-                <el-dialog title="请填写删除原因" :visible.sync="reasonDialog" @close="CancelDelete()" width="29%"
-                  :modal-append-to-body="false">
-                  <h3 style="margin-bottom: 20px;">请填删除原因</h3>
-                  <el-input type="textarea" :rows="5" placeholder="请填写删除原因，限制200字" v-model="reason_textarea"
-                    maxlength="200" show-word-limit>
-                  </el-input>
-                  <!-- <span slot="header">
+            <el-dialog title="请填写删除原因" :visible.sync="reasonDialog" @close="CancelDelete()" width="29%"
+              :modal-append-to-body="false">
+              <h3 style="margin-bottom: 20px;">请填删除原因</h3>
+              <el-input type="textarea" :rows="5" placeholder="请填写删除原因，限制200字" v-model="reason_textarea" maxlength="200"
+                show-word-limit>
+              </el-input>
+              <!-- <span slot="header">
                         <el-button class="dialog-close-button" icon="el-icon-close""></el-button>
                       </span> -->
-                  <!--投诉对话框底部-->
-                  <span slot="footer" class="dialog-footer">
-                    <el-button @click="reasonDialog = false; CancelDelete()">取 消</el-button>
-                    <el-button type="danger" @click="deleteComplainVideo(video_item.id)">确 定</el-button>
-                  </span>
+              <!--投诉对话框底部-->
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="reasonDialog = false; CancelDelete()">取 消</el-button>
+                <el-button type="danger" @click="deleteComplainVideo(video_item.id)">确 定</el-button>
+              </span>
 
-                </el-dialog>
+            </el-dialog>
 
-          </v-card>
+          </div>
         </div>
         <div v-else style="display: flex;justify-content: center; ">
           <div style="font-size: 30px;color:grey;margin-top: 20px;">没有需要处理的投诉视频～</div>
@@ -193,13 +191,11 @@
 <script>
 import axios from 'axios';
 import Header from '@/components/HomePage/Header.vue'
-import AdminHeader from '@/components/AdminPage/AdminHeader.vue'
 import AdminGuide from '@/components/AdminPage/AdminGuide.vue'
 export default {
   name: 'complaintList',//当前引入页面
   components: {
     Header,
-    AdminHeader,
     AdminGuide,
   },
   data() {
@@ -234,7 +230,7 @@ export default {
           console.log(response);
           this.complainVideos = [];
           this.amount = '';
-          this.show_all_compliants= [];
+          this.show_all_compliants = [];
           if (response.data.errno == 0) {
             response.data.video.forEach((video, index) => {
               this.complainVideos.push(video);/*【这样写】*/
@@ -253,10 +249,10 @@ export default {
         })
     },
     /*点击查看*/
-    clickDisplay(index){
-      console.log('index'+index);
+    clickDisplay(index) {
+      console.log('index' + index);
       console.log(this.show_all_compliants[index]);
-      this.$set(this.show_all_compliants,index,true)
+      this.$set(this.show_all_compliants, index, true)
       console.log(this.show_all_compliants[index]);
 
     },
