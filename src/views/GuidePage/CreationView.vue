@@ -140,9 +140,9 @@ export default {
       uploading: false,    // 是否正在上传
       uploadProgress: 0,  // 上传进度，0-100
       dialogImageUrl: '',
-      // dialogVisible: false,
+      dialogVisible: false,
       uploadConfirmationVisible:false,
-      
+      activeIndex: '1',
       
       form:{
         video:'',
@@ -164,6 +164,9 @@ export default {
   },
    
   methods: {
+    handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+    },
     confirmUpload() {
       // 用户点击确认按钮，执行上传逻辑
       this.$router.push('/myCreation');
@@ -294,6 +297,7 @@ export default {
       let formData=new FormData();
       formData.append("video_file",this.form.video);
       formData.append("cover_file",this.form.cover);
+     
       formData.append("label",this.form.label);
       formData.append("title",this.form.title);
       formData.append("description",this.form.description);
@@ -303,8 +307,9 @@ export default {
       axios.post('/videos/upload_video',formData, {headers:Headers,
           onUploadProgress: progressEvent => {
             this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            console.log(this.uploadProgress);
-            console.log(Headers);
+            // console.log(this.uploadProgress);
+            // console.log(Headers);
+            console.log(this.form.cover);
             // for (let pair of formData.entries()) {
             //       console.log(pair[0] + ": " +pair[1] );
             //   }
@@ -314,8 +319,8 @@ export default {
         })
       .then((res)=>{
         console.log(res);
-        if(res.errno==0){ 
-          alert("上传成功");
+        if(res.data.errno==0){ 
+          alert(res.data.msg);
           const keyURL='/myCreation';
           this.$router.push(keyURL);
          
@@ -332,10 +337,8 @@ export default {
   }
 }
 </script>
-<style >
-.upload-body{
-  /* background-color: rgb(247, 247, 247); */
-}
+<style scoped>
+
 .upload-form{
   width: 80%;
   margin-left: 10%;

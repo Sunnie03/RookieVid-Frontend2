@@ -6,21 +6,25 @@
       <!--分区-->
       <Partition></Partition>
   
-      <div class="top-carousel">
-        <el-carousel :interval="4000" type="card" height="300px">
-          <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
-            <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-              <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
+     
+        <div class="top-carousel">
+          <el-carousel :interval="3000" type="card"  height="360px" style="border-radius:10px;background-color: transparent;">
+            <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
+              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+                <div class="top-img-container" >
+                <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
+                </div> 
                 <div class="top-overlay" @click="videoPlay(video.id)">
-                 <div class="top-title">{{ video.title }}</div>
+                  <div class="top-title">{{ video.title }}</div>
                 </div>
-            <!-- </router-link> -->
-            
-          </el-carousel-item>
-  
-        </el-carousel>
-  
-      </div>
+              <!-- </router-link> -->
+              
+            </el-carousel-item>
+    
+          </el-carousel>
+          <!-- <div style="flex:1"></div> -->
+        </div>
+
       <div class="recommend-display">
         <div class="recommend-container">
           <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
@@ -149,7 +153,7 @@
   
   }
   </script>
-  <style>
+  <style scoped>
   
   .recreation{
   height:100%;
@@ -158,7 +162,16 @@
   }
   
   .top-carousel{
-    margin:50px;
+    margin:50px 100px 50px 100px;
+    /* margin-left:15%; */
+    /* width:90%; */
+    
+  }
+  .top-img-container{
+    width: 100%;
+    height:100%;
+  /* height: 200px; 设置容器高度 */
+    overflow: hidden;
   }
   .el-carousel__item h3 {
     color: #475669;
@@ -169,11 +182,13 @@
   }
   
   .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
+    background-color: transparent;
+    border-radius: 10px;
   }
   
   .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
+    background-color: transparent;
+    border-radius: 10px;
   }
   .recommend-display{
     margin:50px;
@@ -288,10 +303,11 @@
   width:100%;
   height:60%;
   object-fit:cover;
-  border-radius: 6px;
+  border-radius: 10px;
   }
   
   .overlay {
+    border-radius: 10px;;
   position: absolute;
   bottom: 40%;
   left: 0;
@@ -305,6 +321,9 @@
   .top-img{
     height:100%;
     width:100%;
+    border-radius:10px;
+   
+    object-fit: cover;
   }
   .top-overlay{
   position: absolute;
@@ -323,7 +342,7 @@
     bottom: -50%;
     left: 0;
     width: 100%;
-    height: 50%;
+    height: 40%;
     /* background-color: rgba(0, 0, 0, 0.5); */
     color: white;
     display: flex;

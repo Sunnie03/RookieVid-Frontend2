@@ -297,7 +297,7 @@ export default {
   }
 }
 </script>
-<style >
+<style scoped>
 .upload-body{
   /* position: absolute; */
   /* margin-bottom:50px; */

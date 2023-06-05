@@ -83,18 +83,19 @@ export default ({
   width:100%;
   height:60%;
   object-fit:cover;
-  border-radius: 6px;
+  border-radius: 10px;
   border-color: rgb(175, 174, 174);
 }
 
 .overlay {
   position: absolute;
+  border-radius:10px;
   bottom: 40%;
   left: 0;
   width: 100%;
   height: 10%;
   /* background-color:rgba(255, 255, 255,0.4);  */
-  background-image: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0.8));
+  background-image: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0.7));
   display: flex;
   justify-content: space-between;
   /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
