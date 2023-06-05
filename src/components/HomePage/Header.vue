@@ -291,9 +291,9 @@ export default {
 
 .guide_menu {
   align-items: center;
-  /* margin-right: 7%; */
+  /* margin-left: 7%; */
   /* margin-right: 50px; */
-  flex: 1;
+  /* flex: 1; */
 }
 
 .search {
@@ -303,7 +303,7 @@ export default {
   align-items: center;
   flex-direction: row;
   /* flex: 1; */
-  margin-left: 8%;
+  margin-left: 10%;
 }
 
 .search-input {
@@ -327,7 +327,7 @@ export default {
   margin-left: 3%;
   /* flex-direction: row; */
   /* margin-left: 20px; */
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 /* .partitions {
