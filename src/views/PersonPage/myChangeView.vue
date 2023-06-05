@@ -282,7 +282,7 @@ export default {
       const isIMAGE = (this.upload_photo.type === 'image/jpeg' ||this.upload_photo.type === 'image/png'|| this.upload_photo.type === 'image/jpg');
       if (!isIMAGE) {
         this.$message.error('头像只能是jpeg/jpg/png格式!');
-        alert(this.upload_photo.type)
+        alert("请选择正确的图片格式")
         return ;
       }
       let Headers={'Authorization': this.$store.getters.getStorage}

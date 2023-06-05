@@ -7,8 +7,8 @@
             <div class="user-sign" v-else>个性签名：这个人很懒，什么都没写吖</div>
             <div class="user-sign">邮箱：{{email}}</div>
           </div>
-          <button class="follow-button" @click="addFollow(look_user)">+关注</button>
-          
+          <button class="follow-button" @click="addFollow(look_user)" v-if="status===1 && is_followed===0">+关注</button>
+          <button class="remove-button" @click="removeFollow(look_user)" v-else-if="status===1 && is_followed===1">已关注</button>
         </div>
 </template>
 
@@ -26,6 +26,8 @@ export default {
       userid: '',
       email: '',
       signature: '',
+      status: '',
+      is_followed: '',
     }
   },
   created() {
@@ -44,6 +46,8 @@ export default {
           this.email = res.data.context.email
           this.signature = res.data.context.signature  //这是个性签名
           this.avatar = res.data.context.avatar_url   //这是头像
+          this.status = res.data.status
+          this.is_followed = res.data.is_followed
         }else {
             alert(res.data.msg)
             // if(res.data.errno == )
@@ -52,8 +56,8 @@ export default {
         console.error()
       )
     },
-  addFollow(user_id){
-      
+    addFollow(user_id){
+        
       let Headers={'Authorization': this.$store.state.token}
       let formData = new FormData()
       formData.append('following_id', user_id)
@@ -62,6 +66,7 @@ export default {
         console.log(res)
         if(res.data.errno ===  0){
           alert('关注成功')
+          location.reload()
         }else {
           alert(res.data.msg)
         }
@@ -69,8 +74,28 @@ export default {
       .catch(
         console.error()
       )
-    }
-  }
+    },
+    removeFollow(user_id){
+      let Headers={'Authorization': this.$store.state.token}
+      let formData = new FormData()
+      
+      formData.append('following_id', user_id)
+      axios.post('/account/remove_follow',formData, { headers: Headers})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno === 0){
+          alert("取关成功")
+          location.reload()
+        } else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    },
+  },
+  
 }
 </script>
 
@@ -117,7 +142,17 @@ export default {
 
   color: white;
   border-radius: 4px;
-  padding: 6px 10px;
+  padding: 4px 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.remove-button {
+  margin-right: 5%;
+  background-color: #e5e9ef;
+
+  color: #606266;
+  border-radius: 4px;
+  padding: 4px 8px;
   font-weight: bold;
   cursor: pointer;
 }

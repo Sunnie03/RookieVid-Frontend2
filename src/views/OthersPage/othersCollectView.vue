@@ -27,7 +27,7 @@
 
           <div class="recommend-container" v-if="!this.null_flag">
             <div v-for="(favorite,index) in this.partition" :key="index" class="recommend-item" >
-                <img class="recommend-img" src="../../../image/logo.png" @click="openCollVideo(favorite.id,favorite.title)">
+                <img class="recommend-img" :src="favorite.cover_url" @click="openCollVideo(favorite.id,favorite.title)">
                
                  <a class="titles" @click="openCollVideo(favorite.id,favorite.title)">{{ favorite.title }}</a> 
                  <div class="author"> 

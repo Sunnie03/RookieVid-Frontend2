@@ -1,7 +1,7 @@
 <template>
   <div class="admin_check">
     <!--导航栏-->
-    <AdminHeader />
+    <Header />
     <!--管理栏的导航栏-->
     <AdminGuide />
 
@@ -61,7 +61,7 @@
 
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:18px;width:100%;">
-                  <video controls :src="video_item.video_url" muted style="width:100%;height:100%;background-color:black"
+                  <video controls :src="video_item.video_url" style="width:100%;height:100%;background-color:black"
                     :poster="video_item.cover_url">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
@@ -82,11 +82,13 @@
 
 <script>
 import axios from 'axios';
+import Header from '@/components/HomePage/Header.vue'
 import AdminHeader from '@/components/AdminPage/AdminHeader.vue'
 import AdminGuide from '@/components/AdminPage/AdminGuide.vue'
 export default {
   name: 'check',//当前引入页面
   components: {
+    Header,
     AdminHeader,
     AdminGuide,
   },

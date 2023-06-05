@@ -1,29 +1,25 @@
 <template>
   <div class="partition">
     <!--分区-->
-    <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+    <el-menu :router="true" :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
       background-color="#ceeef9" text-color="#000000" active-text-color="#ffd04b">
       <el-row type="flex" justify="center">
-        <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-        <el-menu-item index="2"><router-link to="/entertainment" class="no_underline"
-            target="_blank">娱乐</router-link></el-menu-item>
-        <el-menu-item index="3"><router-link to="/film" class="no_underline"
-            target="_blank">影视</router-link></el-menu-item>
-        <el-menu-item index="4"><router-link to="/game" class="no_underline" target="_blank">游戏</router-link>
+        <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
+        <el-menu-item index="entertainment">娱乐</el-menu-item>
+        <el-menu-item index="film">影视</el-menu-item>
+        <el-menu-item index="game">游戏</el-menu-item>
+        <el-menu-item index="sports">运动</el-menu-item>
+        <el-menu-item index="food">美食
         </el-menu-item>
-        <el-menu-item index="5"><router-link to="/sports" class="no_underline" target="_blank">运动</router-link>
+        <el-menu-item index="technology">科技
         </el-menu-item>
-        <el-menu-item index="6"><router-link to="/food" class="no_underline" target="_blank">美食</router-link>
+        <el-menu-item index="military">军事
         </el-menu-item>
-        <el-menu-item index="7"><router-link to="technology" class="no_underline" target="_blank">科技</router-link>
+        <el-menu-item index="music">音乐
         </el-menu-item>
-        <el-menu-item index="8"><router-link to="/military" class="no_underline" target="_blank">军事</router-link>
+        <el-menu-item index="study">学习
         </el-menu-item>
-        <el-menu-item index="9"><router-link to="/music" class="no_underline" target="_blank">音乐</router-link>
-        </el-menu-item>
-        <el-menu-item index="10"><router-link to="/study" class="no_underline" target="_blank">学习</router-link>
-        </el-menu-item>
-        <el-menu-item index="11"><router-link to="/study" class="no_underline" target="_blank">生活</router-link>
+        <el-menu-item index="life">生活
         </el-menu-item>
       </el-row>
     </el-menu>
@@ -32,16 +28,39 @@
 
 <script>
 export default {
+  // components: {
+  //   Partition,
+  // },
   name: 'Partition',
   data() {
     return {
       activeIndex: '1',
-      activeIndex2: '1'
+      activeIndex2: '',
     };
+  },
+  created() {
+    this.$set(this, 'activeIndex2', this.$route.meta.index);
+  },
+  watch: {
+    '$route': function () {
+      //this.activeIndex = this.$route.meta.index;
+      this.$set(this, 'activeIndex2', this.$route.meta.index);
+      //window.location.reload();
+    }
+
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    jumpTo(path) {
+      //this.$router.push('/video/'+video_id);
+      const path_url = '/' + path;
+      window.open(path_url, '_self');
+    },
+    jumpToHome(){
+      const path_url = '/';
+      window.open(path_url, '_self');
     }
   }
 }
@@ -59,4 +78,5 @@ export default {
 
 .no_underline {
   text-decoration: none;
-}</style>
+}
+</style>

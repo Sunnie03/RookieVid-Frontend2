@@ -7,8 +7,7 @@
         
         <div class="info-container">
           <a id="TOPUp" href="#">
-            <i class="el-icon-top"></i>
-            <!-- <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt=""> -->
+            <img style="width: 100%;height: 100%;border-radius:50%" src="../../assets/top.jpg" alt="">
           </a>
           <div class="titles-container" >
             <a class="titles" v-on:click="goBack" style="float:left;width:25%;height:auto">回到上一级</a>

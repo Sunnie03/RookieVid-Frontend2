@@ -53,7 +53,7 @@
               <div>
                 <!--视频播放器-->
                 <div class="video_player" style="margin-top:18px;width:100%;">
-                  <video controls :src="video.url" muted style="width:100%;min-height:550px;background-color:black"
+                  <video controls :src="video.url" style="width:100%;min-height:550px;background-color:black"
                     :poster="video.cover_url">
                     <!-- <source v-bind:src="video.url">
                     </source> -->
@@ -215,11 +215,11 @@
                   <!--justify="center"-->
                   <!--当前用户头像-->
                   <v-col cols="12" md="1" class="d-flex" align="center">
-                    <v-avatar v-if="this.$store.state.isLogin">
+                    <v-avatar v-if="this.$store.state.isLogin" @click="jumpToUser(user.user_id)">
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                     </v-avatar>
                     <v-avatar v-else>
-                      <img src="@/assets/my_avatar.png"></img>
+                      <img src="@/assets/my_avatar.png"/>
                     </v-avatar>
                   </v-col>
                   <!--一级评论输入框-->
@@ -246,7 +246,7 @@
                   :key="index">
                   <v-row>
                     <v-col cols="12" md="1">
-                      <v-avatar>
+                      <v-avatar @click="jumpToUser(comment_item.user_id)">
                         <img :src="comment_item.avatar_url" />
                       </v-avatar>
                     </v-col>
@@ -256,8 +256,8 @@
                       <div @mouseover="judgeShowDelete(comment_item.id, comment_item.user_id)"
                         @mouseleave="hideDelete(comment_item.id)">
                         <!--评论者用户名-->
-                        <div style="align-items: center;margin-bottom: 12px;">
-                          <span style="font-weight:500;font-size: 16px;margin-right: 15px;color:rgb(109, 106, 106)">
+                        <div class="textBtn" style="align-items: center;margin-bottom: 12px;">
+                          <span class="textBtn" style="font-weight:500;font-size: 16px;margin-right: 15px;color:rgb(109, 106, 106)" @click="jumpToUser(comment_item.user_id)">
                             {{ comment_item.user_name }}
                           </span>
                           <!--作者的tag-->
@@ -312,7 +312,7 @@
                             <v-row class="mt-4">
                               <!--二级评论用户头像-->
                               <v-col cols="12" md="1">
-                                <v-avatar size="40">
+                                <v-avatar size="40" @click="jumpToUser(reply_item.user_id)">
                                   <img :src="reply_item.avatar_url" />
                                 </v-avatar>
                               </v-col>
@@ -323,7 +323,7 @@
                                   <!--二级评论者用户名-->
                                   <div style="align-items: center!important;margin-bottom: 14px;">
                                     <span
-                                      style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
+                                      style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click="jumpToUser(reply_item.user_id)">
                                       {{ reply_item.user_name }}
                                     </span>
                                     <span style="align-items: center!important;"><el-tag
@@ -364,7 +364,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40">
+                                  <v-avatar size="40" @click=jumpToUser(reply_item.user_id)>
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -375,7 +375,7 @@
                                     <!--二级评论者用户名-->
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
-                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click=jumpToUser(reply_item.user_id)>
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -417,7 +417,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40">
+                                  <v-avatar size="40" @click=jumpToUser(reply_item.user_id)>
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -428,7 +428,7 @@
                                     <!--二级评论者用户名-->
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
-                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)">
+                                        style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)" @click=jumpToUser(reply_item.user_id)>
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -544,7 +544,7 @@
                   <v-row style="width:100%;margin-top:10px">
                     <!-- <v-col cols="12" md="3"> -->
                     <div style="margin-top: 10px;">
-                      <v-avatar>
+                      <v-avatar @click="jumpToUser(video.author_id)">
                         <img :src="video.author_image_url" />
                       </v-avatar>
                     </div>
@@ -554,7 +554,7 @@
                       <!--作者名字-->
                       <div style="font-size: 17px;font-weight: 500;">
                         <!-- <router-link :to="'/user/' + video.author_id">  -->
-                        {{ video.author_name }}
+                        <span class="textBtn" @click="jumpToUser(video.author_id)">{{ video.author_name }}</span>
                         <!-- </router-link> -->
                       </div>
 
@@ -610,7 +610,7 @@
                         </div>
 
                         <div style="margin-top: 10px;margin-bottom: 10px;color:rgb(109, 106, 106);font-size: 14px;">
-                          <span class="rec_video_author textBtn" v-bind:title="'作者: ' + recommend_item.user_name"> <el-tag
+                          <span class="rec_video_author textBtn" v-bind:title="'作者: ' + recommend_item.user_name" @click="jumpToUser(recommend_item.user_id)"> <el-tag
                               type="info" effect="plain" size="mini">作者 </el-tag>
                             {{
                               recommend_item.user_name }}</span>
@@ -1819,9 +1819,11 @@ export default {
       const video_play_url = '/video/' + video_id;
       window.open(video_play_url, '_self');
     },
+    jumpToUser(user_id) {
+      const display_user_url = '/lookPerson/' + user_id;
+      window.open(display_user_url, '_blank');
+    },
     
-
-
 
     /*获取视频宽度*/
     // onResize() {

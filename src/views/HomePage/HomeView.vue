@@ -18,7 +18,9 @@
       <div class="hot-display">
         <el-carousel class="hot-carousel" indicator-position="outside" height="470px" >
           <el-carousel-item v-for="(video,index) in this.hot_videos" :key="index" >
-            <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.id)" >
+            <div class="hot-carousel-container">
+              <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.id)" >
+            </div>
             <div class="hot-carousel-overlay">
               <div class="hot-carousel-title" @click="videoPlay(video.id)">{{ video.title }}</div>
             </div>
@@ -555,7 +557,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .home{
   display: flex;
   flex-direction: column;
@@ -577,12 +579,18 @@ export default {
   height:100%;
   /* border-radius: 5px; */
 }
-
+.hot-carousel-container{
+  height:100%;
+  width:100%;
+  overflow: hidden;
+}
 .hot-carousel-img{
   height:100%;
   width:100%;
-  cursor:pointer;
   /* border-radius:10px; */
+  object-fit: cover; 
+  cursor:pointer;
+  /* border-radius:20px; */
 }
 .hot-carousel-overlay{
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
@@ -594,6 +602,7 @@ export default {
   /* background-color:rgba(154, 104, 54, 0.5);  */
   display: flex;
   justify-content: space-between;
+  /* border-radius:20px; */
 }
 .hot-carousel-title{
   cursor:pointer;
@@ -622,6 +631,7 @@ export default {
 
 }
 
+
 .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;
@@ -631,11 +641,13 @@ export default {
   }
 
   .el-carousel__item:nth-child(2n) {
-     background-color: #99a9bf;
+     background-color:transparent;
+     /* border-radius: 20px; */
   }
   
   .el-carousel__item:nth-child(2n+1) {
-     background-color: #d3dce6;
+     background-color: transparent;
+     /* border-radius: 20px; */
   }
 
 

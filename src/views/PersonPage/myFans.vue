@@ -119,7 +119,7 @@ methods: {
       .then(res => {
         console.log(res)
         if(res.data.errno === 0){
-          
+          alert("取关成功")
           location.reload()
         } else {
           alert(res.data.msg)

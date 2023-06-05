@@ -9,8 +9,8 @@
                     投稿
                 </el-button>
                 <el-menu :default-active="activeIndex" class="el-menu-demo" @select="handleSelect">
-                <el-menu-item index="1">首页</el-menu-item>
-                <el-menu-item index="2">稿件管理</el-menu-item>
+                <!-- <el-menu-item index="1">首页</el-menu-item> -->
+                <el-menu-item index="1">稿件管理</el-menu-item>
                 </el-menu>
             </div>
         
@@ -26,14 +26,19 @@
                                
                                 <li  v-for="(video,index) in this.displayedVideosPassed" :key="index">
                                     <div class="video-list-item">
-                                    <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
+                                    <div class="video-img-container">
+                                        <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
+                                    </div>
                                     <div class="video-info">
                                         <div class="video-title">{{ video.title }}</div>
-                                        <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
+                                        <div class="video-time">{{ video.created_at?video.created_at:'' }}</div>
                                         <i class="el-icon-video-play">{{ video.view_amount }}</i>
                                         <i class="el-icon-thumb">{{ video.like_amount }}</i>
                                         <i class="el-icon-star-off">{{ video.fav_amount }}</i>
                                     </div>
+                                    <el-button class="delete-button" @click="showDeleteConfirmation(video.id)">
+                                        <i class="el-icon-delete"></i>删除
+                                    </el-button>
                                     <el-button class="amend-button" @click="amendVideo(video.id)">
                                         <i class="el-icon-edit"></i>修改
                                     </el-button>
@@ -50,22 +55,27 @@
                         </div>
                         <div v-else>
                             <ul class="video-list-container">
-                               <li  v-for="(video,index) in this.displayedVideosOnAudi" :key="index">
-                                   <div class="video-list-item">
-                                   <img class="video-img" :src="video.cover_url" >
-                                   <div class="video-info">
-                                       <div class="video-title">{{ video.title }}</div>
-                                       <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
-                                       <i class="el-icon-video-play">{{ video.view_amount }}</i>
-                                       <i class="el-icon-thumb">{{ video.like_amount }}</i>
-                                       <i class="el-icon-star-off">{{ video.fav_amount }}</i>
-                                   </div>
-                                   <el-button class="amend-button" @click="amendVideo(video.id)">
-                                       <i class="el-icon-edit"></i>修改
-                                   </el-button>
+                               <li  v-for="(video,index) in this.displayedVideosOnAudit" :key="index">
+                                <div class="video-list-item">
+                                    <div class="video-img-container">
+                                        <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
                                     </div>
-                                   <el-divider></el-divider>
-                               </li>
+                                    <div class="video-info">
+                                        <div class="video-title">{{ video.title }}</div>
+                                        <div class="video-time">{{ video.created_at?video.created_at:'' }}</div>
+                                        <i class="el-icon-video-play">{{ video.view_amount }}</i>
+                                        <i class="el-icon-thumb">{{ video.like_amount }}</i>
+                                        <i class="el-icon-star-off">{{ video.fav_amount }}</i>
+                                    </div>
+                                    <el-button class="delete-button" @click="showDeleteConfirmation(video.id)">
+                                        <i class="el-icon-delete"></i>删除
+                                    </el-button>
+                                    <el-button class="amend-button" @click="amendVideo(video.id)">
+                                        <i class="el-icon-edit"></i>修改
+                                    </el-button>
+                                     </div>
+                                    <el-divider></el-divider>
+                                </li>
                              </ul>
                              
                         </div>
@@ -153,7 +163,39 @@ export default {
         // window.open(amend_creation_url,)
         this.$router.push(amend_creation_url);
       },
-        handleSelect(key, keyPath) {
+      showDeleteConfirmation(videoId) {
+        this.$confirm('确定要删除吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+        }).then(() => {
+        // 用户点击了确定按钮，执行删除操作
+        this.deleteVideo(videoId);
+        }).catch(() => {
+        // 用户点击了取消按钮，不执行任何操作
+        });
+    },
+      deleteVideo(id){
+        let Headers={'Authorization': this.$store.getters.getStorage}
+        let formdata=new FormData();
+        formdata.append("video_id",id);
+        console.log(id);
+        axios.post('/videos/delete_video',formdata,{headers:Headers})
+        .then((response)=>{
+            if(response.data.errno!=0){
+                alert(response.data.msg);
+            }
+            else{
+                alert(response.data.msg);
+                window.location.reload();
+                // this.$router.push('myCreation');
+            }
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+      },
+      handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
       upload_video(){
@@ -195,7 +237,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .creation-display{
     margin:30px;
     display:flex;
@@ -235,12 +277,19 @@ export default {
     width:100%;
     display:flex;
     margin:20px;
+    /* height:112px; */
     /* border-bottom: 1px solid #ccc; */
 
 }
+.video-img-container{
+    width:23%;
+    height:112px;
+}
 .video-img{
-    width:20%;
+    width:100%;
     height:100%;
+    object-fit: cover;
+    /* width:199px; */
     border-radius:10px;
 }
 .video-info{
@@ -286,6 +335,16 @@ export default {
     height:33.3%;
     font-size:16px;
     color:grey;
+}
+.delete-button{
+    margin-top:3%;
+   
+    height:70%;
+}
+.delete-button:hover{
+    background-color: rgb(243, 206, 206);
+    border-color:rgb(250, 175, 175);
+    color:rgb(255, 0, 0);
 }
 .amend-button{
     margin-top:3%;

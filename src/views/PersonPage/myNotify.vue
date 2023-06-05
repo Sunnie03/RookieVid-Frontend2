@@ -113,7 +113,7 @@ import { Avatar } from 'element-ui';
 },
   data () {
     return {
-      readList:[''],
+      readList:[],
       unreadList:[''],
       count_unread: 0,
       activeName: 'first',
