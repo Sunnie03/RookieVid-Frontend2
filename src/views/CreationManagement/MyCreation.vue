@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="video-info">
                                         <div class="video-title">{{ video.title }}</div>
-                                        <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
+                                        <div class="video-time">{{ video.created_at?video.created_at:'' }}</div>
                                         <i class="el-icon-video-play">{{ video.view_amount }}</i>
                                         <i class="el-icon-thumb">{{ video.like_amount }}</i>
                                         <i class="el-icon-star-off">{{ video.fav_amount }}</i>
@@ -55,24 +55,27 @@
                         </div>
                         <div v-else>
                             <ul class="video-list-container">
-                               <li  v-for="(video,index) in this.displayedVideosOnAudi" :key="index">
-                                   <div class="video-list-item">
+                               <li  v-for="(video,index) in this.displayedVideosOnAudit" :key="index">
+                                <div class="video-list-item">
                                     <div class="video-img-container">
-                                   <img class="video-img" :src="video.cover_url" >
-                                   </div>
-                                   <div class="video-info">
-                                       <div class="video-title">{{ video.title }}</div>
-                                       <div class="video-time">{{ video.created_at?video.created_at.split("T")[0]:'' }}</div>
-                                       <i class="el-icon-video-play">{{ video.view_amount }}</i>
-                                       <i class="el-icon-thumb">{{ video.like_amount }}</i>
-                                       <i class="el-icon-star-off">{{ video.fav_amount }}</i>
-                                   </div>
-                                   <el-button class="amend-button" @click="amendVideo(video.id)">
-                                       <i class="el-icon-edit"></i>修改
-                                   </el-button>
+                                        <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
                                     </div>
-                                   <el-divider></el-divider>
-                               </li>
+                                    <div class="video-info">
+                                        <div class="video-title">{{ video.title }}</div>
+                                        <div class="video-time">{{ video.created_at?video.created_at:'' }}</div>
+                                        <i class="el-icon-video-play">{{ video.view_amount }}</i>
+                                        <i class="el-icon-thumb">{{ video.like_amount }}</i>
+                                        <i class="el-icon-star-off">{{ video.fav_amount }}</i>
+                                    </div>
+                                    <el-button class="delete-button" @click="showDeleteConfirmation(video.id)">
+                                        <i class="el-icon-delete"></i>删除
+                                    </el-button>
+                                    <el-button class="amend-button" @click="amendVideo(video.id)">
+                                        <i class="el-icon-edit"></i>修改
+                                    </el-button>
+                                     </div>
+                                    <el-divider></el-divider>
+                                </li>
                              </ul>
                              
                         </div>

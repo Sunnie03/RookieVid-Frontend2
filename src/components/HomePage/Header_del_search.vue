@@ -8,22 +8,18 @@
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
 
-  
 
       <!--导航栏菜单-->
-      <div class="guide_menu" v-if="this.$store.state.isAdmin"><!--是管理员，就显示有“管理中心”-->
+      <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
-            <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-            <el-menu-item index="2"><router-link to="/person" class="no_underline"
-                target="_blank">用户主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
-                target="_blank">创作中心</router-link></el-menu-item>
-            <el-menu-item index="4"><router-link to="/notification" class="no_underline"
-                target="_blank">消息</router-link></el-menu-item>
-            <el-menu-item index="5"><router-link to="/admin" class="no_underline"
-                target="_blank">管理中心</router-link></el-menu-item>
+            <el-menu-item index="home" @click="jumpToHome()">首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
+              创作中心</el-menu-item>
+            <el-menu-item index="message" @click="jumpTo('message')">消息</el-menu-item>
+            <el-menu-item index="admin" @click="jumpTo('admin')">管理中心</el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -32,20 +28,36 @@
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
 
-            <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-            <el-menu-item index="2"><router-link to="/person" class="no_underline"
-                target="_blank">用户主页</router-link></el-menu-item>
-            <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
-                target="_blank">创作中心</router-link></el-menu-item>
-            <el-menu-item index="4"><router-link to="/notification" class="no_underline"
-                target="_blank">消息</router-link></el-menu-item>
+            <el-menu-item index="home" @click="jumpToHome()">首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
+            <el-menu-item index="message" @click="jumpTo('message')">消息</el-menu-item>
           </el-menu>
         </el-row>
       </div>
 
-      <div class="userPhoto">
-        <el-button icon="el-icon-user" circle @click="open_login"></el-button>
-        登录
+      <!--没有登录，显示默认样式-->
+      <!--当前用户还没登录，为游客-->
+      <div v-if="this.$store.state.isLogin === false" class="userPhoto">
+        <el-dropdown @command="handleCommandLogin">
+          <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
+          <span class="el-dropdown-link" @click="open_login"> 登录</span>
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <!--用户已经登录-->
+      <div v-else class="userPhoto">
+        <el-dropdown @command="handleCommandPerson">
+          <v-avatar class="el-dropdown-link" @click="open_login">
+            <img :src="avatar" />
+          </v-avatar>
+          {{ username }}
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
 
     </div>
@@ -54,17 +66,106 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'Header',
   data() {
     return {
-      activeIndex: "1",
-      input: ""
-    };
+      /*登录用户相关信息*/
+      username: '',
+      avatar: '',
+      userid: '',
+      email: '',
+      signature: '',
+      /*导航栏组件*/
+      activeIndex: "home",/*默认是首页*/
+      input: "",
+    }
+  },
+  created() {
+    this.getUserData();
+    this.$set(this,'activeIndex',this.$route.meta.index);
+    //this.activeIndex = this.$route.meta.index;
+    //this.pageName = this.$route.name;
+  },
+  watch: {
+    '$route': function() {
+      //this.activeIndex = this.$route.meta.index;
+      this.$set(this,'activeIndex',this.$route.meta.index);
+    }
+  },
+  mounted() {
+    // 在原始页面中添加 focus 事件监听器
+    window.addEventListener('focus', this.onWindowFocus);
+  },
+  beforeDestroy() {
+    // 在组件销毁前移除事件监听器
+    window.removeEventListener('focus', this.onWindowFocus);
   },
   methods: {
+    onWindowFocus() {
+      // // 通过 $children 访问组件实例
+      // var myComponent = this.$children[0];
+  
+      // // 手动调用 activated 钩子函数
+      // myComponent.activated();
+      console.log('Component activated');
+      this.$set(this,'activeIndex',this.$route.meta.index);
+      //this.activeIndex = this.$route.meta.index;
+      //console.log('value:'+this.activeIndex);
+    },
+    // activated() {
+    //   // 当组件从缓存中激活时执行一些代码
+    //   console.log('Component activated');
+    //   this.activeIndex = this.$route.meta.index;
+    // },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    /*处理未登录时的下拉菜单*/
+    handleCommandLogin(command) {
+      //this.$message('click on item ' + command);
+      this.open_login();
+    },
+    /*处理已经登录时的下拉菜单*/
+    handleCommandPerson(command) {
+      //this.$message('click on item ' + command);
+      if (command === 'logout') {
+        /*执行登出*/
+        this.open_login();
+      }
+    },
+    /*如果已经登录，获取登录者的导航栏相关信息*/
+    getUserData() {
+      /*如果已经登录*/
+      if (this.$store.state.isLogin === "true") {
+        axios.get('account/display_myprofile', { headers: { Authorization: this.$store.getters.getStorage } })
+          .then(response => {
+            console.log(response);
+
+            this.userid = response.data.context.id;
+            this.username = response.data.context.username;
+            this.avatar = response.data.context.avatar_url;
+            console.log('isl111');
+            this.signature = response.data.context.signature;
+          })
+          .catch(error => {
+            console.log('Error: ' + error);
+          });
+      }
+      else {
+        console.log('login-no');
+      }
+    },
+    /*跳转对应页*/
+    jumpTo(path) {
+      //this.$router.push('/video/'+video_id);
+      const path_url = '/' + path;
+      window.open(path_url, '_blank');
+    },
+    jumpToHome() {
+      const path_url = '/home';
+      window.open(path_url, '_self');
     },
     search_by_key() {
       // console.log(this.input);
