@@ -1,7 +1,7 @@
 <template>
   <div class="admin_check">
     <!--导航栏-->
-    <AdminHeader />
+    <Header />
     <!--管理栏的导航栏-->
     <AdminGuide />
 
@@ -82,11 +82,13 @@
 
 <script>
 import axios from 'axios';
+import Header from '@/components/HomePage/Header.vue'
 import AdminHeader from '@/components/AdminPage/AdminHeader.vue'
 import AdminGuide from '@/components/AdminPage/AdminGuide.vue'
 export default {
   name: 'check',//当前引入页面
   components: {
+    Header,
     AdminHeader,
     AdminGuide,
   },

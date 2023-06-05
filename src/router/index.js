@@ -10,10 +10,11 @@ Vue.use(VueRouter)
 const routes = [
    /*导航栏跳转页面*/
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     // component: () => import(/* webpackChunkName: "about" */ '../views/HomePage/HomeView.vue')
-    component: HomeView
+    component: HomeView,
+    meta: { index: 'home' }
   },
   {
     path: '/homeHeader',
@@ -24,12 +25,14 @@ const routes = [
   {
     path: '/creation',
     name: 'creation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/CreationView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/CreationView.vue'),
+    meta: { index: 'creation' }
   },
   {
     path: '/message',
     name: 'message',
-    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/MessageView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/MessageView.vue'),
+    meta: { index: 'message' }
   },
    /*视频播放页面*/
   {
@@ -121,7 +124,8 @@ const routes = [
   {
     path: '/admin', 
     name: 'allVideo',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/AllVideoView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AdminPage/AllVideoView.vue'),
+    meta: { index: 'admin' }
   },
   {
     path: '/admin/complain', 
@@ -138,7 +142,8 @@ const routes = [
   {
     path: '/person',
     name: 'person',
-    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/PersonView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/PersonPage/PersonView.vue'),
+    meta: { index: 'person' }
   },
   {
     path: '/person/myVideo',
@@ -195,7 +200,8 @@ const routes = [
   {
     path: '/myCreation',
     name: 'myCreation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/MyCreation.vue'),
+    meta: { index: 'myCreation' }
   },
   {
     path: '/amendCreation/:id',
