@@ -24,7 +24,8 @@
       </el-col>
       
       <div class="info-container">
-        <a id="TOPUp" href="#topAnchor">
+        <a id="TOPUp" href="#">
+          <!-- <i class="el-icon-top"></i> -->
           <img style="width: 100%;height: 100%;" src="../../assets/top.jpg" alt="">
         </a>
         <div class="titles-container" >
