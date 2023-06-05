@@ -41,7 +41,7 @@
               <el-menu-item index="notification" @click="jumpTo('notification')" style="font-size:15px"><el-badge
                   :max="99" :value="messageNum" class="item">消息</el-badge></el-menu-item>
 
-              <el-menu-item index="admin" @click="jumpTo('admin')">管理中心</el-menu-item>
+              <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
             </el-menu>
           </el-row>
         </div>

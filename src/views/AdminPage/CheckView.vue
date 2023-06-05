@@ -23,7 +23,7 @@
                 </div>
                 <div style="font-weight: 500;font-size: 20px;color:rgb(57, 56, 56);margin-bottom: 7px;">
                   <v-avatar><img :src="video_item.avatar_url" /></v-avatar>
-                  &nbsp;&nbsp;<span class="textBtn">{{ video_item.user_name }}</span>
+                  &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name }}</span>
                 </div>
                 <div style="font-size: 18px;color:rgb(57, 56, 56);margin-bottom: 7px;">
                   <i>投稿时间：{{ video_item.created_at }} </i>
@@ -103,6 +103,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    jumpToUser(user_id) {
+      const display_user_url = '/lookPerson/' + user_id;
+      window.open(display_user_url, '_blank');
+    },
     fetchData() {
       let Headers = { 'Authorization': this.$store.getters.getStorage };/*获取token*/
       console.log(Headers);
