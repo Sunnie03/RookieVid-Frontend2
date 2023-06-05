@@ -179,6 +179,10 @@ export default {
           console.log(response);
           console.log(response.data.msg);
           alert(response.data.msg);
+          if(response.data.errno==0){
+            console.log(response.data.errno);
+            window.location.reload();
+          }
         })
       },
       getData(text){

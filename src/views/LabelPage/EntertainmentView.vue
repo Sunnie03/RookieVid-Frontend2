@@ -1,20 +1,41 @@
 <template>
+  <div class="partition-page">
+    <Header/>
+    <Partition/>
+    <PartitionPage :partition_label="'娱乐'"></PartitionPage>
+  </div>
+</template>
+
+<script>
+import Header from '@/components/HomePage/Header.vue'
+import Partition from '@/components/HomePage/Partition.vue'
+import PartitionPage from '@/components/PartitionPage.vue'
+
+export default({
+  name:'EntertainmentView',
+  components: {
+    Header,
+    Partition,
+    PartitionPage
+  },
+})
+</script>
+
+<!-- <template>
    
   <div class="recreation">
-     <!--导航栏-->
+    
      <Header />
-    <!--分区-->
+   
     <Partition></Partition>
 
     <div class="top-carousel">
       <el-carousel :interval="4000" type="card" height="300px">
         <el-carousel-item v-for="(video,index) in this.top_videos" :key="index" >
-          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
             <img class="top-img" :src="video.cover_url" style="height:100%" @click="videoPlay(video.id)">
               <div class="top-overlay" @click="videoPlay(video.id)">
                <div class="top-title">{{ video.title }}</div>
               </div>
-          <!-- </router-link> -->
           
         </el-carousel-item>
 
@@ -24,9 +45,7 @@
     <div class="recommend-display">
       <div class="recommend-container">
         <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
-          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
           <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
-          <!-- </router-link> -->
           <div class="overlay">
             <span class="play-info">
               <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -36,9 +55,7 @@
               {{ video.like_amount }}
             </span>
           </div>
-          <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
             <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }} </div>
-          <!-- </router-link> -->
           <div class="author">
             <span class="author-tag">作者</span>
             <span class="author-name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
@@ -63,9 +80,9 @@
     </div>
     
   </div>
-</template>
+</template> -->
 
-<script>
+<!-- <script>
 import Header from '@/components/HomePage/Header.vue'
 import Partition from '@/components/HomePage/Partition.vue'
 import Partitionvideo from '@/components/HomePage/PartitionVideoShow.vue'
@@ -156,7 +173,7 @@ export default {
 .recreation{
 height:100%;
 width:100%;
-/* margin-top:5%; */
+
 }
 
 .top-carousel{
@@ -192,21 +209,14 @@ width:100%;
 }
 .ranking-display{
   width:20%;
-  /* display:flex; */
+  
   
   margin-left:20px;
-  /* border: 1px solid var(--line_light);
-  border-radius: 6px;
-  background-color: var(--bg2);
-  overflow: hidden; */
+ 
 }
 .ranking-container{
   width:100%;
-  /* height:80%; */
-  /* border: 1px solid var(--line_light);
-  border-radius: 6px;
-  background-color: var(--bg2);
-  overflow: hidden; */
+  
   
 }
 .ranking-item {
@@ -216,8 +226,7 @@ width:100%;
   justify-content: flex-start;
   height:48px;
   width:100%;
-  /* margin-bottom: 10px; */
-  /* background-color: rgba(230, 230, 230,0.5); */
+
 }
 .ranking-item:first-child{
   height:118px;
@@ -253,13 +262,7 @@ width:100%;
 }
 .ranking-video-title {
   
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  /* color: black;
   
-  
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
   height:65%;
   display: -webkit-box;
   overflow: hidden;
@@ -299,7 +302,6 @@ bottom: 40%;
 left: 0;
 width: 100%;
 height: 10%;
-/* background-color:rgba(255, 255, 255,0.5);  */
 display: flex;
 justify-content: space-between;
 background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
@@ -314,7 +316,6 @@ bottom: 0;
 left: 0;
 width: 100%;
 height: 30%;
-/* background-color:rgba(255, 255, 255,0.5);  */
 background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
 display: flex;
 justify-content: space-between;
@@ -326,7 +327,6 @@ justify-content: space-between;
   left: 0;
   width: 100%;
   height: 50%;
-  /* background-color: rgba(0, 0, 0, 0.5); */
   color: white;
   display: flex;
   justify-content: center;
@@ -368,7 +368,6 @@ text-decoration: none;
   left: 0;
   width: 100%;
   height: 20%;
-  /* background-color: rgba(0, 0, 0, 0.5); */
   color: black;
   display: flex;
   justify-content: center;
@@ -392,15 +391,13 @@ text-decoration: none;
 
 .author {
 display: flex;
-/* justify-content: space-between; */
 align-items: center;
 margin-top: 8px;
 margin-left:5px;
 }
 
 .author-tag {
-/* width:50px;
-height:30px; */
+
 border: 1px solid #20bcf0;
 font-weight:bold;
 color: #20bcf0;
@@ -415,7 +412,6 @@ margin-right: 8px;
 font-weight: bold;
 color: grey;
 padding: 2px 8px;
-/* margin-right:0; */
 }
 .time{
 color:grey;
@@ -426,3 +422,4 @@ margin-left:30px;
 }
 
 </style>
+ -->
