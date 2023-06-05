@@ -13,7 +13,7 @@
           
             <div class="recommend-container">
               <div v-for="(favorite,index) in this.partition" :key="index" class="recommend-item" >
-                 <img class="recommend-img" src="../../../image/logo.png" @click="openCollect(favorite.id,favorite.title)">
+                 <img class="recommend-img" :src="favorite.cover_url" @click="openCollect(favorite.id,favorite.title)">
                 <!-- <div class="overlay">
                   <span class="play-info">
                     <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
@@ -27,7 +27,7 @@
                   <div class="author"> 
                     <span class="time" style="float:left">简介： {{ favorite.description }}</span>
                     <el-button v-on:click="removeCollect(favorite.id)" size="small" style="align-self:flex-end;float:left ">删除  </el-button>
-                    <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
+                    
                      
                   </div>
               </div>
@@ -225,7 +225,6 @@ export default {
   <style scoped>
   .person-container {
     border: 1px;
-    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: relative;

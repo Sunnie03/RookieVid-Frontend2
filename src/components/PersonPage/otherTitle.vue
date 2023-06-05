@@ -38,7 +38,6 @@ export default {
       axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.look_user} })
       .then((res) => {
         console.log(res);
-        console.log(Headers);
         if(res.data.errno == 0){  //获取成功
           this.userid = res.data.context.uid,
           this.username = res.data.context.username,

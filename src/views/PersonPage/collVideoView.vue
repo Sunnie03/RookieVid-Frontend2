@@ -36,10 +36,9 @@
                   </div>
                     <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
                   <div class="author">
-                    <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
                     <span class="author-tag">作者</span>
                     <span class="author-name">{{ video.user_name | ellipsis}}</span>
-                    <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+                    <span class="time">{{ video.created_at ? video.created_at.substring(0, 10): ''}}</span>
     
                   </div>
                 </div>
@@ -137,7 +136,6 @@
   
   <style scoped>
   .person-container {
-    background-color: #faf1e6;
     border: 1px;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
@@ -159,7 +157,6 @@
   }
   
   .info-container{
-  background-color: #faf1e6;
   color: #4a5045;
   text-align:justify;
   font-size: 15px;
@@ -182,7 +179,6 @@
   
   /*首页抄的视频代码*/
    .recommend-container {
-    background-color: #faf1e6;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;

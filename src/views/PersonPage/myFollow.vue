@@ -15,8 +15,7 @@
                   <div class="user-name" @click="openLook(user.id)">{{ user.username | ellipsis_name}}</div>
                   <div class="user-sign" v-if="user.signature">{{user.signature | ellipsis_descp}}</div>
                   <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
-                  <button class="remove-button" @click="removeFollow(user.id, index)" v-if="followFlag[index]===1">已关注</button>
-                  <button class="follow-button" @click="addFollow(user.id, index)" v-else>+关注</button>
+                  <button class="remove-button" @click="removeFollow(user.id, index)" >已关注</button>
                 </li>
               
               <!-- <li class="follow-item">关注用户2 </li> -->
@@ -44,7 +43,6 @@ export default {
   data () {
     return {
       followList:[''],
-      followFlag:[],
     }
   },
   created() {
@@ -74,16 +72,10 @@ export default {
       axios.get('/account/get_followings',{ headers: Headers})
       .then((res) => {
         console.log(res);
-        console.log(Headers);
         if(res.data.errno == 0){  //获取成功
           if(Array.isArray(res.data.data)) {
             this.followList = res.data.data
           }
-          let i=0;
-          for(i=0;i<this.followList.length;i++) {
-            this.followFlag.push(1);
-          }
-          console.log(this.followFlag)
         }else {
             alert("获取数据出错")
             alert(res.data.msg)
@@ -109,12 +101,9 @@ export default {
       .then(res => {
         console.log(res)
         if(res.data.errno === 0){
-          alert(index)
-          alert('取关成功,取关id'+index)
-          this.followFlag[index] = 0;
           
           // this.$router.replace(location)
-          location.reload()
+          // location.reload()
         } else {
           alert(res.data.msg)
         }
@@ -131,7 +120,6 @@ export default {
         console.log(res)
         if(res.data.errno ===  0){
           alert('关注成功')
-          this.followFlag[index] = 1;
         }else {
           alert(res.data.msg)
         }
@@ -147,7 +135,6 @@ export default {
 <style scoped>
 .person-container {
   border: 1px;
-  background-color: #faf1e6;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
   position: absolute;

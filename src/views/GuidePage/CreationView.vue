@@ -333,9 +333,6 @@ export default {
 }
 </script>
 <style >
-.upload-body{
-  /* background-color: rgb(247, 247, 247); */
-}
 .upload-form{
   width: 80%;
   margin-left: 10%;

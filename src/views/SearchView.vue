@@ -160,7 +160,6 @@ export default {
          console.log(key, value);
         });
         let Headers={'Authorization': this.$store.getters.getStorage}
-        console.log(Headers);
         axios.post('/account/create_follow',formData,{headers:Headers})
         .then((response)=>{
           console.log(response);
@@ -175,7 +174,6 @@ export default {
          console.log(key, value);
         });
         let Headers={'Authorization': this.$store.getters.getStorage}
-        console.log(Headers);
         axios.post('/account/remove_follow',formData,{headers:Headers})
         .then((response)=>{
           console.log(response);
@@ -380,9 +378,6 @@ text-decoration: none;
 
 }
 
-.user-signature{
-  /* height:33.3%; */
-}
 .follow-button {
   /* margin-left:6%; */
   height:30px;

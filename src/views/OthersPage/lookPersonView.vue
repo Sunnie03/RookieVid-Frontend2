@@ -39,10 +39,7 @@
               </div>
                 <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
               <div class="author">
-                <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
-                <!-- 修改视频的功能暂时不用了 -->
-                <!-- <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button> -->
-                <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+                <span class="time">{{ video.created_at ? video.created_at.substring(0, 10): ''}}</span>
 
               </div>
             </div>

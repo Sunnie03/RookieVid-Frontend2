@@ -33,7 +33,7 @@
                  <div class="author"> 
                    <span class="time" style="float:left">简介： {{ favorite.description }}</span>
                    
-                   <!-- <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>  -->
+                  
                     
                  </div>
             </div>

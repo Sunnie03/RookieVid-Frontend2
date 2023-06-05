@@ -49,10 +49,9 @@
                 </div>
                   <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
                 <div class="author">
-                  <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
                   <span class="author-tag">作者</span>
                   <span class="author-name">{{ video.user_name | ellipsis }}</span>
-                  <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+                  <span class="time">{{ video.created_at ? video.created_at.substring(0, 10): ''}}</span>
   
                 </div>
               </div>
@@ -231,7 +230,7 @@ export default {
 
 .el-menu-vertical-demo {
   border-right: grey 1px solid;
-  background-color:rgb(252, 252, 247);
+  background-color:#fcfcf7;
   height: 100%;
 }
 .v-application ul, .v-application ol {

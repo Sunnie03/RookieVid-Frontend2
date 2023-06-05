@@ -25,14 +25,14 @@
         
         <el-main>
           <div class="title-container" >
-            <img class="photo" :src="avatar">
-            <button class="changephoto" @click="changephoto">更换头像</button>
+            <img class="photo" :src="avatar">            
+            <label class="changephoto" @click="dialogFormVisible = true">更换头像</label>
             
           </div>
         
         
 
-        <el-form style="width:100%">
+        <el-form style="width:100% ">
           <el-form-item label="用户ID  " prop="userid" style="display:flex;margin-left:15px"> {{ userid }}
           </el-form-item>
           <el-form-item label="用户名" prop="username" style="display:flex;margin-left:15px">
@@ -55,7 +55,7 @@
             <el-input type="password" v-model="oldPassword" autocomplete="off" style="width:370%" show-password></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="password1" style="display:flex;margin-left:15px">
-            <el-input type="password" v-model="password" autocomplete="off" style="width:370%" show-password></el-input>
+            <el-input type="password" v-model="password" autocomplete="off" style="width:370%" show-password  placeholder="8 到 14 个字符，数字+字母"></el-input>
           </el-form-item>
           <el-form-item label="确认新密码" prop="password2" style="display:flex">
             <el-input type="password" v-model="checkPass" autocomplete="off" style="width:364%" show-password></el-input>
@@ -63,6 +63,35 @@
           <el-button type="primary" @click="changePass" >修改密码</el-button>
           <el-button @click="giveUp">取消</el-button>
         </el-form>
+
+        <!--更换头像表单-->
+        <el-dialog :visible.sync="dialogFormVisible"  >
+              
+          <label for="upload">上传图片
+            <!-- <img src="@/assets/upload/upload_cover.png" style="height: 100px; width:100px;opacity: 0.6;"> -->
+          </label>
+          <el-upload 
+                  action=""
+                  v-model="upload_photo"
+                  list-type="picture-card"
+                  
+                  :on-remove="handleRemove"
+                  :auto-upload="false"
+
+                  :on-change="savePicture"
+                  :on-preview="handlePictureCardPreview"
+                  accpet=".png,.jpeg"
+                  :limit="1"
+                  >
+                  <button>请点此上传图片</button>
+                </el-upload>
+          <!-- <el-input  type="file" id="upload" v-model="upload_photo" style="width:200px" accpet=".png,.jpeg,.jpg"
+          :limit="1" :auto-upload="false" >  </el-input> -->
+          
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="changephoto(), dialogFormVisible = false" >上传图片</el-button>
+          
+        </el-dialog>
         </el-main>
           
     </div>
@@ -108,6 +137,7 @@ export default {
       user_id: 0,
       username: '',
       avatar: '',
+      upload_photo: null,
       userid: '',
       email: '',
       oldEmail: '',
@@ -116,6 +146,7 @@ export default {
       password: '',
       checkPass: '',
       verify: '',
+      dialogFormVisible:Boolean,
       rules: {
         password: [{ required: true, validator: validatePass, trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
@@ -126,6 +157,7 @@ export default {
   },
   
   created(){
+    this.dialogFormVisible = false;
     this.getData()
   },
   methods: {
@@ -236,7 +268,40 @@ export default {
         console.error()
       )
     },
+    savePicture(file){
+      this.upload_photo=file.raw;
+      
+    },
     changephoto() { //更改头像
+
+      if(this.upload_photo==null || this.upload_photo=='' || this.upload_photo==undefined) {
+        alert("您还未选择图片！")
+        return
+      }
+      console.log(this.upload_photo)
+      const isIMAGE = (this.upload_photo.type === 'image/jpeg' ||this.upload_photo.type === 'image/png'|| this.upload_photo.type === 'image/jpg');
+      if (!isIMAGE) {
+        this.$message.error('头像只能是jpeg/jpg/png格式!');
+        alert(this.upload_photo.type)
+        return ;
+      }
+      let Headers={'Authorization': this.$store.getters.getStorage}
+      let formData = new FormData();
+      formData.append("avatar_file", this.upload_photo);
+      
+      axios.post('/account/edit_avatar', formData, {headers: Headers})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno == 0) {
+          alert("更换头像成功")
+          location.reload()
+        } else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
       
     },
     sendVerification() {
@@ -260,6 +325,12 @@ export default {
       location.reload()
       return
     },
+    handleRemove(file, fileList) {
+      return
+    },
+    handlePictureCardPreview(file) {
+      return
+    }
   }
 }
 </script>
@@ -267,7 +338,6 @@ export default {
 <style scoped>
 .person-container {
     border: 1px;
-    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: relative;
@@ -281,17 +351,16 @@ export default {
     border-radius: 50% ;
     vertical-align: middle;
 }
-.text-title {
-    display:inline;
-    font-size: 30px;
-    background-repeat: repeat;
-    margin-left: 40px;
-}
+
 .verti-menu{
   height: 150px;
   text-align: center;
   vertical-align: middle;
   line-height: 150px;
+  }
+  .el-menu-vertical-demo {
+    background-color:#fcfcf7;
+    height: 100%;
   }
 
 .title-container {
@@ -322,10 +391,9 @@ export default {
 
 
 .changephoto{
-  margin-left: 100px;
-  border: 10px blue;
-  background-color: aquamarine;
-  border-radius: 2px;
-  padding: 5px 5px 5px 5px;
+  margin-left: 70px;
+  background-color: rgb(235, 232, 208);
+  border-radius: 5px;
+  padding: 8px 8px 8px 8px;
 }
 </style>

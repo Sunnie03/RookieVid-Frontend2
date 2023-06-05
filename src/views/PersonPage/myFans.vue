@@ -17,7 +17,8 @@
                 <div class="user-name" @click="openLook(user.id)">{{ user.username | ellipsis_name }}</div>
                 <div class="user-sign" v-if="user.signature">{{user.signature | ellipsis_descp}}</div>
                 <div class="user-sign" v-else>这个人很懒，什么都没写吖</div>
-                <button class="follow-button">+ 回粉</button>
+                <button class="follow-button" @click="addFollow(user.id)" v-if="user.is_refollowed===0">+ 回粉</button>
+                <button class="remove-button" @click="removeFollow(user.id)" v-else>已关注</button>
               </li>
             
             <!-- <li class="follow-item">关注用户2 </li> -->
@@ -45,7 +46,6 @@ components: {
 data () {
   return {
     followList:[''],
-    followFlag:[],
   }
 },
 created() {
@@ -75,7 +75,6 @@ methods: {
     axios.get('/account/get_followers',{ headers: Headers})
     .then((res) => {
       console.log(res);
-      console.log(Headers);
       if(res.data.errno == 0){  //获取成功
         if(Array.isArray(res.data.data)) {
           this.followList = res.data.data
@@ -92,15 +91,17 @@ methods: {
     let look_url='/lookPerson/'+look_user;
     window.open(look_url,'_blank');
   },
-  addFollow(user_id,index){
+  addFollow(user_id){
       
       let Headers={'Authorization': this.$store.state.token}
-      axios.post('/account/create_follow', { headers: Headers, body:{following_id: user_id}})
+      let formData = new FormData()    
+      formData.append('following_id', user_id)
+      axios.post('/account/create_follow', formData, { headers: Headers})
       .then(res => {
         console.log(res)
         if(res.data.errno ===  0){
           alert('关注成功')
-          this.followFlag[index] = 1;
+          location.reload()
         }else {
           alert(res.data.msg)
         }
@@ -108,7 +109,26 @@ methods: {
       .catch(
         console.error()
       )
-    }
+    },
+    removeFollow(user_id){
+      let Headers={'Authorization': this.$store.state.token}
+      let formData = new FormData()
+      
+      formData.append('following_id', user_id)
+      axios.post('/account/remove_follow',formData, { headers: Headers})
+      .then(res => {
+        console.log(res)
+        if(res.data.errno === 0){
+          
+          location.reload()
+        } else {
+          alert(res.data.msg)
+        }
+      })
+      .catch(
+        console.error()
+      )
+    },
 }
 }
 </script>
@@ -116,7 +136,6 @@ methods: {
 <style scoped>
 .person-container {
   border: 1px;
-  background-color: #faf1e6;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
   position: absolute;

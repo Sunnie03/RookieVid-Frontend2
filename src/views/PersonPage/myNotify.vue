@@ -35,7 +35,7 @@
                     <img :src="notify.avatar_url" class="photo" >
                     <div class="user-name" >{{ notify.username | ellipsis_name}}</div>
                     <div class="user-sign" >{{notify.content | ellipsis_descp}}</div>
-                    <div class="time" style="float:right">{{ notify.create_at ? notify.create_at.split('T')[0] : '' }}</div>
+                    <div class="time" style="float:right">{{ notify.create_at ? notify.create_at.substring(0, 10): '' }}</div>
                     <button class="notify-button" @click="readIt1(notify)"><i class="el-icon-check"></i> 已读</button>
                   </li>
                 
@@ -50,7 +50,7 @@
                     <img :src="notify.avatar_url" class="photo" >
                     <div class="user-name" >{{ notify.username | ellipsis_name }}</div>
                     <div class="user-sign" >{{notify.content | ellipsis_descp }}</div>
-                    <div class="time" style="float:right">{{ notify.created_at ? notify.created_at.split('T')[0] : '' }}</div>
+                    <div class="time" style="float:right">{{ notify.create_at ? notify.create_at.substring(0, 10): ''}}</div>
                     <button class="notify-button" @click="readIt2(notify)"> 详情</button>
                   </li>
                 
@@ -60,36 +60,35 @@
               </el-tab-pane>
             </el-tabs>
             
-            <el-dialog title="消息内容" :visible.sync="readVisible">
-            <!-- <el-dialog title="消息内容" > -->
-
-              
-
-              <el-form >
+            <el-dialog title="消息内容" :visible.sync="readVisible1">
 
                 <div :label-width="formLabelWidth" style="display:flex">
-                  <avatar :src="form.avatar_url" style="width:80px;height:80px;margin-left:30px" ></avatar>
-                  <div class="notify-from" >{{ form.username | ellipsis_name }}</div>
+                  <img :src="form.avatar_url" style="width:80px;height:80px;margin-left:30px;border-radius: 50% ;" >
+                  <div class="notify-from" >{{ form.username }}</div>
                 </div>
                 
-                <div >{{form.content | ellipsis_descp }}</div>
-                <div class="time" >{{ form.created_at ? form.created_at.split('T')[0] : '' }}</div>
+                <div class="dialog-container">{{form.content }}</div>
+                <div class="notify-time" >{{ form.create_at ? form.create_at.substring(0, 10): '' }}</div>
                 
-                <!-- <el-form-item label="sender" :label-width="formLabelWidth">
-                  <el-input v-model="form.collectName" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="一句话描述" :label-width="formLabelWidth">
-                  <el-input v-model="form.collectDes" autocomplete="off"></el-input>
-                </el-form-item> -->
-                
-                
-                
-              </el-form>
               <div slot="footer" class="dialog-footer">
-                <el-button @click="readVisible = false">取 消</el-button>
-                <el-button type="primary" @click="newCollect, readVisible = false">确 定</el-button>
+                <el-button type="primary" @click="end(), readVisible1 = false">O K</el-button>
               </div>
             </el-dialog>
+
+            <el-dialog title="消息内容" :visible.sync="readVisible2">
+
+              <div :label-width="formLabelWidth" style="display:flex">
+                <avatar :src="form.avatar_url" style="width:80px;height:80px;margin-left:30px" ></avatar>
+                <div class="notify-from" >{{ form.username }}</div>
+              </div>
+              
+              <div class="dialog-container">{{form.content }}</div>
+              <div class="notify-time" >{{ form.create_at ? form.create_at.substring(0, 10): '' }}</div>
+              
+            <div slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="readVisible2 = false">O K</el-button>
+            </div>
+          </el-dialog>
             
           </div>
         </el-main>
@@ -118,7 +117,8 @@ import { Avatar } from 'element-ui';
       unreadList:[''],
       count_unread: 0,
       activeName: 'first',
-      readVisible: false,
+      readVisible1: false,
+      readVisible2: false,
       form:[''],
       formLabelWidth: '120px',
     }
@@ -150,7 +150,6 @@ import { Avatar } from 'element-ui';
       axios.get('/notification/get_all_notification',{ headers: Headers})//注意接口
       .then((res) => {
         console.log(res);
-        console.log(Headers);
         
         if(res.data.errno === 0 ){  //获取成功
             this.count_unread = res.data.count_unread
@@ -188,12 +187,9 @@ import { Avatar } from 'element-ui';
         }
       })
     },
-    deleteNotify(){
-
-    },
     readIt1(notify) {
 
-      this.readVisible = true
+      this.readVisible1 = true
       let Headers={'Authorization': this.$store.state.token}
       let notify_id = notify.id
       axios.get('/notification/check_notification', { headers: Headers, params:{notification_id: notify_id}})
@@ -202,7 +198,7 @@ import { Avatar } from 'element-ui';
         if(res.data.errno === 0) {
           this.form = notify
           console.log('已读成功')
-          location.reload()
+          // location.reload()
           return 
         } else {
           alert(res.data.msg)
@@ -212,7 +208,7 @@ import { Avatar } from 'element-ui';
     },
     readIt2(notify) {
 
-      this.readVisible = true
+      this.readVisible2 = true
       let Headers={'Authorization': this.$store.state.token}
       let notify_id = notify.id
       axios.get('/notification/check_notification', { headers: Headers, params:{notification_id: notify_id}})
@@ -230,7 +226,10 @@ import { Avatar } from 'element-ui';
       })
     },
     handleClick(tab, event) {
-        console.log(tab, event);
+        // console.log(tab, event);
+    },
+    end() {
+      location.reload()
     }
   }
   }
@@ -239,7 +238,6 @@ import { Avatar } from 'element-ui';
   <style scoped>
   .person-container {
     border: 1px;
-    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: relative;
@@ -248,7 +246,6 @@ import { Avatar } from 'element-ui';
   }
   .el-main {
     overflow: hidden;
-    background-color: #faf1e6;
   }
   
   .notify-container {
@@ -276,7 +273,7 @@ import { Avatar } from 'element-ui';
     width: 100%;
     display: flex;
     justify-content: flex-start;
-}
+  }
   .item {
     margin-top: 30px;
     margin-right: 40px;
@@ -365,6 +362,24 @@ import { Avatar } from 'element-ui';
     margin-top:5px;
     margin-left: 0px;
     width: 100px;
+  } 
+
+  .dialog-container {
+    margin: 20px 0px 20px 30px;
+    width:90%;
+    height: 200px;
+    border: rgb(233, 176, 100) 1px solid;
+    border-radius: 3px;
+    text-align: center;
+    font-size: medium;
+  }
+  .notify-time{
+    font-size:medium;
+    margin-top:5px;
+    margin-right: 30px;
+    width: 100px;
+    height: 40px;
+    float: right;
   } 
 
 

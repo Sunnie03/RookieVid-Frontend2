@@ -104,7 +104,6 @@ export default {
 <style scoped>
 .person-container {
     border: 1px;
-    background-color: #faf1e6;
     background-size: 100% 100% ;
     background-repeat: no-repeat;
     position: absolute;
@@ -131,9 +130,13 @@ export default {
   vertical-align: middle;
   line-height: 150px;
   }
+  .el-menu-vertical-demo {
+    background-color:#fcfcf7;
+    height: 100%;
+  }
 .el-main {
   color: #4a5045;
-  line-height: 80px;
+  line-height: 60px;
   text-align:justify;
   font-size: 25px;
   height:100%;
@@ -150,10 +153,9 @@ export default {
   border: 1px solid #6b80e0;
   /*font-weight:bold;*/
   font-size: 20px;
-  background-color: rgb(225, 241, 239);
   border-radius: 4px;
   padding: 2px 8px;
-  height: 80px;
+  height: 60px;
   margin: 20px 8px 5px 50px;
   width: 80%;
 }

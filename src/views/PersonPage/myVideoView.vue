@@ -52,7 +52,7 @@
                 <!-- <span class="time">{{ video.created_at.split('T')[0] }}</span> -->
                 <!-- 修改视频的功能暂时不用了 -->
                 <!-- <el-button v-on:click="changeVideo(video.id)" size="small" style="align-self:flex-end; ">修改  </el-button> -->
-                <span class="time">{{ video.created_at ? video.created_at.split('T')[0] : '' }}</span>
+                <span class="time">{{ video.created_at ? video.created_at.substring(0, 10): '' }}</span>
 
               </div>
             </div>
@@ -114,7 +114,6 @@ methods: {
     axios.get('/account/display_profile',{ headers: Headers, params:{user_id: this.user_id} })
     .then((res) => {
       console.log(res);
-      console.log(Headers);
       if(res.data.errno == 0){  //获取成功
         this.username = res.data.context.username,
         this.avatar = res.data.context.avatar_url   //这是头像
@@ -150,7 +149,6 @@ methods: {
 
 <style scoped>
 .person-container {
-  background-color: #faf1e6;
   border: 1px;
   background-size: 100% 100% ;
   background-repeat: no-repeat;
@@ -176,8 +174,11 @@ methods: {
   vertical-align: middle;
   line-height: 150px;
   }
+  .el-menu-vertical-demo {
+    background-color:#fcfcf7;
+    height: 100%;
+  }
 .info-container{
-background-color: #faf1e6;
 color: #4a5045;
 text-align:justify;
 font-size: 15px;
@@ -193,14 +194,10 @@ padding-top: 20px;
   height: 100px;
   opacity: 0.9;
 }
-el-main {
-  overflow: auto;
-}
 
 
 /*首页抄的视频代码*/
  .recommend-container {
-  background-color: #faf1e6;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
