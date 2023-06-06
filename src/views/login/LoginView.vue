@@ -66,10 +66,17 @@ export default {
           this.$store.commit("$_logAdmin", res.data.status);  //是否是管理员
           this.$store.commit('$_setToken', res.data.token)  //这里就是要更改token
           this.$store.commit('$_setNowUser', res.data.user_id)
-          alert("登录成功！")
+          this.$message({
+            message:"登录成功！",
+            type: 'success',
+            duration: 1000})
+          // alert("登录成功！")
+
           console.log(this.$store.state.token)    //打印当前token
           //刷新首页
           console.log(this.$store.state)
+
+          // this.$message.close()
           if(window.opener === null) {
             this.$router.push("/")
           }else {

@@ -94,8 +94,8 @@ export default {
     },
     
     getVideo() {
-    let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/account/get_videos',{ headers: Headers, params:{user_id: this.look_user} })
+    // let Headers={'Authorization': this.$store.getters.getStorage}
+    axios.get('/account/get_videos',{ params:{user_id: this.look_user} })
     .then((res) => {
       console.log(res);
       if(res.data.errno == 0){  //获取成功

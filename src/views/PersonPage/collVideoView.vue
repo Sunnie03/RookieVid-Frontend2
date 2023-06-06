@@ -298,6 +298,7 @@
     z-index: 99999999;
     box-shadow: 0px 0px 4px 4px #ecefef;
     border-radius: 600px;
+    align-content: center;
   }
   
   </style>

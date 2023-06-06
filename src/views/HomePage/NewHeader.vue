@@ -32,19 +32,20 @@
       </v-btn>
 
       <el-row type="flex" justify="end">
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-          active-text-color="#89d1e8">
-          <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
-          <el-menu-item index="2"><router-link to="/person" class="no_underline"
-              target="_blank">用户主页</router-link></el-menu-item>
-          <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
-              target="_blank">创作中心</router-link></el-menu-item>
-          <el-menu-item index="4"><router-link to="/message" class="no_underline"
-              target="_blank">消息</router-link></el-menu-item>
-          <el-menu-item index="5"><router-link to="/admin" class="no_underline"
-              target="_blank">管理中心</router-link></el-menu-item>
-        </el-menu>
-      </el-row>
+          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+            active-text-color="#89d1e8">
+            <el-menu-item index="1"><router-link to="/" class="no_underline">首页</router-link></el-menu-item>
+            <el-menu-item index="2"><router-link to="/person" class="no_underline"
+                target="_blank">用户主页</router-link></el-menu-item>
+            <el-menu-item index="3"><router-link to="/myCreation" class="no_underline"
+                target="_blank">创作中心</router-link></el-menu-item>
+            <el-menu-item index="4"><router-link to="/notification" class="no_underline"
+                target="_blank">消息</router-link></el-menu-item>
+            <el-menu-item index="5"><router-link to="/admin" class="no_underline"
+                target="_blank">管理中心</router-link></el-menu-item>
+          </el-menu>
+        </el-row>
+      
     </v-app-bar>
 
     <v-sheet id="scrolling-techniques-4" class="overflow-y-auto" max-height="2000">
