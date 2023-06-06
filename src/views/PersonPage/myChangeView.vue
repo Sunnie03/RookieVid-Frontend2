@@ -55,7 +55,7 @@
             <el-input type="password" v-model="oldPassword" autocomplete="off" style="width:370%" show-password></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="password1" style="display:flex;margin-left:15px">
-            <el-input type="password" v-model="password" autocomplete="off" style="width:370%" show-password  placeholder="8 到 14 个字符，数字+字母"></el-input>
+            <el-input type="password" v-model="password" autocomplete="off" style="width:370%" show-password  placeholder="8 到 16 个字符，数字+字母"></el-input>
           </el-form-item>
           <el-form-item label="确认新密码" prop="password2" style="display:flex">
             <el-input type="password" v-model="checkPass" autocomplete="off" style="width:364%" show-password></el-input>
@@ -80,7 +80,7 @@
 
                   :on-change="savePicture"
                   :on-preview="handlePictureCardPreview"
-                  accpet=".png,.jpeg"
+                  accpet=".png,jpg,.jpeg"
                   :limit="1"
                   >
                   <button>请点此上传图片</button>
@@ -149,7 +149,7 @@ export default {
       dialogFormVisible:Boolean,
       rules: {
         password: [{ required: true, validator: validatePass, trigger: 'blur' },
-          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
         checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' }],
       },
     }
@@ -213,15 +213,15 @@ export default {
           console.log(res1)
           console.log(res2)
           if(res1.data.errno === 0 && res2.data.errno === 0){
-            alert("已成功修改信息");
+            this.$message.success("已成功修改信息");
             location.reload()
           } else if(res1.data.errno !== 0) {
-            alert(res1.data.msg);
+            this.$message.error(res1.data.msg);
             if(res2.data.errno) {
-              alert(res2.data.msg);
+              this.$message.error(res2.data.msg);
             }
           } else {
-            alert(res2.data.msg);
+            this.$message.error(res2.data.msg);
           }
           
         })
@@ -235,10 +235,10 @@ export default {
             // console.log("修改用户名+个性签名 "+res)
             console.log(res)
             if(res.data.errno == 0){
-              alert("已成功修改信息");
+              this.$message.success("已成功修改信息");
               location.reload()
             } else {
-              alert(res.data.msg);
+              this.$message.error(res.data.msg);
             }
             
           })
@@ -258,10 +258,10 @@ export default {
       .then(res => {
         console.log(res)
         if(res.data.errno == 0) {
-          alert("修改密码成功")
+          this.$message.success("修改密码成功")
           location.reload()
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
         }
       })
       .catch(
@@ -275,14 +275,14 @@ export default {
     changephoto() { //更改头像
 
       if(this.upload_photo==null || this.upload_photo=='' || this.upload_photo==undefined) {
-        alert("您还未选择图片！")
+        this.$message.error("您还未选择图片！")
         return
       }
       console.log(this.upload_photo)
       const isIMAGE = (this.upload_photo.type === 'image/jpeg' ||this.upload_photo.type === 'image/png'|| this.upload_photo.type === 'image/jpg');
       if (!isIMAGE) {
         this.$message.error('头像只能是jpeg/jpg/png格式!');
-        alert("请选择正确的图片格式")
+        // this.$message.error("请选择正确的图片格式")
         return ;
       }
       let Headers={'Authorization': this.$store.getters.getStorage}
@@ -293,10 +293,10 @@ export default {
       .then(res => {
         console.log(res)
         if(res.data.errno == 0) {
-          alert("更换头像成功")
+          this.$message.success("更换头像成功")
           location.reload()
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
         }
       })
       .catch(
@@ -311,9 +311,9 @@ export default {
         .then(response => {
           //处理成功响应
           if(response.data.errno === 0){
-            alert("已发送验证码，注意5分钟内有效");
+            this.$message.success("已发送验证码，注意5分钟内有效");
           } else {
-            alert(response.data.msg)
+            this.$message.error(response.data.msg)
           }
           console.log(response)
         })

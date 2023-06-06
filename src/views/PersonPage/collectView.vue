@@ -129,10 +129,11 @@ export default {
             if (Array.isArray(res.data.favorite)) {
               this.partition = res.data.favorite; 
               console.log(this.partition)
-            } else {    //我估计传回来的是空
-              alert("收藏夹列表为空")
-              console.log("收藏夹列表为空")
-            }
+            } 
+            // else {    //这个弹窗没用，因为一定是数组
+            //   alert("收藏夹列表为空")
+            //   console.log("收藏夹列表为空")
+            // }
         } else {
             alert(res.data.msg)
             // if(res.data.errno == )
@@ -159,11 +160,11 @@ export default {
           //处理成功响应
           console.log(res.data)
           if(res.data.errno == 0){
-            alert("创建成功！");
+            this.$message.success("创建成功！");
             //还得刷新页面记得
             location.reload()
           } else {
-            alert(res.data.msg)
+            this.$message.error(res.data.msg)
           }
          
         })
@@ -192,11 +193,11 @@ export default {
       .then((res) =>  {
           //处理成功响应
           if(res.data.errno == 0){
-            alert("删除收藏夹成功！");
+            this.$message.success("删除收藏夹成功！");
             //还得刷新页面记得
             location.reload()
           } else {
-            alert(res.data.msg)
+            this.$message.error(res.data.msg)
           }
           console.log(res)
          

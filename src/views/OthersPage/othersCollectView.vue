@@ -85,8 +85,8 @@ export default {
     },
    
     getVideo() {  //获取别人的收藏夹，懒得改名了
-    let Headers={'Authorization': this.$store.getters.getStorage}
-    axios.get('/account/get_favorite',{ headers: Headers, params: {user_id: this.look_user}})
+    // let Headers={'Authorization': this.$store.getters.getStorage}
+    axios.get('/account/get_favorite',{ params: {user_id: this.look_user}})
       .then((res) => {
         
         console.log(res);

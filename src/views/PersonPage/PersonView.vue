@@ -90,7 +90,7 @@ export default {
 
           this.$store.commit('$_setNowUser', res.data.context.id) //保存当前用户的id
         }else {
-            alert(res.data.msg)
+          this.$message.error(res.data.msg)
             // if(res.data.errno == )
         }
       }).catch(

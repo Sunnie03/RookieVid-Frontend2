@@ -96,7 +96,7 @@
       return 
     },
     playVideo(id){
-      this.$router.push({ name: 'video', params: { id }})
+      this.$router.push({ name: 'video/', params: { id }})
     },
     
     getVideo() {
