@@ -149,7 +149,7 @@ export default {
       dialogFormVisible:Boolean,
       rules: {
         password: [{ required: true, validator: validatePass, trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
         checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' }],
       },
     }

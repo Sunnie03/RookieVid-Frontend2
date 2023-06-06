@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mdiZWave } from '@mdi/js'
 import axios from 'axios'
 // import { callbackify } from 'util'
 
@@ -43,6 +44,11 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码')) // input为空
       } else {
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$/;
+        const isValid = regex.test(value);
+        if(!isValid){
+          callback(new Error('密码为数字+字母的组合'))
+        }
         if (this.form.checkPass !== '') {
           this.$refs.form.validateField('checkPass') // 如果确认密码不为空，去往比对两密码函数
         }
@@ -55,6 +61,11 @@ export default {
       } else if (value !== this.form.password) {
         callback(new Error('两次输入密码不一致'))
       } else {
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$/;
+        const isValid = regex.test(value);
+        if(!isValid){
+          callback(new Error('密码为数字+字母的组合'))
+        }
         callback()
       }
     }
@@ -75,10 +86,11 @@ export default {
       },
       rules: {
         username: [{ required: true, validator: validateName, trigger: 'blur' },
-          { min: 2, max: 20, message: '用户名长度在 2 到 20 个字符', trigger: 'blur' }/* 长度要求 */],
-        password: [{ required: true, validator: validatePass, trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
-        checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' }],
+          { min: 1, max: 20, message: '用户名长度在 1 到 20 个字符', trigger: 'blur' }/* 长度要求 */],
+        password: [{ required: true, validator: validatePass, trigger: 'blur'},
+          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+        checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' },
+          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }],
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
       }
     }
@@ -107,8 +119,12 @@ export default {
           //处理失败响应
           console.error())
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    resetForm () {
+      this.form.username=''
+      this.form.password=''
+      this.form.checkPass=''
+      this.form.email=''
+      this.form.verify=''
     },
     sendVerification() {
         let formData  = new FormData();
