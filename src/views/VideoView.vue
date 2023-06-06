@@ -786,9 +786,9 @@ export default {
     this.fetchVideoData();
 
     /*每隔一分钟，获取一次评论【答辩时打开】*/
-    // setInterval(() => {
-    //   this.getComments()
-    // }, 18000);/*1分钟60000，1s1000，这里的数字单位是毫秒*/
+    setInterval(() => {
+      this.getComments()
+    }, 18000);/*1分钟60000，1s1000，这里的数字单位是毫秒*/
   },
   mounted() {
     // 在 mounted 钩子中设置自定义标题

@@ -5,72 +5,78 @@
     <!--主页最上方导航栏 链接-->
     <div class="head_guide">
       <!--logo图标-->
-        <!-- <v-col cols="12" md="2"> -->
-        <div class="logo">
-          <img alt="web logo" src="@/assets/web_logo.png" height="80px">
-        </div>
+      <!-- <v-col cols="12" md="2"> -->
+      <div class="logo">
+        <img alt="web logo" src="@/assets/web_logo.png" height="80px">
+      </div>
       <!-- </v-col>Ï -->
 
-        <!--搜索框-->
-      
+      <!--搜索框-->
+
       <!-- </v-col> -->
 
-        <!--导航栏菜单-->
-        <!-- <v-col cols="12" md="4"> -->
-        <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
-          <el-row type="flex" justify="end">
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-              active-text-color="#89d1e8">
-              <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-              <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
-              <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
-                创作中心</el-menu-item>
+      <!--导航栏菜单-->
+      <!-- <v-col cols="12" md="4"> -->
+      <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
+        <el-row type="flex" justify="end">
+          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+            active-text-color="#89d1e8">
+            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
+              创作中心</el-menu-item>
 
-              <el-menu-item index="notification" @click="jumpTo('notification')" style="font-size:15px"><el-badge
-                  :max="99" :value="messageNum" class="item">消息</el-badge></el-menu-item>
+            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
+              style="font-size:15px">
+              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+            </el-menu-item>
+            <!--没有未读消息-->
+            <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
+              消息
+            </el-menu-item>
 
-                  <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
-            </el-menu>
-          </el-row>
-        </div>
-        <div class="guide_menu" v-else> <!--不是管理员-->
-          <el-row type="flex" justify="end">
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-              active-text-color="#89d1e8">
+            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
+          </el-menu>
+        </el-row>
+      </div>
+      <div class="guide_menu" v-else> <!--不是管理员-->
+        <el-row type="flex" justify="end">
+          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+            active-text-color="#89d1e8">
 
-              <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-              <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
-              <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-              <el-menu-item index="notification" @click="jumpTo('notification')">消息</el-menu-item>
-            </el-menu>
-          </el-row>
-        </div>
+            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
+            <el-menu-item index="notification" @click="jumpTo('notification')">消息</el-menu-item>
+          </el-menu>
+        </el-row>
+      </div>
       <!-- </v-col> -->
 
-        <!--没有登录，显示默认样式-->
-        <!--当前用户还没登录，为游客-->
-        <!-- <v-col cols="12" md="2"> -->
-        <div v-if="this.$store.state.isLogin === false" class="userPhoto">
-          <el-dropdown @command="handleCommandLogin">
-            <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
-            <span class="el-dropdown-link" @click="open_login"> 登录</span>
-            <el-dropdown-menu slot="dropdown" @click="open_login">
-              <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-        <!--用户已经登录-->
-        <div v-else class="userPhoto">
-          <el-dropdown @command="handleCommandPerson">
-            <v-avatar class="el-dropdown-link" @click="jumpTo('person')">
-              <img :src="avatar" />
-            </v-avatar>
-            <!-- {{ username }} -->
-            <el-dropdown-menu slot="dropdown" @click="open_login">
-              <el-dropdown-item icon="el-icon-s-custom" command="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+      <!--没有登录，显示默认样式-->
+      <!--当前用户还没登录，为游客-->
+      <!-- <v-col cols="12" md="2"> -->
+      <div v-if="this.$store.state.isLogin === false" class="userPhoto">
+        <el-dropdown @command="handleCommandLogin">
+          <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
+          <span class="el-dropdown-link" @click="open_login"> 登录</span>
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <!--用户已经登录-->
+      <div v-else class="userPhoto">
+        <el-dropdown @command="handleCommandPerson">
+          <v-avatar class="el-dropdown-link" @click="jumpTo('person')">
+            <img :src="avatar" />
+          </v-avatar>
+          <!-- {{ username }} -->
+          <el-dropdown-menu slot="dropdown" @click="open_login">
+            <el-dropdown-item icon="el-icon-s-custom" command="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
       <!-- </v-col> -->
     </div>
     <!-- </v-app-bar> -->
@@ -98,9 +104,14 @@ export default {
   },
   created() {
     this.getUserData();
+    this.getMessageNum();
     this.$set(this, 'activeIndex', this.$route.meta.index);
     //this.activeIndex = this.$route.meta.index;
     //this.pageName = this.$route.name;
+
+    setInterval(() => {
+      this.getMessageNum()
+    }, 6000);
   },
   watch: {
     '$route': function () {
@@ -168,14 +179,19 @@ export default {
           .catch(error => {
             console.log('Error: ' + error);
           });
-
-
+      }
+      else {
+        console.log('login-no');
+      }
+    },
+    getMessageNum() {
+      if (this.$store.state.isLogin === "true") {
         /*获取未读通知的数量*/
         axios.get('notification/count_unread', { headers: { Authorization: this.$store.getters.getStorage } })
           .then(response => {
             console.log(response);
 
-            if (response.errno == 0) {
+            if (response.data.errno == 0) {
               this.messageNum = response.data.count;
               console.log('message num');
             }
@@ -190,9 +206,16 @@ export default {
     },
     /*跳转对应页*/
     jumpTo(path) {
-      //this.$router.push('/video/'+video_id);
-      const path_url = '/' + path;
-      window.open(path_url, '_blank');
+      /*已经登录*/
+      if (this.$store.state.isLogin === "true") {
+        //this.$router.push('/video/'+video_id);
+        const path_url = '/' + path;
+        window.open(path_url, '_blank');
+      }
+      else {
+        this.$message.warning('请先登录');
+        return;
+      }
     },
     jumpToHome() {
       const path_url = '/';
@@ -274,7 +297,7 @@ export default {
   /* left: 100px; */
   padding-left: 100px;
   /* margin-right:5%; */
-  flex: 1 ;
+  flex: 1;
 }
 
 .guide_menu {
@@ -302,8 +325,9 @@ export default {
   padding-left: 3%;
   /* height:100%; */
 }
-.search-input:focus{
-  outline:none;
+
+.search-input:focus {
+  outline: none;
   border-color: rgb(147, 227, 252);
   box-shadow: 0 0 5px rgb(105, 163, 255);
   background-color: white;
