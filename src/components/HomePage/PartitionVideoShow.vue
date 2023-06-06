@@ -187,7 +187,7 @@ a{
 }
 
 .author-name {
-  width:49%;
+  width:47%;
   font-weight: bold;
   color: grey;
   padding: 2px 8px;
