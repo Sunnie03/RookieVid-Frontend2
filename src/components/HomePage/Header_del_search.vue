@@ -35,7 +35,7 @@
               消息
             </el-menu-item>
 
-            <el-menu-item index="admin" @click="jumpTo('admin')">管理中心</el-menu-item>
+            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -46,7 +46,7 @@
             <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-            <el-menu-item index="message" @click="jumpTo('message')">消息</el-menu-item>
+            <el-menu-item index="message" @click="jumpTo('notification')">消息</el-menu-item>
           </el-menu>
         </el-row>
       </div>
