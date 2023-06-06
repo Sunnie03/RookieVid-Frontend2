@@ -20,7 +20,7 @@
                 <div class="complained_video_block" style="padding-left: 20px;margin-bottom: 20px;padding-right: 9px;">
                   <v-row>
                     <v-col cols="12" md="4">
-                      <img :src="video_item.cover_url" width="100%" height="120px" />
+                      <img :src="video_item.cover_url" width="100%" height="120px" @click="jumpTo(video_item.id)" style="cursor: pointer;" />
                     </v-col>
 
                     <v-col class="complain_introdction" cols="12" md="7">

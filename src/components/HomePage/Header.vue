@@ -6,7 +6,7 @@
     <div class="head_guide">
       <!--logo图标-->
       <!-- <v-col cols="12" md="2"> -->
-      <div class="logo">
+      <div class="logo" style="cursor: pointer;" @click="jumpToHome()">
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
       <!-- </v-col> -->
@@ -33,21 +33,26 @@
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
-            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
-              创作中心</el-menu-item>
+              <i class="el-icon-upload"></i>创作中心</el-menu-item>
 
             <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
               style="font-size:15px">
-              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+              <v-icon size="19">
+                mdi-email
+              </v-icon>
+              <el-badge :max="99" :value="messageNum" class="item">&nbsp;&nbsp;消息</el-badge>
             </el-menu-item>
             <!--没有未读消息-->
             <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
-              消息
+              <v-icon size="19">
+                mdi-email
+              </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
 
-            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
+            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')"><i class="el-icon-s-management"></i>管理中心</el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -56,15 +61,22 @@
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
             active-text-color="#89d1e8">
 
-            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
-            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')" style="font-size:15px">
-              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+            <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')"><i
+                class="el-icon-upload"></i>创作中心</el-menu-item>
+            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
+              style="font-size:15px">
+              <v-icon size="19">
+                mdi-email
+              </v-icon>
+              <el-badge :max="99" :value="messageNum" class="item">&nbsp;&nbsp;消息</el-badge>
             </el-menu-item>
             <!--没有未读消息-->
             <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
-              消息
+              <v-icon size="19">
+                mdi-email
+              </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
           </el-menu>
         </el-row>
@@ -77,7 +89,7 @@
       <div v-if="this.$store.state.isLogin === false" class="userPhoto">
         <el-dropdown @command="handleCommandLogin">
           <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
-          <span class="el-dropdown-link" @click="open_login"> 登录</span>
+          <span class="el-dropdown-link" @click="open_login" style="cursor: pointer;"> 登录</span>
           <el-dropdown-menu slot="dropdown" @click="open_login">
             <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
           </el-dropdown-menu>
