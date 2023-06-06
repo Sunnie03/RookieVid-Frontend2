@@ -9,7 +9,7 @@
       <div class="logo">
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
-      <!-- </v-col>Ï -->
+      <!-- </v-col> -->
 
       <!--搜索框-->
       <!-- <v-col cols="12" md="4"> -->
@@ -59,7 +59,13 @@
             <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-            <el-menu-item index="notification" @click="jumpTo('notification')">消息</el-menu-item>
+            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')" style="font-size:15px">
+              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+            </el-menu-item>
+            <!--没有未读消息-->
+            <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
+              消息
+            </el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -226,10 +232,11 @@ export default {
         window.open(path_url, '_blank');
       }
       else {
-        this.$message.warning('请先登录');
-        this.$router.push('/login');
-        // const path_url = '/login';
-        // window.open(path_url, '_blank');
+        //this.$message.warning('请先登录');
+        //this.$router.push('/login');
+        const path_url = '/login';
+        window.open(path_url, '_blank');
+        //this.$message.warning('请先登录');
         return;
       }
     },
@@ -262,6 +269,7 @@ export default {
       // console.log('key:'+key)
       const url = '/search?keyword=' + key
       console.log(url);
+      localStorage.setItem('selectedTab', 'video');
       window.open(url, '_blank')
 
     },

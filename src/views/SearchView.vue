@@ -34,7 +34,17 @@
                 <div class="blank-msg">这里什么都没有吖</div>
               </div>
               <div v-else>
-                <SearchVideo :partition="search_videos"></SearchVideo>
+                <SearchVideo :partition="displayedVideos"></SearchVideo>
+                <el-pagination
+                  v-if="totalSearchPages > 1"
+                  background
+                  class="search-video-pagination center-pagination"
+                  :hide-on-single-page="false"
+                  :current-page="currentPage"
+                  :page-size="videosPerPage"
+                  :total="search_videos.length"
+                  @current-change="handlePageChange"
+                ></el-pagination>
               </div>
             </div>
           </el-tab-pane>
@@ -51,9 +61,14 @@
                     <div class="user-details">
                       <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div> 
                       <div class="user-signature" >{{ user.signature ?user.signature:"Ta什么都没写"}}</div>
-                   
-                    <button v-if="user.followed===0" class="follow-button" @click="follow(user.id)">+关注</button>
-                    <button v-if="user.followed===1" class="cancel-follow-button" @click="defollow(user.id)">取消关注</button>
+                      <v-btn v-if="user.followed===1" depressed @click="defollow(user.id,index)">
+                               取消关注
+                      </v-btn>
+                      <v-btn v-if="user.followed===0"  depressed color="primary" @click="follow(user.id,index)">
+                              +关注
+                      </v-btn>
+                    <!-- <button v-if="user.followed===0" class="follow-button" @click="follow(user.id)">+关注</button> -->
+                    <!-- <button v-if="user.followed===1" class="cancel-follow-button" @click="defollow(user.id)">取消关注</button> -->
                   </div>
                 </div>
               </div>
@@ -103,8 +118,20 @@ export default {
       input:"",
       search_videos:[],
       search_users:[],
-      selectedTab: 'video' // 默认选中视频
+      selectedTab: 'video', // 默认选中视频
+      currentPage: 1,
+      videosPerPage: 20,
     }
+  },
+  computed:{
+    displayedVideos() {
+      const startIndex = (this.currentPage - 1) * this.videosPerPage;
+      const endIndex = startIndex + this.videosPerPage;
+      return this.search_videos.slice(startIndex, endIndex);
+    },
+    totalSearchPages() {
+            return Math.ceil(this.search_videos.length / this.videosPerPage);
+        },
   },
   created(){
     
@@ -132,6 +159,9 @@ export default {
  
   },
   methods: {
+    handlePageChange(newPage) {
+      this.currentPage = newPage;
+    },
     // searchVideo(){ 
       goPersonPage(id){
         const user_page_url='/lookPerson/'+id;
@@ -159,7 +189,7 @@ export default {
 
           this.$router.push({ path: '/search', query: { keyword: this.input } })
       },
-      follow(id){
+      follow(id,index){
         let formData=new FormData();
         formData.append("following_id",id);
         formData.forEach(function(value, key) {
@@ -172,15 +202,22 @@ export default {
           console.log(response.data.msg);
           if(response.data.errno==0){
             console.log(response.data.errno);
-            window.location.reload();
+            // window.location.reload();
+            this.search_users[index].followed=1;
+            // this.$data.search_users.forEach((user, index) => {
+            //   if (user.id===id){
+            //     user.followed=1;
+            //   } 
+            // });
           }
           else{
-            alert(response.data.msg);
+            // alert(response.data.msg);
+            this.$message.warning(response.data.msg)
           }
           
         })
       },
-      defollow(id){
+      defollow(id,index){
         let formData=new FormData();
         formData.append("following_id",id);
         formData.forEach(function(value, key) {
@@ -194,10 +231,17 @@ export default {
           
           if(response.data.errno==0){
             console.log(response.data.errno);
-            window.location.reload();
+            // window.location.reload();
+            this.search_users[index].followed=0;
+            // this.$data.search_users.forEach((user, index) => {
+            //   if (user.id===id){
+            //     user.followed=0;
+            //   } 
+            // });
           }
           else{
-            alert(response.data.msg);
+            // alert(response.data.msg);
+            this.$message.error(response.data.msg);
           }
         })
       },
@@ -232,7 +276,7 @@ export default {
   }
 </script>
 
-<style>
+<style scoped>
 
 
 /* .search-container {
@@ -326,8 +370,10 @@ background-color: #ccc;
   font-weight: bold;
   color:rgb(163, 154, 154)
 }
-
-
+.center-pagination {
+  display: flex;
+  justify-content: center;
+}
 .play-info, .like-info {
 display: flex;
 align-items: center;

@@ -1123,7 +1123,7 @@ export default {
           console.log(formData);
           if (response.data.errno == 401) /*用户未登录，就跳转到用户登录界面去登录*/ {
             this.$message.warning(response.data.msg);/*先去登录*/
-            this.$router.push('/login');
+            //this.$router.push('/login');
             // console.log('here');//【】
             // const url = '/login';
             // window.open(url, '_blank');
@@ -1174,7 +1174,7 @@ export default {
       }
       else {
         this.$message.warning('请先登录');
-        this.$router.push('/login');
+        //this.$router.push('/login');
         // const url = '/login';
         // window.open(url, '_blank');
         return;
@@ -1405,7 +1405,7 @@ export default {
     },
     toLogin() {
       this.$message.warning('请先登录');
-      this.$router.push('/login');
+      //this.$router.push('/login');
     },
     /*点击投诉键，出现投诉的对话框*/
     clickComplain() {
@@ -1675,7 +1675,7 @@ export default {
     /*在未登录状态下，点击评论的输入框或发布，跳转到这里*/
     clickSend() {
       this.$message.warning('还未登录，请先登录');/*先去登录*/
-      this.$router.push('/login');
+      //this.$router.push('/login');
       // const url = '/login';
       // window.open(url, '_blank');
       return;
@@ -1750,7 +1750,7 @@ export default {
       else {
         /*没有登录，点击“回复”，显示“未登录”*/
         this.$message.warning('当前未登录，请先去登录');/*先去登录*/
-        this.$router.push('/login');
+        //this.$router.push('/login');
         // const url = '/login';
         // window.open(url, '_blank');
         return;
@@ -1867,8 +1867,8 @@ export default {
             if (response.data.errno == 401) /*用户未登录，就跳转到用户登录界面去登录*/ {
               this.$message.warning(response.data.msg);/*先去登录*/
               //this.$router.push('/login');
-              const url = '/login';
-              window.open(url, '_blank');
+              //const url = '/login';
+              //window.open(url, '_blank');
               return;
             }
             else if (response.data.errno == 0) {
@@ -1891,8 +1891,8 @@ export default {
         console.log(this.$store.state.isLogin);
         this.$message.warning('还未登录，请先登录');/*先去登录*/
         //this.$router.push('/login');
-        const url = '/login';
-        window.open(url, '_blank');
+        //const url = '/login';
+        //window.open(url, '_blank');
         return;
       }
     },
