@@ -125,10 +125,10 @@ export default {
     },
     
     getVideo() {  //获取他人收藏夹里的视频
-      let Headers={'Authorization': this.$store.getters.getStorage}
+      // let Headers={'Authorization': this.$store.getters.getStorage}
       let collect_id = this.$route.params.collect_id
       console.log(collect_id)
-      axios.get('/account/get_favlist',{ headers: Headers, params:{favorite_id: collect_id} })
+      axios.get('/account/get_favlist',{ params:{favorite_id: collect_id} })
       .then((res) => {
         console.log(res);
         if(res.data.errno == 0){  //获取成功

@@ -169,7 +169,7 @@ import { Avatar } from 'element-ui';
     },
     readAll(){
       if(this.count_unread === 0){
-        alert('没有未读消息啦！')
+        this.$message.warning('没有未读消息啦！')
         return 
       }
     
@@ -182,7 +182,7 @@ import { Avatar } from 'element-ui';
           location.reload()
           return 
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
 
         }
       })
@@ -201,7 +201,7 @@ import { Avatar } from 'element-ui';
           // location.reload()
           return 
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
 
         }
       })
@@ -220,7 +220,7 @@ import { Avatar } from 'element-ui';
           // location.reload()
           return 
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
 
         }
       })

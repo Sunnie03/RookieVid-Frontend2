@@ -86,7 +86,7 @@ export default {
           
           // this.$router.push({name:'home'})
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
         }
         console.log(res.data);
 

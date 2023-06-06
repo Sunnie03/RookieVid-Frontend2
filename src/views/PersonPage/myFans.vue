@@ -100,10 +100,10 @@ methods: {
       .then(res => {
         console.log(res)
         if(res.data.errno ===  0){
-          alert('关注成功')
+          // this.$message.success('关注成功')
           location.reload()
         }else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
         }
       })
       .catch(
@@ -119,10 +119,10 @@ methods: {
       .then(res => {
         console.log(res)
         if(res.data.errno === 0){
-          alert("取关成功")
+          // this.$message.success("取关成功")
           location.reload()
         } else {
-          alert(res.data.msg)
+          this.$message.error(res.data.msg)
         }
       })
       .catch(
