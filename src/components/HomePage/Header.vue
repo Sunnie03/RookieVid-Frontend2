@@ -9,7 +9,7 @@
       <div class="logo">
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
-      <!-- </v-col>Ï -->
+      <!-- </v-col> -->
 
       <!--搜索框-->
       <!-- <v-col cols="12" md="4"> -->
@@ -226,10 +226,11 @@ export default {
         window.open(path_url, '_blank');
       }
       else {
-        this.$message.warning('请先登录');
-        this.$router.push('/login');
-        // const path_url = '/login';
-        // window.open(path_url, '_blank');
+        //this.$message.warning('请先登录');
+        //this.$router.push('/login');
+        const path_url = '/login';
+        window.open(path_url, '_blank');
+        //this.$message.warning('请先登录');
         return;
       }
     },
