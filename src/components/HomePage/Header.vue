@@ -59,7 +59,13 @@
             <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-            <el-menu-item index="notification" @click="jumpTo('notification')">消息</el-menu-item>
+            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')" style="font-size:15px">
+              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+            </el-menu-item>
+            <!--没有未读消息-->
+            <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
+              消息
+            </el-menu-item>
           </el-menu>
         </el-row>
       </div>
