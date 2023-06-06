@@ -263,6 +263,7 @@ export default {
       // console.log('key:'+key)
       const url = '/search?keyword=' + key
       console.log(url);
+      localStorage.setItem('selectedTab', 'video');
       window.open(url, '_blank')
 
     },

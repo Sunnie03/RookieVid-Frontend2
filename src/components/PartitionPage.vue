@@ -26,29 +26,40 @@
         </div>
 
       <div class="recommend-display">
-        <div class="recommend-container">
-          <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
-            <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
-            <!-- </router-link> -->
-            <div class="overlay">
-              <span class="play-info">
-                <img class="play-icon" src="../assets/display/play_circle_outline.svg">
-                {{video.view_amount }}</span>
-              <span class="like-info">
-                <img class="like-icon" src="../assets/display/thumb-up.svg">
-                {{ video.like_amount }}
-              </span>
-            </div>
-            <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-              <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }} </div>
-            <!-- </router-link> -->
-            <div class="author">
-              <span class="author-tag">作者</span>
-              <span class="author-name" :data-fullname="video.user_name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
-              <span class="time">{{ video.created_at?video.created_at.substring(0,10):''}}</span>
+        <div class="recommend-pagination-container">
+          <div class="recommend-container">
+            <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
+              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+              <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+              <!-- </router-link> -->
+              <div class="overlay">
+                <span class="play-info">
+                  <img class="play-icon" src="../assets/display/play_circle_outline.svg">
+                  {{video.view_amount }}</span>
+                <span class="like-info">
+                  <img class="like-icon" src="../assets/display/thumb-up.svg">
+                  {{ video.like_amount }}
+                </span>
+              </div>
+              <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+                <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }} </div>
+              <!-- </router-link> -->
+              <div class="author">
+                <span class="author-tag">作者</span>
+                <span class="author-name" :data-fullname="video.user_name" @click="goPersonPage(video.user_id)">{{ video.user_name }}</span>
+                <span class="time">{{ video.created_at?video.created_at.substring(0,10):''}}</span>
+              </div>
             </div>
           </div>
+          <!-- <el-pagination
+            class="center-pagination"
+            :hide-on-single-page="false"
+            :current-page="currentPage"
+            :page-size="PartitionVideosPerPage"
+            :total="videos.length"
+            layout="prev, pager, next,total"
+            @current-change="handlePageChange"
+          ></el-pagination> -->
         </div>
         <div class="ranking-display">
           <div style="font-weight:bold;font-size:23px;margin-bottom:10px;margin-left:20px;">热播</div>
@@ -85,7 +96,16 @@
             videos:[""],
             top_videos:[""],
             ranking_list:[""],
+            // currentPage: 1,
+            // PartitionVideosPerPage: 12,
         }
+    },
+    computed: {
+      // paginatedVideos() {
+      //   const startIndex = (this.currentPage - 1) * this.PartitionVideosPerPage;
+      //   const endIndex = startIndex + this.PartitionVideosPerPage;
+      //   return this.videos.slice(startIndex, endIndex);
+      // }
     },
     created(){
         this.getAll(this.partition_label,-1);
@@ -93,6 +113,9 @@
         this.getData(this.partition_label,8);
     },
     methods:{
+        // handlePageChange(newPage) {
+        //   this.currentPage = newPage;
+        // },
         videoPlay(id){
           const video_play_url='/video/'+id
           window.open(video_play_url,'_blank');
@@ -168,6 +191,7 @@
     /* width:90%; */
     
   }
+
   .top-img-container{
     width: 100%;
     height:100%;
@@ -197,8 +221,11 @@
     padding: 10px;
     flex-direction:row;
   }
-  .recommend-container {
+  .recommend-pagination-container{
     width:80%;
+  }
+  .recommend-container {
+    width:100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
