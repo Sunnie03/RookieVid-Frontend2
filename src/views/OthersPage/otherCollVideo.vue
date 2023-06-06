@@ -39,7 +39,6 @@
 
           <div class="recommend-container" v-if="!this.null_flag">
               <div v-for="(video,index) in this.partition" :key="index" class="recommend-item" >
-                <!-- <router-link :to="{name:'video',params:{'id':video.id}}"> -->
                 <img class="recommend-img" :src="video.cover_url" v-on:click="playVideo(video.id)">
                 <!-- </router-link> -->
                 <div class="overlay">
