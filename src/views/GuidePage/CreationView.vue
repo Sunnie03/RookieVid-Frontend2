@@ -355,13 +355,12 @@ export default {
     display:flex;
 }
 .aside-wrapper{
-    width:14%;
+    width:10%;
     background-color: white;
     
 }
 .upload-button{
-    width:80%;
-    margin-left:20px;
+  width:100%;
     background-color: rgb(0, 166, 255);
     color:white;
     font-size:16px;
