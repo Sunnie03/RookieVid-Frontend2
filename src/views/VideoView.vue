@@ -221,7 +221,8 @@
                   <!--justify="center"-->
                   <!--当前用户头像-->
                   <v-col cols="12" md="1" class="d-flex" align="center">
-                    <v-avatar class="avatar" v-if="this.$store.state.isLogin" @click="jumpToPerson()" style="cursor: pointer;">
+                    <v-avatar class="avatar" v-if="this.$store.state.isLogin" @click="jumpToPerson()"
+                      style="cursor: pointer;">
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                     </v-avatar>
                     <v-avatar class="avatar" v-else>
@@ -320,7 +321,8 @@
                             <v-row class="mt-4">
                               <!--二级评论用户头像-->
                               <v-col cols="12" md="1">
-                                <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)"
+                                  style="cursor: pointer;">
                                   <img :src="reply_item.avatar_url" />
                                 </v-avatar>
                               </v-col>
@@ -373,7 +375,8 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)"
+                                    style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -427,7 +430,8 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)"
+                                    style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -777,6 +781,8 @@ export default {
       /*推荐视频列表*/
       videos_recommend: [],
       /*遍历数组到此结束*/
+      beginTime: 0,/*当前视频开始播放的时间*/
+      currentTime: 0,/*当前视频当前播放到多少秒*/
 
       /*收藏相关量*/
       // StarWindowVisable: false,
@@ -792,6 +798,14 @@ export default {
     setInterval(() => {
       this.getComments()
     }, 18000);/*1分钟60000，1s1000，这里的数字单位是毫秒*/
+
+    /*当前播放秒数*/
+    // setInterval(() => {
+    //   this.currentTime = Math.floor(this.$refs.video.currentTime);
+    //   console.log(this.currentTime);
+    //   //this.//【调用发给后端的方法】
+    // }, 1000);
+
   },
   mounted() {
     // 在 mounted 钩子中设置自定义标题
@@ -799,7 +813,6 @@ export default {
     //     <span style="display: inline-block; border-top: 1px solid #999; padding-top: 8px;">
     //       ${'添加到收藏夹'}
     //     </span>`
-
 
     // 将 shouldMute 设为 false，以恢复浏览器记录的音量
     setTimeout(() => {
@@ -816,7 +829,10 @@ export default {
         //document.getElementById("shipin").volume = 0.2;
         //console.log(document.getElementById("shipin").volume);
 
-      });
+        //video_player.addEventListener('timeupdate', this.updateCurrentTime);
+        //console.log(this.$refs.video_player.currentTime);
+
+      }, 1000);
     });
   },
   // mounted() { /*计算视频长宽*/
@@ -827,6 +843,21 @@ export default {
   // },
   // beforeDestroy() { /*计算视频长宽*/
   //   window.removeEventListener('resize', this.updateVideoSize);
+  // },
+  // watch: {
+
+  // '$refs.video_player': {
+  //   handler(video_player) {
+  //     setTimeout(() => {
+  //     this.$nextTick(() => {
+  //       video_player.addEventListener('timeupdate', this.updateCurrentTime);
+  //       console.log(this.currentTime);
+  //     });
+  //   },1000);
+
+  //   },
+  //   immediate: true,
+  //  }
   // },
   methods: {
     // updateVideoSize() { /*计算视频长宽*/
@@ -861,7 +892,27 @@ export default {
     //   })
 
     // },
+    // computed: {
+    //   currentTime() {
+    //     const video_player = this.$refs.video_player;
+    //     if (video_player) {
+    //       console.log(video_player.currentTime);
+    //       return Math.floor(video_player.currentTime);
+    //     }
+    //     console.log(video_player.currentTime);
+    //   }
+    // },
 
+    // updateCurrentTime() {
+    //   this.currentTime = Math.floor(this.$refs.video_player.currentTime);
+    // },
+
+    sendTime(){
+      // let formData = new FormData();
+      // formData.append("video_id", this.$route.params.id);
+      // formData.append("time",this.currentTime);
+      // axios.post('',)
+    },
     /*获取视频详情页相关数据（在刷新时加载一次）*/
     fetchVideoData() {
       /*输出登录信息*/
@@ -928,6 +979,8 @@ export default {
           this.video.author_description = response.data.video.user_description;
           this.video.isFollowed = response.data.video.followed;
           this.video.author_follower_amount = response.data.video.follower_amount;
+          this.video.beginTime=0;/*【换成调的接口，获取时间】*/
+          //this.$refs.video.currentTime=this.video.beginTime;
 
           /*视频相关数据量*/
           this.video.view_amount = response.data.video.view_amount;
@@ -2175,7 +2228,7 @@ export default {
   cursor: pointer;
 }
 
-.avatar{
+.avatar {
   transition: transform 0.2s;
 }
 
@@ -2183,7 +2236,7 @@ export default {
   transform: scale(1.28);
 }
 
-.coverHover{
+.coverHover {
   transition: transform 0.2s;
 }
 
