@@ -3,7 +3,7 @@
         <!-- 根标签 -->
         <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="login-form">
             <h2 class="title-zc">
-                <img src="../../../image/logo.png" style="height: 30px;width: 30px;vertical-align: sub" />
+                <img src="../../assets/web_logo.png" style="height: 30px;vertical-align: sub" />
                 欢迎登录
             </h2>
             <div id="username" class="intrud">请输入用户ID/邮箱</div>
