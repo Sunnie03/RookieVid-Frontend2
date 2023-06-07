@@ -3,7 +3,7 @@
         <!-- 根标签 -->
         <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="register-form">
             <h2 class="title-zc">
-              <img src="../../../image/logo.png" style="height: 30px;width: 30px;vertical-align: sub"/>
+              <img src="../../assets/web_logo.png" style="height: 30px;vertical-align: sub"/>
               欢迎注册
             </h2>
             <el-form-item label="用户名" prop="username" style="margin-top:20px">
@@ -109,7 +109,8 @@ export default {
           //处理成功响应
           if(res.data.errno == 0){
             this.$message.success("注册成功");
-            this.$router.push({name: login})
+            // this.$router.push({name: login})
+            this.$router.push('/login')
           } else {
             this.$message.error(res.data.msg)
           }
@@ -133,7 +134,7 @@ export default {
         axios.post('/account/send_vcode',formData)
         .then(response => {
           //处理成功响应
-          if(response.data.errno == 1000){
+          if(response.data.errno === 0){
             this.$message.success("已发送验证码，注意5分钟内有效");
           } else {
             this.$message.error(response.data.msg)

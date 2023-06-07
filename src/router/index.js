@@ -38,13 +38,15 @@ const routes = [
   {
     path: '/video/:id',/*注意这里*/
     name: 'video/',
-    component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/VideoView.vue'),
+    meta: { index: 'noShow'},
   },
   /*搜索页面*/
   {
     path:'/search',
     name:'search',
-    component: () => import(/* webpackChunkName: "about" */ '../views/SearchView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/SearchView.vue'),
+    meta: { index: 'noShow'},
   },
   /*用户的个人主页页面*/
   {
@@ -112,12 +114,12 @@ const routes = [
   {
      path: '/register', 
     name: 'register',
-    component: Register
+    component: Register,
   },
   {
     path: '/login', 
     name: 'login',
-    component: Login
+    component: Login,
   },
   /*管理端页面*/
   /*投诉列表*/

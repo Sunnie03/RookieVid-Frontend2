@@ -14,32 +14,35 @@
 
           <div class="block" style="padding-left: 20px;padding-right: 20px;padding-bottom: 20px;">
             <!--类似轮播器的效果-->
-            <v-carousel ref="carousel" :cycle="false" height="800" style="margin-top: 10px;">
+            <v-carousel ref="carousel" :cycle="false" height="850px" style="margin-top: 10px;">
               <v-carousel-item v-for="(video_item, index) in complainVideos" :key="index"
                 reverse-transition="fade-transition" transition="fade-transition">
                 <!--视频信息-->
-                <div style="font-weight: 500;font-size: 24px;margin-bottom: 7px;">
-                  标题：{{ video_item.title }}
-                </div>
-                <div style="font-weight: 500;font-size: 20px;color:rgb(57, 56, 56);margin-bottom: 7px;">
-                  <v-avatar><img :src="video_item.avatar_url" /></v-avatar>
-                  &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name
-                  }}</span>
-                </div>
-                <div style="font-size: 18px;color:rgb(57, 56, 56);margin-bottom: 7px;">
-                  <i>投稿时间：{{ video_item.created_at }} </i>
-                </div>
-                <div style="display: flex;">
-                  <span style="margin-left: auto;">
-                    <span style="margin-right: 20px">
-                      <!--通过-->
-                      <el-button type="success" plain @click="passVideo(video_item.id)">通过</el-button>
+                <div>
+                  <div class="videoTitle" style="font-weight: 500;font-size: 24px;margin-bottom: 7px;">
+                    标题：{{ video_item.title }}
+                  </div>
+                  <div style="font-weight: 500;font-size: 20px;color:rgb(57, 56, 56);margin-bottom: 7px;">
+                    <v-avatar class="avatar"><img :src="video_item.avatar_url" @click="jumpToUser(video_item.user_id)"
+                        style="cursor: pointer;" /></v-avatar>
+                    &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name
+                    }}</span>
+                  </div>
+                  <div style="font-size: 18px;color:rgb(57, 56, 56);margin-bottom: 7px;">
+                    <i>投稿时间：{{ video_item.created_at }} </i>
+                  </div>
+                  <div style="display: flex;">
+                    <span style="margin-left: auto;">
+                      <span style="margin-right: 20px">
+                        <!--通过-->
+                        <el-button type="success" plain @click="passVideo(video_item.id)">通过</el-button>
+                      </span>
+                      <span>
+                        <!--删除-->
+                        <el-button type="danger" plain @click="reasonDialog = true">删除</el-button>
+                      </span>
                     </span>
-                    <span>
-                      <!--删除-->
-                      <el-button type="danger" plain @click="reasonDialog = true">删除</el-button>
-                    </span>
-                  </span>
+                  </div>
                 </div>
 
                 <!--原因的对话框-->
@@ -77,6 +80,8 @@
           <div style="font-size: 30px;color:grey;margin-top: 20px;">没有需要审核的视频～</div>
         </div>
       </div>
+
+      <el-footer height="80px"></el-footer>
     </el-container>
   </div>
 </template>
@@ -112,9 +117,9 @@ export default {
         console.log(this.$refs.video[0].volume);
         //console.log(document.getElementById("shipin").volume);
         this.shouldMute = false;
-        for(let i=0;i<this.$refs.video.length;i++)
-        this.$refs.video[i].volume = 0.25; // 设置视频音量为 25%
-        
+        for (let i = 0; i < this.$refs.video.length; i++)
+          this.$refs.video[i].volume = 0.25; // 设置视频音量为 25%
+
         console.log('in v');
         //console.log(this.$refs.video.volume);
         //console.log(document.getElementById("shipin").volume);
@@ -257,5 +262,21 @@ export default {
   border-radius: 10px;
   padding: 10px 0 10px 0;
   box-shadow: 0 .5px 0 .5px#e7f6f69a;
+}
+
+.avatar {
+  transition: transform 0.2s;
+}
+
+.avatar:hover {
+  transform: scale(1.2);
+}
+
+.videoTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

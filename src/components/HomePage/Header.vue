@@ -6,7 +6,7 @@
     <div class="head_guide">
       <!--logo图标-->
       <!-- <v-col cols="12" md="2"> -->
-      <div class="logo">
+      <div class="logo" style="cursor: pointer;" @click="jumpToHome()">
         <img alt="web logo" src="@/assets/web_logo.png" height="80px">
       </div>
       <!-- </v-col> -->
@@ -32,39 +32,51 @@
       <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-            active-text-color="#89d1e8">
-            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
+            active-text-color="#1054da" background-color="#ceeef9">
+            <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
-              创作中心</el-menu-item>
+              <i class="el-icon-upload"></i>创作中心</el-menu-item>
 
             <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
               style="font-size:15px">
-              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+              <v-icon size="19">
+                mdi-email
+              </v-icon>
+              <el-badge :max="99" :value="messageNum" class="item">&nbsp;&nbsp;消息</el-badge>
             </el-menu-item>
             <!--没有未读消息-->
             <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
-              消息
+              <v-icon size="19">
+                mdi-email
+              </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
 
-            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')">管理中心</el-menu-item>
+            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')"><i
+                class="el-icon-s-management"></i>管理中心</el-menu-item>
           </el-menu>
         </el-row>
       </div>
       <div class="guide_menu" v-else> <!--不是管理员-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-            active-text-color="#89d1e8">
-
-            <el-menu-item index="" @click="jumpToHome()">首页</el-menu-item>
-            <el-menu-item index="person" @click="jumpTo('person')">用户主页</el-menu-item>
-            <el-menu-item index="myCreation" @click="jumpTo('myCreation')">创作中心</el-menu-item>
-            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')" style="font-size:15px">
-              <el-badge :max="99" :value="messageNum" class="item">消息</el-badge>
+            active-text-color="#1054da" background-color="#ceeef9">
+            <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
+            <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')"><i
+                class="el-icon-upload"></i>创作中心</el-menu-item>
+            <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
+              style="font-size:15px">
+              <v-icon size="19">
+                mdi-email
+              </v-icon>
+              <el-badge :max="99" :value="messageNum" class="item">&nbsp;&nbsp;消息</el-badge>
             </el-menu-item>
             <!--没有未读消息-->
             <el-menu-item index="notification" v-else @click="jumpTo('notification')" style="font-size:15px">
-              消息
+              <v-icon size="19">
+                mdi-email
+              </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
           </el-menu>
         </el-row>
@@ -76,8 +88,8 @@
       <!-- <v-col cols="12" md="2"> -->
       <div v-if="this.$store.state.isLogin === false" class="userPhoto">
         <el-dropdown @command="handleCommandLogin">
-          <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
-          <span class="el-dropdown-link" @click="open_login"> 登录</span>
+          <el-button class="el-dropdown-link avatar" icon="el-icon-user" circle @click="open_login"></el-button>
+          <span class="el-dropdown-link" @click="open_login" style="cursor: pointer;"> 登录</span>
           <el-dropdown-menu slot="dropdown" @click="open_login">
             <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
           </el-dropdown-menu>
@@ -86,7 +98,7 @@
       <!--用户已经登录-->
       <div v-else class="userPhoto">
         <el-dropdown @command="handleCommandPerson">
-          <v-avatar class="el-dropdown-link" @click="jumpTo('person')">
+          <v-avatar class="el-dropdown-link avatar" @click="jumpToPerson()">
             <img :src="avatar" />
           </v-avatar>
           <!-- {{ username }} -->
@@ -115,7 +127,7 @@ export default {
       email: '',
       signature: '',
       /*导航栏组件*/
-      activeIndex: "",/*默认是首页*/
+      activeIndex: "noShow",/*默认是首页*/
       input: "",
       messageNum: '',
     }
@@ -134,9 +146,10 @@ export default {
   },
   watch: {
     '$route': function () {
-      //this.activeIndex = this.$route.meta.index;
+      this.activeIndex = this.$route.meta.index;
       this.$set(this, 'activeIndex', this.$route.meta.index);
       window.location.reload();
+      this.activeIndex = this.$route.meta.index;
     }
 
   },
@@ -244,6 +257,10 @@ export default {
       const path_url = '/';
       window.open(path_url, '_self');
     },
+    jumpToPerson() {
+      const path_url = '/person';
+      window.open(path_url, '_self');
+    },
     search_by_key() {
       // console.log(this.input);
       // console.log(key);
@@ -308,8 +325,14 @@ export default {
   display: flex;
   /* justify-content: space-between; */
   /*好像没区别*/
-  background-color: #b2deed;
-  /* background-color: #ceeef9; */
+  /* background-color: rgba(202, 248, 248, 0.477); */
+  /* background-color: #d4f7f7bd; */
+  background-color: #ceeef9;
+  /* background-color: #1054da; */
+
+  /* background-color: #cdeff4; */
+
+  /* background-color: #dbf2f5; */
   padding: 5px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   align-items: center;
@@ -319,26 +342,26 @@ export default {
 .logo {
   /* position: relative; */
   /* left: 100px; */
-  padding-left: 100px;
-  /* margin-right:5%; */
+  /* padding-left: 10%; */
+  margin-left:5%;
   flex: 1 auto;
 }
 
 .guide_menu {
   align-items: center;
   /* margin-left: 7%; */
-  /* margin-right: 50px; */
+  margin-left: 1%;
   /* flex: 1; */
 }
 
 .search {
   /* display: flex; */
-  width: 420px;
+  width: 24%;
   /* justify-content: center; */
   align-items: center;
   flex-direction: row;
   /* flex: 1; */
-  margin-left: 10%;
+  margin-left: 2%;
 }
 
 .search-input {
@@ -370,7 +393,15 @@ export default {
   display: flex;
 } */
 
-.item {
-  /* padding-top: 10px; */
+/* .item {
+  padding-top: 10px;
+} */
+
+.avatar{
+  transition: transform 0.2s;
+}
+
+.avatar:hover {
+  transform: scale(1.28);
 }
 </style>

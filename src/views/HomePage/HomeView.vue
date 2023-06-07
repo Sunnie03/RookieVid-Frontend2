@@ -21,7 +21,7 @@
             <div class="hot-carousel-container">
               <img :src="video.cover_url" class="hot-carousel-img" @click="videoPlay(video.id)" >
             </div>
-            <div class="hot-carousel-overlay">
+            <div class="hot-carousel-overlay" @click="videoPlay(video.id)">
               <div class="hot-carousel-title" @click="videoPlay(video.id)">{{ video.title }}</div>
             </div>
           </el-carousel-item>
@@ -29,6 +29,7 @@
         <div class="hot-video-display">
 
           <div v-for="(video,index) in top_videos" :key="index" class="recommend-item">
+            <div class="recommend-img-container">
             <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)">
             <div class="overlay" >
               <span class="play-info">
@@ -39,6 +40,7 @@
                 {{ video.like_amount }}
               </span>
             </div>
+          </div>
             <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
               <div class="recommend-title" @click="videoPlay(video.id)">{{ video.title }}</div>
             <!-- </router-link> -->
@@ -100,61 +102,61 @@
     </div> -->
     <div class="recommend">
       <div class="menu">娱乐
-          <el-button @click="goPartition('entertainment')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('entertainment')" size="small" class="lookTotalButton" >查看全部 <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition1" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">影视
-          <el-button @click="goPartition('film')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('film')" size="small" class="lookTotalButton">查看全部 <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition2" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">游戏
-          <el-button @click="goPartition('game')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('game')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition3" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">运动
-          <el-button @click="goPartition('sports')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('sports')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition4" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">美食
-          <el-button @click="goPartition('food')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('food')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition5" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">科技
-          <el-button @click="goPartition('technology')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('technology')" size="small" class="lookTotalButton">查看全部 <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition6" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">军事
-          <el-button @click="goPartition('military')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('military')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition7" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">音乐
-          <el-button @click="goPartition('music')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('music')" size="small" class="lookTotalButton">查看全部 <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition8" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">学习
-          <el-button @click="goPartition('study')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('study')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition9" ></Partitionvideo>
     </div>
     <div class="recommend">
       <div class="menu">生活
-          <el-button @click="goPartition('life')" size="small" style="align-self:flex-end;">查看全部  ></el-button>
+          <el-button @click="goPartition('life')" size="small" class="lookTotalButton">查看全部  <i class="el-icon-arrow-right"></i></el-button>
       </div>   
       <Partitionvideo  :partition="partition10" ></Partitionvideo>
     </div>
@@ -598,20 +600,24 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 40%;
+  height: 30%;
   /* background-color:rgba(154, 104, 54, 0.5);  */
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
   /* border-radius:20px; */
 }
+/* .hot-carousel:hover .hot-carousel-overlay{
+  opacity: 0;
+} */
 .hot-carousel-title{
   cursor:pointer;
   position: relative;
-  bottom: -70%;
+  bottom: -60%;
   /* top:0; */
   left: 0;
   width: 100%;
-  height: 20%;
+  height: 30%;
   /* background-color: rgba(0, 0, 0, 0.5); */
   color: white;
   display: flex;
@@ -660,8 +666,204 @@ export default {
   grid-row-gap:0;
   justify-items: center;
  }
- 
+ .menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  line-height: 60px;
+  margin-top:20px;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  text-shadow: 2px 2px 2px #ccc;
+  flex:1;
+ }
+ .lookTotalButton{
+  align-self:flex-end;
+  margin-bottom:8px;
+ }
+ .recommend-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 50px;
+  justify-items: center;
+}
+.recommend-item {
+    width: 100%;
+    height: 250px;
+    position: relative;
+    margin-bottom: 10px;
+}
+.recommend-img-container{
+  width:100%;
+  height:60%;
+}
+.recommend-img{
+  cursor:pointer;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius: 10px;
+  border-color: rgb(175, 174, 174);
+  transition: transform 0.3s ease;
+}
+.recommend-img-container:hover .recommend-img {
+  transform: scale(1.05);
+}
 
+.overlay {
+  position: absolute;
+  border-radius:10px;
+  bottom: 40%;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  /* background-color:rgba(255, 255, 255,0.4);  */
+  background-image: linear-gradient(to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0.7));
+  display: flex;
+  justify-content: space-between;
+  /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+}
+
+.recommend-img-container:hover .overlay {
+  opacity: 0;
+}
+
+.play-info, .like-info {
+  display: flex;
+  align-items: center;
+  color: rgb(255, 255, 255);
+  font-weight:bold;
+  /* margin-top:20px; */
+  margin-left: 8px;
+  margin-right:8px;
+}
+.play-icon, .like-icon{
+  margin:5px;
+}
+a{
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
+}
+._title{
+  height:20%;
+  width:100%;
+}
+.recommend-title {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px !important;
+    font-weight: bold;
+    padding: 10px;
+    box-sizing: border-box;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    word-break:break-all;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    cursor:pointer;
+  }
+ 
+.recommend-title:hover{
+    color:#1e90ff;
+  }
+.recommend-title:hover::before {
+  content: attr(data-fulltitle);
+  position: absolute;
+  border-radius:5px;
+  background: rgb(228, 228, 228);
+  border: 1px solid rgb(180, 180, 180);
+  padding: 2px 8px;
+  font-weight: normal;
+  color:black;
+  font-size: 10px;
+  top: 100%;
+  left: 30%;
+  white-space: nowrap;
+}
+.author {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-top: 8px;
+  margin-left:5px;
+}
+
+.author-tag {
+  /* width:50px;
+  height:30px; */
+  border: 1px solid #20bcf0;
+  font-weight:bold;
+  color: #20bcf0;
+  font-size: 10px;
+  background-color: rgba(35, 179, 241, 0.1);
+  border-radius: 4px;
+  padding: 2px 8px;
+  /* margin-right: 8px; */
+}
+
+.author-name {
+  width:47%;
+  font-weight: bold;
+  color: grey;
+  padding: 2px 8px;
+  font-size:15px;
+  cursor:pointer;
+  box-sizing: border-box;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    word-break:break-all;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:1;
+    overflow:hidden;
+  
+  
+  /* margin-right:0; */
+}
+.author-name:hover{
+  color:orange
+}
+.author-name:hover::before {
+  content: attr(data-fullname);
+  position: absolute;
+  border-radius:5px;
+  background: rgb(228, 228, 228);
+  border: 1px solid rgb(180, 180, 180);
+  padding: 2px 8px;
+  font-weight: normal;
+  color:black;
+  font-size: 10px;
+  top: 100%;
+  left: 30%;
+  white-space: nowrap;
+  z-index:1;
+}
+.time{
+  color:grey;
+  font-size:smaller;
+  margin-top:5px;
+  margin-left:0;
+  
+}
+ 
 /* .carousel-container {
   padding-top:10px;
   width: 80%;

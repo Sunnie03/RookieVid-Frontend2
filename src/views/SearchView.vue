@@ -57,7 +57,9 @@
             <div v-else>
               <div class="user-result-display">
                 <div v-for="(user, index) in search_users" :key="index"  class="user-row">
-                    <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
+                    <div class="avatar-container">
+                      <img :src="user.avatar_url" class="user-avatar" @click="goPersonPage(user.id)">
+                    </div>
                     <div class="user-details">
                       <div class="user-name" @click="goPersonPage(user.id)">{{ user.username }}</div> 
                       <div class="user-signature" >{{ user.signature ?user.signature:"Ta什么都没写"}}</div>
@@ -418,8 +420,11 @@ text-decoration: none;
   border-radius: 50%;
   margin-right: 10px;
   cursor:pointer;
+  transition: transform 0.3s ease;
 }
-
+.avatar-container:hover .user-avatar{
+  transform: scale(1.1);
+}
 /* .user-info {
   display: flex;
   align-items: center;

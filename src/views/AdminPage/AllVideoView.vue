@@ -26,7 +26,7 @@
       </el-aside> -->
 
       <el-main>
-        <div :style="{ 'width': '45vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
+        <div :style="{ 'width': '60vw', 'margin-top': '30px', 'justify-content': 'center' }" class="mx-auto">
           <div v-if="amount > 0">
             <div style="margin-bottom: 10px;font-weight: 500;font-size: 22px;">
               <p>全部视频 &nbsp;&nbsp;共{{ amount }}条</p>
@@ -36,12 +36,12 @@
               <div class="show_video_block"
                 style="padding-top: 20px;padding-left: 20px;margin-bottom: 14px;padding-right: 9px;">
                 <v-row>
-                  <v-col cols="12" md="4">
-                    <img class="video_cover" :src="video_item.cover_url" width="100%" height="128px"
-                      @click="jumpTo(video_item.id)" />
+                  <v-col cols="12" md="3">
+                    <img class="video_cover coverHover" :src="video_item.cover_url" width="100%" height="128px"
+                      @click="jumpTo(video_item.id)" style="cursor: pointer;" />
                   </v-col>
 
-                  <v-col class="video_introdction" cols="12" md="8">
+                  <v-col class="video_introdction" cols="12" md="9">
                     <div class="video_title" v-bind:title="video_item.title" @click="jumpTo(video_item.id)"
                       style="font-weight: 400;font-size: 18px;">
                       <span>{{ video_item.title }}</span>
@@ -211,5 +211,13 @@ export default {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
   cursor: pointer;
+}
+
+.coverHover{
+  transition: transform 0.2s;
+}
+
+.coverHover:hover {
+  transform: scale(1.07);
 }
 </style>

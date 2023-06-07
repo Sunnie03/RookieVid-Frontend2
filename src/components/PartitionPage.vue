@@ -30,7 +30,9 @@
           <div class="recommend-container">
             <div v-for="(video,index) in this.videos" :key="index" class="recommend-item">
               <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-              <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.video_id)">
+              <div class="recommend-img-container">
+                <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)">
+              </div>
               <!-- </router-link> -->
               <div class="overlay">
                 <span class="play-info">
@@ -42,7 +44,7 @@
                 </span>
               </div>
               <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-                <div class="recommend-title" @click="videoPlay(video.video_id)">{{ video.title }} </div>
+                <div class="recommend-title" @click="videoPlay(video.id)">{{ video.title }} </div>
               <!-- </router-link> -->
               <div class="author">
                 <span class="author-tag">作者</span>
@@ -117,7 +119,8 @@
         //   this.currentPage = newPage;
         // },
         videoPlay(id){
-          const video_play_url='/video/'+id
+          console.log('video_id:'+id);
+          const video_play_url='/video/'+id;
           window.open(video_play_url,'_blank');
         },
         goPersonPage(uid){
@@ -160,7 +163,7 @@
                 else if(id===8){
                   if(response.data.errno!=0){
                     console.log(response.data.msg);
-                    alert(response.data.msg);
+                    this.$message.warning(response.data.msg);
                   }
                   else{
                     response.data.video.forEach((video,index)=>{
@@ -260,6 +263,7 @@
     /* margin-bottom: 10px; */
     /* background-color: rgba(230, 230, 230,0.5); */
   }
+
   .ranking-item:first-child{
     height:118px;
   }
@@ -334,13 +338,23 @@
     position: relative;
     margin-bottom: 20px;
   }
+  .recommend-img-container{
+    width:100%;
+    height:60%;
+  }
   .recommend-img{
   width:100%;
-  height:60%;
+  height:100%;
   object-fit:cover;
   border-radius: 10px;
+  transition: transform 0.3s ease;
   }
-  
+
+  .recommend-img-container:hover .recommend-img {
+  transform: scale(1.05);
+}
+
+
   .overlay {
     border-radius: 10px;;
   position: absolute;
@@ -353,6 +367,9 @@
   justify-content: space-between;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
   }
+  .recommend-item:hover .overlay {
+  opacity: 0;
+}
   .top-img{
     height:100%;
     width:100%;
@@ -479,6 +496,9 @@
     -webkit-line-clamp:1;
     overflow:hidden;
   /* margin-right:0; */
+  }
+  .author-name:hover{
+    color:orange;
   }
   .author-name:hover::before {
   content: attr(data-fullname);
