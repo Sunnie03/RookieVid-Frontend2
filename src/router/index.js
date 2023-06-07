@@ -213,6 +213,12 @@ const routes = [
     name: 'amendCreation',
     component: () => import(/* webpackChunkName: "about" */ '../views/CreationManagement/AmendCreation.vue')
   },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import(/* webpackChunkName: "about" */ '../views/GuidePage/HistoryView.vue'),
+    meta: { index: 'history' }
+  },
 ]
 
 const router = new VueRouter({
