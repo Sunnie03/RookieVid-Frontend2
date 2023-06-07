@@ -2,8 +2,9 @@
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition" :key="index" class="recommend-item">
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-          
+          <div class="recommend-img-container">
            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)" >
+          
           <!-- </router-link> -->
           <div class="overlay" >
             <span class="play-info">
@@ -13,6 +14,7 @@
               <img class="like-icon" src="../../assets/display/thumb-up.svg">
               {{ video.like_amount }}
             </span>
+          </div>
           </div>
           <!-- <div class="_title"> -->
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
@@ -79,16 +81,20 @@ export default ({
     position: relative;
     margin-bottom: 10px;
 }
+.recommend-img-container{
+  width:100%;
+  height:60%;
+}
 .recommend-img{
   cursor:pointer;
   width:100%;
-  height:60%;
+  height:100%;
   object-fit:cover;
   border-radius: 10px;
   border-color: rgb(175, 174, 174);
   transition: transform 0.3s ease;
 }
-.recommend-item:hover .recommend-img {
+.recommend-img-container:hover .recommend-img {
   transform: scale(1.05);
 }
 
@@ -106,7 +112,7 @@ export default ({
   /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
 }
 
-.recommend-item:hover .overlay {
+.recommend-img-container:hover .overlay {
   opacity: 0;
 }
 
