@@ -20,7 +20,7 @@
       <div class="guide_menu" v-if="this.$store.state.isAdmin === 'true'"><!--是管理员，就显示有“管理中心”-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-            active-text-color="#89d1e8">
+            active-text-color="#1054da" background-color="#ceeef9">
             <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')">
@@ -47,7 +47,7 @@
       <div class="guide_menu" v-else> <!--不是管理员-->
         <el-row type="flex" justify="end">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-            active-text-color="#89d1e8">
+            active-text-color="#1054da" background-color="#ceeef9">
             <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
             <el-menu-item index="myCreation" @click="jumpTo('myCreation')"><i class="el-icon-upload"></i>创作中心</el-menu-item>
@@ -84,7 +84,7 @@
       <!--用户已经登录-->
       <div v-else class="userPhoto">
         <el-dropdown @command="handleCommandPerson">
-          <v-avatar class="el-dropdown-link" @click="jumpTo('person')">
+          <v-avatar class="el-dropdown-link" @click="jumpToPerson()">
             <img :src="avatar" />
           </v-avatar>
           <!-- {{ username }} -->
@@ -239,6 +239,10 @@ export default {
       const path_url = '/';
       window.open(path_url, '_self');
     },
+    jumpToPerson() {
+      const path_url = '/person';
+      window.open(path_url, '_self');
+    },
     search_by_key() {
       // console.log(this.input);
       // console.log(key);
@@ -302,8 +306,8 @@ export default {
   display: flex;
   /* justify-content: space-between; */
   /*好像没区别*/
-  background-color: #b2deed;
-  /* background-color: #ceeef9; */
+  /* background-color: #b2deed; */
+  background-color: #ceeef9;
   padding: 5px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   align-items: center;
