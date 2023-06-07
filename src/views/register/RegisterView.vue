@@ -88,9 +88,9 @@ export default {
         username: [{ required: true, validator: validateName, trigger: 'blur' },
           { min: 1, max: 20, message: '用户名长度在 1 到 20 个字符', trigger: 'blur' }/* 长度要求 */],
         password: [{ required: true, validator: validatePass, trigger: 'blur'},
-          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+          { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
         checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' },
-          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }],
+          { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur' }],
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
       }
     }

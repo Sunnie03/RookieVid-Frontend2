@@ -14,15 +14,7 @@
             <div class="recommend-container">
               <div v-for="(favorite,index) in this.partition" :key="index" class="recommend-item" >
                  <img class="recommend-img" :src="favorite.cover_url" @click="openCollect(favorite.id,favorite.title)">
-                <!-- <div class="overlay">
-                  <span class="play-info">
-                    <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
-                    {{video.view_amount }}</span>
-                  <span class="like-info">
-                    <img class="like-icon" src="../../assets/display/thumb-up.svg">
-                    {{ video.like_amount }}
-                  </span>
-                </div> -->
+    
                   <a class="titles" @click="openCollect(favorite.id,favorite.title)">{{ favorite.title }}</a> 
                   <div class="author"> 
                     <span class="time" style="float:left">简介： {{ favorite.description }}</span>
@@ -38,7 +30,7 @@
                  <a class="titles" style="text-align:center" @click="openForm" >新建收藏夹 {{ favorite.title }}</a> 
                  
                 <el-dialog title="新收藏夹" :visible.sync="dialogFormVisible">
-                  <el-form :model="form">
+                  <el-form :model="form" :rules="rules">
                     <el-form-item label="收藏夹名称" :label-width="formLabelWidth">
                       <el-input v-model="form.collectName" autocomplete="off"></el-input>
                     </el-form-item>
@@ -48,8 +40,8 @@
                     
                     
                     <el-form-item label="是否公开" :label-width="formLabelWidth">
-                      <el-radio v-model="form.radio" label="1" @click="publicColl">公开</el-radio>
-                      <el-radio v-model="form.radio" label="2" @click="privateColl">不公开</el-radio>
+                      <el-radio v-model="form.radio" label="1" @click="privateColl()">不公开</el-radio>
+                      <el-radio v-model="form.radio" label="2" @click="publicColl()">公开</el-radio>
                     </el-form-item>
 
                   </el-form>
@@ -95,7 +87,12 @@ export default {
       },
       dialogFormVisible: Boolean,
       formLabelWidth: '120px',
+
+      rules: {
+        collectDes:[{min: 0, max: 15, message: '收藏夹描述长度在15个字符以内', trigger: 'blur'}]
+      }
     }
+    
   },
   created() {
     this.dialogFormVisible = false
@@ -178,10 +175,10 @@ export default {
       window.open(collect_url,'_blank');
     },
     publicColl() {
-      this.radio = 1;
+      this.form.radio = 0;
     },
     privateColl () {
-      this.radio = 0;
+      this.form.radio = 1;
     },
     removeCollect(collect_id) {
       let Headers={'Authorization': this.$store.getters.getStorage}

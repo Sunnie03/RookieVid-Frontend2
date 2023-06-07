@@ -5,7 +5,7 @@
             <div class="text-title" > 昵称：{{ username }}</div>
             <div class="user-sign" v-if="signature">个性签名：{{signature}}</div>
             <div class="user-sign" v-else>个性签名：这个人很懒，什么都没写吖</div>
-            <div class="user-sign">邮箱：{{email}}</div>
+            <div class="user-sign">用户ID：{{userid}}</div>
           </div>
           <button class="follow-button" @click="addFollow(look_user)" v-if="status===1 && is_followed===0">+关注</button>
           <button class="remove-button" @click="removeFollow(look_user)" v-else-if="status===1 && is_followed===1">已关注</button>

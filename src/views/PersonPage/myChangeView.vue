@@ -44,7 +44,13 @@
             <el-button type="success" @click="sendVerification()" style="margin-left:20px;position:absolute">发送验证码</el-button>
           </el-form-item>
           <el-form-item label="个性签名" prop="signature" style="display:flex">
-            <el-input v-model="signature" autocomplete="off"></el-input>
+            <!-- <div style="flex:1"> -->
+              <el-input v-model="signature" autocomplete="off" :maxlength="30" @input="handleInput">
+
+              </el-input>
+            <!-- </div> -->
+            <div >{{ inputCount }}/30</div>
+            
           </el-form-item>
           <el-button type="primary" @click="changeInfo">修改资料</el-button>
           <el-button @click="giveUp">取消</el-button>
@@ -146,10 +152,11 @@ export default {
       password: '',
       checkPass: '',
       verify: '',
+      inputCount: 0,
       dialogFormVisible:Boolean,
       rules: {
         password: [{ required: true, validator: validatePass, trigger: 'blur' },
-          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+          { min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
         checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' }],
       },
     }
@@ -184,6 +191,7 @@ export default {
           this.email = res.data.context.email
           this.oldEmail = this.email
           this.signature = res.data.context.signature
+          this.inputCount = this.signature.length
 
         } else {
             alert(res.data.msg)
@@ -330,6 +338,9 @@ export default {
     },
     handlePictureCardPreview(file) {
       return
+    },
+    handleInput() {
+      this.inputCount = this.signature.length;
     }
   }
 }
