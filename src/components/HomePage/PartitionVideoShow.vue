@@ -2,9 +2,10 @@
       <div class="recommend-container">
         <div v-for="(video,index) in this.partition" :key="index" class="recommend-item">
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
+          
            <img class="recommend-img" :src="video.cover_url" @click="videoPlay(video.id)" >
           <!-- </router-link> -->
-          <div class="overlay">
+          <div class="overlay" >
             <span class="play-info">
               <img class="play-icon" src="../../assets/display/play_circle_outline.svg">
               {{video.view_amount }}</span>
@@ -15,7 +16,7 @@
           </div>
           <!-- <div class="_title"> -->
           <!-- <router-link :to="{name:'video',params:{'id':video.video_id}}"> -->
-            <div class="recommend-title" :data-fulltitle="video.title" @click="videoPlay(video.id)">{{ video.title }}</div>
+          <div class="recommend-title" :data-fulltitle="video.title" @click="videoPlay(video.id)">{{ video.title }}</div>
           <!-- </div> -->
             <!-- </router-link> -->
           <div class="author">
@@ -48,7 +49,7 @@ export default ({
     },
 })
 </script>
-<style >
+<style scoped>
 .menu{
   display: flex;
   justify-content: space-between;
@@ -85,6 +86,10 @@ export default ({
   object-fit:cover;
   border-radius: 10px;
   border-color: rgb(175, 174, 174);
+  transition: transform 0.3s ease;
+}
+.recommend-item:hover .recommend-img {
+  transform: scale(1.05);
 }
 
 .overlay {
@@ -99,6 +104,10 @@ export default ({
   display: flex;
   justify-content: space-between;
   /* background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8)); */
+}
+
+.recommend-item:hover .overlay {
+  opacity: 0;
 }
 
 .play-info, .like-info {
