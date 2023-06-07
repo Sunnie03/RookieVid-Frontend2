@@ -274,6 +274,7 @@ export default {
     justify-items: center;
     margin-top: 30px;
     padding-bottom: 50px;
+    grid-template-rows: 380px;
   }
   .recommend-item {
       width: 85%;
