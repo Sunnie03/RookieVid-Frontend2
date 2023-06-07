@@ -74,7 +74,7 @@
       <!-- <v-col cols="12" md="2"> -->
       <div v-if="this.$store.state.isLogin === false" class="userPhoto">
         <el-dropdown @command="handleCommandLogin">
-          <el-button class="el-dropdown-link" icon="el-icon-user" circle @click="open_login"></el-button>
+          <el-button class="el-dropdown-link avatar" icon="el-icon-user" circle @click="open_login"></el-button>
           <span class="el-dropdown-link" @click="open_login"> 登录</span>
           <el-dropdown-menu slot="dropdown" @click="open_login">
             <el-dropdown-item icon="el-icon-s-custom" command="a">立即登录</el-dropdown-item>
@@ -84,7 +84,7 @@
       <!--用户已经登录-->
       <div v-else class="userPhoto">
         <el-dropdown @command="handleCommandPerson">
-          <v-avatar class="el-dropdown-link" @click="jumpToPerson()">
+          <v-avatar class="el-dropdown-link avatar" @click="jumpToPerson()">
             <img :src="avatar" />
           </v-avatar>
           <!-- {{ username }} -->
@@ -112,7 +112,7 @@ export default {
       email: '',
       signature: '',
       /*导航栏组件*/
-      activeIndex: "",/*默认是首页*/
+      activeIndex: "myCreation",/*默认是首页*/
       input: "",
       messageNum: '',
     }
@@ -372,4 +372,12 @@ export default {
   margin-top: 10px;
   margin-right: 40px;
 } */
+
+.avatar{
+  transition: transform 0.2s;
+}
+
+.avatar:hover {
+  transform: scale(1.28);
+}
 </style>
