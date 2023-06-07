@@ -355,8 +355,9 @@ export default {
   .time{
     font-size:smaller;
     margin-top:5px;
-    margin-left: 0px;
-    width: 100%;
+    /* margin-left: 0px; */
+    text-align: right;
+    width: 40%;
   }
   #TOPUp{
     position: fixed;

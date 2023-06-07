@@ -283,7 +283,7 @@
     font-size:smaller;
     margin-top:5px;
     text-align: right;
-    width: 100%;
+    width: 40%;
   }
   .v-application ul, .v-application ol {
     padding-left: 0px

@@ -31,9 +31,9 @@
                                             <el-tag type="success">{{ history.video.label }}</el-tag>
                                         </div>
                                         <div class="author-info-container">
-                                            <!-- <div class="author-avatar-container"> -->
+                                            <div class="author-avatar-container">
                                                 <img class="author-info-avatar" :src="history.avatar_url" @click="goPersonPage(history.user_id)">
-                                            <!-- </div> -->
+                                            </div>
                                             <div class="author-name" @click="goPersonPage(history.user_id)"> {{ history.user_name }}</div>
                                             <!-- <div class="partition-label-info">{{ history.video.label }}</div> -->
                                            
@@ -228,20 +228,20 @@ export default {
     width:80%;
 }
 .video-title{
-    /* height:25%; */
+    height:34%;
     padding-bottom:4%;
     font-weight:bold;
     font-size:19px;
     color:rgb(74, 74, 74);
-/*    
+   
   box-sizing: border-box;
   word-break:break-all;
   text-overflow:ellipsis;
   word-break:break-all;
   display:-webkit-box;
   -webkit-box-orient:vertical;
-  -webkit-line-clamp:1;
-  overflow:hidden; */
+  -webkit-line-clamp:2;
+  overflow:hidden;
   cursor:pointer
   /* flex:1; */
 }
@@ -276,14 +276,17 @@ export default {
 .author-info-container:hover .author-info-avatar{
     transform: scale(1.1);
 }
-
+.author-avatar-container{
+    height:30px;
+    width:40px;
+}
 .author-info-avatar{
     
     border-radius:50%;
     vertical-align: middle;
     line-height: 30px;
-    height:30px;
-    width:30px;
+    height:100%;
+    width:100%;
     transition: transform 0.3s ease;
     
 }
