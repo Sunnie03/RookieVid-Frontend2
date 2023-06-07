@@ -51,7 +51,10 @@
                 mdi-email
               </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
-
+            <el-menu-item index="history" @click="jumpTo('history')">
+              <v-icon size="20"
+                >mdi-clock-time-nine-outline</v-icon>
+                &nbsp;历史记录</el-menu-item>
             <el-menu-item index="admin" @click="jumpTo('admin/allVideo')"><i
                 class="el-icon-s-management"></i>管理中心</el-menu-item>
           </el-menu>
@@ -78,7 +81,12 @@
                 mdi-email
               </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
+            <el-menu-item index="history" @click="jumpTo('history')">
+              <v-icon
+                size="20">mdi-clock-time-nine-outline</v-icon>
+                &nbsp;历史记录</el-menu-item>
           </el-menu>
+
         </el-row>
       </div>
       <!-- </v-col> -->
@@ -301,7 +309,9 @@ export default {
       } else if (this.$store.state.isLogin || !(Token === 'null' || Token === '' || Token === undefined)) {//已经登录
 
         if (confirm("您已登录，请确认是否登出？")) {
-          this.$store.commit('$_logout')
+          this.$store.commit('$_logout');
+          location.reload();
+          return;
 
         } else {
           return;
@@ -343,7 +353,7 @@ export default {
   /* position: relative; */
   /* left: 100px; */
   /* padding-left: 10%; */
-  margin-left:5%;
+  margin-left: 5%;
   flex: 1 auto;
 }
 
@@ -397,7 +407,7 @@ export default {
   padding-top: 10px;
 } */
 
-.avatar{
+.avatar {
   transition: transform 0.2s;
 }
 

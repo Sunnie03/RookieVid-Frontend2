@@ -40,7 +40,11 @@
               </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
 
-            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')"><i class="el-icon-s-management"></i>管理中心</el-menu-item>
+            <el-menu-item index="history" @click="jumpTo('history')">
+              <v-icon size="20">mdi-clock-time-nine-outline</v-icon>
+              &nbsp;历史记录</el-menu-item>
+            <el-menu-item index="admin" @click="jumpTo('admin/allVideo')"><i
+                class="el-icon-s-management"></i>管理中心</el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -50,7 +54,8 @@
             active-text-color="#1054da" background-color="#ceeef9">
             <el-menu-item index="" @click="jumpToHome()"><i class="el-icon-s-home"></i>首页</el-menu-item>
             <el-menu-item index="person" @click="jumpTo('person')"><i class="el-icon-user-solid"></i>用户主页</el-menu-item>
-            <el-menu-item index="myCreation" @click="jumpTo('myCreation')"><i class="el-icon-upload"></i>创作中心</el-menu-item>
+            <el-menu-item index="myCreation" @click="jumpTo('myCreation')"><i
+                class="el-icon-upload"></i>创作中心</el-menu-item>
             <el-menu-item index="notification" v-if="messageNum > 0" @click="jumpTo('notification')"
               style="font-size:15px">
               <v-icon size="19">
@@ -64,6 +69,10 @@
                 mdi-email
               </v-icon>&nbsp;&nbsp;消息
             </el-menu-item>
+
+            <el-menu-item index="history" @click="jumpTo('history')">
+              <v-icon size="20">mdi-clock-time-nine-outline</v-icon>
+              &nbsp;历史记录</el-menu-item>
           </el-menu>
         </el-row>
       </div>
@@ -282,7 +291,9 @@ export default {
       } else if (this.$store.state.isLogin || !(Token === 'null' || Token === '' || Token === undefined)) {//已经登录
 
         if (confirm("您已登录，请确认是否登出？")) {
-          this.$store.commit('$_logout')
+          this.$store.commit('$_logout');
+          location.reload();
+          return;
 
         } else {
           return;
@@ -373,7 +384,7 @@ export default {
   margin-right: 40px;
 } */
 
-.avatar{
+.avatar {
   transition: transform 0.2s;
 }
 
