@@ -221,10 +221,10 @@
                   <!--justify="center"-->
                   <!--当前用户头像-->
                   <v-col cols="12" md="1" class="d-flex" align="center">
-                    <v-avatar v-if="this.$store.state.isLogin" @click="jumpToPerson()" style="cursor: pointer;">
+                    <v-avatar class="avatar" v-if="this.$store.state.isLogin" @click="jumpToPerson()" style="cursor: pointer;">
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                     </v-avatar>
-                    <v-avatar v-else>
+                    <v-avatar class="avatar" v-else>
                       <img src="@/assets/my_avatar.png" />
                     </v-avatar>
                   </v-col>
@@ -252,7 +252,7 @@
                   :key="index">
                   <v-row>
                     <v-col cols="12" md="1">
-                      <v-avatar @click="jumpToUser(comment_item.user_id)" style="cursor: pointer;">
+                      <v-avatar class="avatar" @click="jumpToUser(comment_item.user_id)" style="cursor: pointer;">
                         <img :src="comment_item.avatar_url" />
                       </v-avatar>
                     </v-col>
@@ -320,7 +320,7 @@
                             <v-row class="mt-4">
                               <!--二级评论用户头像-->
                               <v-col cols="12" md="1">
-                                <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                   <img :src="reply_item.avatar_url" />
                                 </v-avatar>
                               </v-col>
@@ -373,7 +373,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -427,7 +427,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
+                                  <v-avatar class="avatar" size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -521,7 +521,7 @@
                       <v-row v-if="show_comment_input[index]" style="margin-top: 10px;">
                         <!--当前用户头像-->
                         <v-col cols="12" md="1" class="d-flex" align="center">
-                          <v-avatar style="cursor: pointer;" @click="jumpToPerson()">
+                          <v-avatar class="avatar" style="cursor: pointer;" @click="jumpToPerson()">
                             <img :src="user.user_avatar" />
                           </v-avatar>
                         </v-col>
@@ -553,43 +553,46 @@
               <div>
                 <div style="margin:15px;margin-bottom: 20px;">
                   <v-row style="width:100%;margin-top:10px">
-                    <!-- <v-col cols="12" md="3"> -->
-                    <div style="margin-top: 10px;">
-                      <v-avatar @click="jumpToUser(video.author_id)" style="cursor: pointer;">
-                        <img :src="video.author_image_url" />
-                      </v-avatar>
-                    </div>
-                    <!-- </v-col> -->
-
-                    <div style="margin-left: 14px;">
-                      <!--作者名字-->
-                      <div style="font-size: 17px;font-weight: 500;">
-                        <!-- <router-link :to="'/user/' + video.author_id">  -->
-                        <span class="textBtn" @click="jumpToUser(video.author_id)">{{ video.author_name }}</span>
-                        <!-- </router-link> -->
+                    <v-col cols="12" md="2">
+                      <div style="margin-top: 10px;">
+                        <v-avatar class="avatar" @click="jumpToUser(video.author_id)" style="cursor: pointer;">
+                          <img :src="video.author_image_url" />
+                        </v-avatar>
                       </div>
+                    </v-col>
 
-                      <div>
-                        <div style="margin-top: 7px;margin-bottom: 10px;color:rgb(68, 67, 67)">
-                          {{ video.author_description }}
+                    <v-col cols="12" md="10">
+                      <div style="margin-left: 14px;">
+                        <!--作者名字-->
+                        <div style="font-size: 17px;font-weight: 500;">
+                          <!-- <router-link :to="'/user/' + video.author_id">  -->
+                          <span class="textBtn rec_video_author" v-bind:title="'作者: ' + video.author_name"
+                            @click="jumpToUser(video.author_id)">{{ video.author_name }}</span>
+                          <!-- </router-link> -->
+                        </div>
+
+                        <div>
+                          <div style="margin-top: 7px;margin-bottom: 10px;color:rgb(68, 67, 67)">
+                            {{ video.author_description }}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div style="margin-bottom: 20px;margin-top: 3px">
+                            <span v-if="video.isFollowed"> <!--如果已关注-->
+                              <v-btn depressed @click="DisFollow">
+                                <i class="el-icon-check"></i> 已关注 {{ video.author_follower_amount }}
+                              </v-btn>
+                            </span>
+                            <span v-else> <!--如果未关注-->
+                              <v-btn depressed color="primary" @click="Follow">
+                                +关注 {{ video.author_follower_amount }}
+                              </v-btn>
+                            </span>
+                          </div>
                         </div>
                       </div>
-
-                      <div>
-                        <div style="margin-bottom: 20px;margin-top: 3px">
-                          <span v-if="video.isFollowed"> <!--如果已关注-->
-                            <v-btn depressed @click="DisFollow">
-                              <i class="el-icon-check"></i> 已关注 {{ video.author_follower_amount }}
-                            </v-btn>
-                          </span>
-                          <span v-else> <!--如果未关注-->
-                            <v-btn depressed color="primary" @click="Follow">
-                              +关注 {{ video.author_follower_amount }}
-                            </v-btn>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    </v-col>
                   </v-row>
                 </div>
               </div>
@@ -609,7 +612,7 @@
                     <v-row>
                       <v-col cols="12" md="6">
                         <div style="padding-left: 15px;">
-                          <img :src="recommend_item.cover_url" width="100%" height="120px"
+                          <img class="coverHover" :src="recommend_item.cover_url" width="100%" height="120px"
                             @click="jumpTo(recommend_item.id)" style="cursor: pointer;" />
                         </div>
                       </v-col>
@@ -1932,7 +1935,7 @@ export default {
       const display_user_url = '/lookPerson/' + user_id;
       window.open(display_user_url, '_self');
     },
-    jumpToPerson(){
+    jumpToPerson() {
       const user_url = '/person';
       window.open(user_url, '_self');
     },
@@ -2170,5 +2173,21 @@ export default {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
   cursor: pointer;
+}
+
+.avatar{
+  transition: transform 0.2s;
+}
+
+.avatar:hover {
+  transform: scale(1.28);
+}
+
+.coverHover{
+  transition: transform 0.2s;
+}
+
+.coverHover:hover {
+  transform: scale(1.07);
 }
 </style>

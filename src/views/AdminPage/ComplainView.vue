@@ -20,7 +20,7 @@
                 <div class="complained_video_block" style="padding-left: 20px;margin-bottom: 20px;padding-right: 9px;">
                   <v-row>
                     <v-col cols="12" md="4">
-                      <img :src="video_item.cover_url" width="100%" height="120px" @click="jumpTo(video_item.id)" style="cursor: pointer;" />
+                      <img class="coverHover" :src="video_item.cover_url" width="100%" height="120px" @click="jumpTo(video_item.id)" style="cursor: pointer;" />
                     </v-col>
 
                     <v-col class="complain_introdction" cols="12" md="7">
@@ -383,5 +383,13 @@ export default {
   color: rgb(0, 179, 255);
   /*这个颜色比较接近链接的颜色*/
   cursor: pointer;
+}
+
+.coverHover{
+  transition: transform 0.2s;
+}
+
+.coverHover:hover {
+  transform: scale(1.07);
 }
 </style>
