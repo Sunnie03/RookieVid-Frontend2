@@ -221,7 +221,7 @@
                   <!--justify="center"-->
                   <!--当前用户头像-->
                   <v-col cols="12" md="1" class="d-flex" align="center">
-                    <v-avatar v-if="this.$store.state.isLogin" @click="jumpToUser(user.user_id)">
+                    <v-avatar v-if="this.$store.state.isLogin" @click="jumpToPerson()" style="cursor: pointer;">
                       <img :src="user.user_avatar" /><!--未登录时有问题【】-->
                     </v-avatar>
                     <v-avatar v-else>
@@ -252,7 +252,7 @@
                   :key="index">
                   <v-row>
                     <v-col cols="12" md="1">
-                      <v-avatar @click="jumpToUser(comment_item.user_id)">
+                      <v-avatar @click="jumpToUser(comment_item.user_id)" style="cursor: pointer;">
                         <img :src="comment_item.avatar_url" />
                       </v-avatar>
                     </v-col>
@@ -320,7 +320,7 @@
                             <v-row class="mt-4">
                               <!--二级评论用户头像-->
                               <v-col cols="12" md="1">
-                                <v-avatar size="40" @click="jumpToUser(reply_item.user_id)">
+                                <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                   <img :src="reply_item.avatar_url" />
                                 </v-avatar>
                               </v-col>
@@ -332,7 +332,7 @@
                                   <div style="align-items: center!important;margin-bottom: 14px;">
                                     <span
                                       style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
-                                      @click="jumpToUser(reply_item.user_id)">
+                                      @click="jumpToUser(reply_item.user_id)" class="textBtn">
                                       {{ reply_item.user_name }}
                                     </span>
                                     <span style="align-items: center!important;"><el-tag
@@ -373,7 +373,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40" @click=jumpToUser(reply_item.user_id)>
+                                  <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -385,7 +385,7 @@
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
                                         style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
-                                        @click=jumpToUser(reply_item.user_id)>
+                                        @click="jumpToUser(reply_item.user_id)" class="textBtn">
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -427,7 +427,7 @@
                               <v-row class="mt-4">
                                 <!--二级评论用户头像-->
                                 <v-col cols="12" md="1">
-                                  <v-avatar size="40" @click=jumpToUser(reply_item.user_id)>
+                                  <v-avatar size="40" @click="jumpToUser(reply_item.user_id)" style="cursor: pointer;">
                                     <img :src="reply_item.avatar_url" />
                                   </v-avatar>
                                 </v-col>
@@ -439,7 +439,7 @@
                                     <div style="align-items: center;margin-bottom: 14px;">
                                       <span
                                         style="font-weight:500;font-size: 15px;margin-right: 15px;color:rgb(109, 106, 106)"
-                                        @click=jumpToUser(reply_item.user_id)>
+                                        @click="jumpToUser(reply_item.user_id)" class="textBtn">
                                         {{ reply_item.user_name }}
                                       </span>
                                       <span style="align-items: center!important;"><el-tag
@@ -521,7 +521,7 @@
                       <v-row v-if="show_comment_input[index]" style="margin-top: 10px;">
                         <!--当前用户头像-->
                         <v-col cols="12" md="1" class="d-flex" align="center">
-                          <v-avatar>
+                          <v-avatar style="cursor: pointer;" @click="jumpToPerson()">
                             <img :src="user.user_avatar" />
                           </v-avatar>
                         </v-col>
@@ -555,7 +555,7 @@
                   <v-row style="width:100%;margin-top:10px">
                     <!-- <v-col cols="12" md="3"> -->
                     <div style="margin-top: 10px;">
-                      <v-avatar @click="jumpToUser(video.author_id)">
+                      <v-avatar @click="jumpToUser(video.author_id)" style="cursor: pointer;">
                         <img :src="video.author_image_url" />
                       </v-avatar>
                     </div>
@@ -610,7 +610,7 @@
                       <v-col cols="12" md="6">
                         <div style="padding-left: 15px;">
                           <img :src="recommend_item.cover_url" width="100%" height="120px"
-                            @click="jumpTo(recommend_item.id)" />
+                            @click="jumpTo(recommend_item.id)" style="cursor: pointer;" />
                         </div>
                       </v-col>
 
@@ -1931,6 +1931,10 @@ export default {
     jumpToUser(user_id) {
       const display_user_url = '/lookPerson/' + user_id;
       window.open(display_user_url, '_self');
+    },
+    jumpToPerson(){
+      const user_url = '/person';
+      window.open(user_url, '_self');
     },
 
 

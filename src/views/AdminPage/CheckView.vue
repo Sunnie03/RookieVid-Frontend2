@@ -22,7 +22,7 @@
                   标题：{{ video_item.title }}
                 </div>
                 <div style="font-weight: 500;font-size: 20px;color:rgb(57, 56, 56);margin-bottom: 7px;">
-                  <v-avatar><img :src="video_item.avatar_url" /></v-avatar>
+                  <v-avatar><img :src="video_item.avatar_url" @click="jumpToUser(video_item.user_id)" style="cursor: pointer;" /></v-avatar>
                   &nbsp;&nbsp;<span class="textBtn" @click="jumpToUser(video_item.user_id)">{{ video_item.user_name
                   }}</span>
                 </div>

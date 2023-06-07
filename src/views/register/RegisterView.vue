@@ -88,9 +88,9 @@ export default {
         username: [{ required: true, validator: validateName, trigger: 'blur' },
           { min: 1, max: 20, message: '用户名长度在 1 到 20 个字符', trigger: 'blur' }/* 长度要求 */],
         password: [{ required: true, validator: validatePass, trigger: 'blur'},
-          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
+          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }/* 长度要求、正则要求 */],
         checkPass: [{ required: true, validator: validatePass2, trigger: 'blur' },
-          { min: 8, max: 14, message: '长度在 8 到 14 个字符', trigger: 'blur' }],
+          { min: 8, max: 14, message: '长度在 8 到 16 个字符', trigger: 'blur' }],
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
       }
     }
@@ -108,9 +108,10 @@ export default {
       .then((res) =>  {
           //处理成功响应
           if(res.data.errno == 0){
-            alert("注册成功");
+            this.$message.success("注册成功");
+            this.$router.push({name: login})
           } else {
-            alert(res.data.msg)
+            this.$message.error(res.data.msg)
           }
           console.log(res.data.msg)
          
@@ -133,9 +134,9 @@ export default {
         .then(response => {
           //处理成功响应
           if(response.data.errno == 1000){
-            alert("已发送验证码，注意5分钟内有效");
+            this.$message.success("已发送验证码，注意5分钟内有效");
           } else {
-            alert(response.data.msg)
+            this.$message.error(response.data.msg)
             // prompt("okkl")
             // confirm("11111")
           }
