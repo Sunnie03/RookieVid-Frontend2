@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import Header from '@/components/HomePage/Header_del_search.vue'
+import Header from '@/components/HomePage/Header.vue'
 import VideoContent from '@/components/HomePage/PartitionVideoShow.vue'
 import axios from 'axios'
 
@@ -242,7 +242,7 @@ export default {
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2;
   overflow:hidden;
-  cursor:pointer
+  cursor:pointer;
   /* flex:1; */
 }
 .video-title:hover{
@@ -274,7 +274,7 @@ export default {
     margin-left:40%;
 }
 .author-info-container:hover .author-info-avatar{
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 .author-avatar-container{
     height:30px;
@@ -287,6 +287,7 @@ export default {
     line-height: 30px;
     height:100%;
     width:100%;
+    cursor:pointer;
     transition: transform 0.3s ease;
     
 }
@@ -304,6 +305,10 @@ export default {
     -webkit-box-orient:vertical;
     -webkit-line-clamp:1;
     overflow:hidden;
+    cursor:pointer;
+}
+.author-name:hover{
+    color:orange;
 }
 .partition-label-info{
     margin-left:40px;;

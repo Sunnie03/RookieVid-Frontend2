@@ -30,7 +30,7 @@
                                         <img class="video-img" :src="video.cover_url" @click="videoPlay(video.id)">
                                     </div>
                                     <div class="video-info">
-                                        <div class="video-title">{{ video.title }}</div>
+                                        <div class="video-title" @click="videoPlay(video.id)">{{ video.title }}</div>
                                         <div class="video-time">{{ video.created_at?video.created_at:'' }}</div>
                                         <i class="el-icon-video-play">{{ video.view_amount }}</i>
                                         <i class="el-icon-thumb">{{ video.like_amount }}</i>
@@ -291,6 +291,7 @@ export default {
     object-fit: cover;
     /* width:199px; */
     border-radius:10px;
+    cursor:pointer;
 }
 .video-info{
     margin-top:1%;
@@ -312,6 +313,10 @@ export default {
   -webkit-box-orient:vertical;
   -webkit-line-clamp:1;
   overflow:hidden;
+  cursor:pointer;
+}
+.video-title:hover{
+    color:rgb(44, 176, 243);
 }
 .video-time{
     height:33.3%;
