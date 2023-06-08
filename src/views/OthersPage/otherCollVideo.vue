@@ -53,7 +53,7 @@
                   <a class="titles" v-on:click="playVideo(video.id)">{{ video.title }}</a>
                 <div class="author">
                   <span class="author-tag">作者</span>
-                  <span class="author-name">{{ video.user_name | ellipsis }}</span>
+                  <span class="author-name" @click="lookPerson(video.user_id)">{{ video.user_name | ellipsis }}</span>
                   <span class="time">{{ video.created_at ? video.created_at.substring(0, 10): ''}}</span>
   
                 </div>
@@ -126,7 +126,7 @@ export default {
     getVideo() {  //获取他人收藏夹里的视频
       // let Headers={'Authorization': this.$store.getters.getStorage}
       let collect_id = this.$route.params.collect_id
-      console.log(collect_id)
+      // console.log(collect_id)
       axios.get('/account/get_favlist',{ params:{favorite_id: collect_id} })
       .then((res) => {
         console.log(res);
@@ -155,6 +155,10 @@ export default {
     playVideo(id){
       this.$router.push({ name: 'video/', params: { id }})
     },
+    lookPerson(id){
+      console.log('user_id: '+id)
+      this.$router.push('/lookPerson/'+id)
+    }
   }
 }
 </script>
@@ -342,21 +346,24 @@ export default {
     background-color: rgba(35, 179, 241, 0.1);
     border-radius: 4px;
     padding: 2px 6px;
-    width:60px;
+    width:40px;
     margin-right: 8px;
   }
   
   .author-name {
     font-weight: bold;
     color: grey;
-    width: 150px;
     /* margin-right:0; */
+  }
+  .author-name:hover{
+    color:orange;
   }
   .time{
     font-size:smaller;
     margin-top:5px;
     /* margin-left: 0px; */
     text-align: right;
+    flex:1;
     width: 40%;
   }
   #TOPUp{
