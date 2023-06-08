@@ -183,6 +183,7 @@
    .recommend-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 320px;
     justify-items: center;
     margin-top: 30px;
   }
